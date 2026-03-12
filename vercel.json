@@ -1,0 +1,13 @@
+{
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "env": {
+    "MOTION_ENGINE_MODE": "production",
+    "WEBGL_QUALITY": "ultra",
+    "ANALYTICS": "disabled"
+  },
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "outputDirectory": ".next"
+}
