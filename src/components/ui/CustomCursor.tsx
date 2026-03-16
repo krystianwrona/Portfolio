@@ -99,6 +99,7 @@ export function CustomCursor() {
   return (
     <>
       <motion.div
+        aria-hidden="true"
         className="fixed top-0 left-0 w-3 h-3 bg-text-primary rounded-full pointer-events-none z-[9999] mix-blend-difference"
         style={{
           x: cursorXSpring,
@@ -111,7 +112,8 @@ export function CustomCursor() {
       />
       
       <motion.div
-        className="fixed top-0 left-0 border border-text-primary rounded-full pointer-events-none z-[9998] mix-blend-difference flex items-center justify-center font-sans font-bold text-[0.6rem] tracking-widest uppercase"
+        aria-hidden="true"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9998] mix-blend-difference flex items-center justify-center font-sans font-bold text-[0.6rem] tracking-widest uppercase"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -119,14 +121,13 @@ export function CustomCursor() {
           translateY: "-50%",
           width: cursorSize,
           height: cursorSize,
-          scale: isHovered ? (injectedText ? 1 : 1.5) : 0.5,
-          opacity: isHovered ? 1 : 0,
-          backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
           color: 'transparent',
           WebkitTextStroke: '0.4px #fff'
         }}
         animate={{
           scale: isHovered ? (injectedText ? 1 : (isMagnetic ? 1.2 : 1.5)) : 0.5,
+          opacity: isHovered ? 1 : 0,
+          border: isHovered ? '1px solid #FACC15' : '1px solid #111111',
           color: injectedText ? '#fff' : 'transparent',
           backgroundColor: injectedText ? 'transparent' : 'rgba(255, 255, 255, 0.1)'
         }}

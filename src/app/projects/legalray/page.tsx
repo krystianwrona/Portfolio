@@ -1,302 +1,350 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
-import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
+
+const BRAND = "#2563EB";
 
 export default function LegalRayCaseStudy() {
   const router = useRouter();
   const containerRef = useRef<HTMLElement>(null);
-  const [isExiting, setIsExiting] = useState<{ x: number, y: number } | null>(null);
+  const [isExiting, setIsExiting] = useState(false);
+  const { t } = useLanguage();
 
-  // Parallax for Bento Grid Images
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const bentoParallax1 = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const bentoParallax2 = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
-
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsExiting({ x: e.clientX, y: e.clientY });
-    setTimeout(() => {
-      router.push('/');
-    }, 800);
+    setIsExiting(true);
+    setTimeout(() => router.push("/"), 250);
   };
+
+  const features = [
+    { title: t('legalray.feature1.title'), desc: t('legalray.feature1.desc') },
+    { title: t('legalray.feature2.title'), desc: t('legalray.feature2.desc') },
+    { title: t('legalray.feature3.title'), desc: t('legalray.feature3.desc') },
+    { title: t('legalray.feature4.title'), desc: t('legalray.feature4.desc') },
+  ];
+
 
   return (
     <>
-      <main className="w-full min-h-screen bg-background" ref={containerRef}>
+      <motion.main
+        className="w-full min-h-screen bg-[#F5F5F4]"
+        ref={containerRef}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isExiting ? 0 : 1 }}
+        transition={{ duration: 0.25, ease: "easeInOut" }}
+      >
 
-        {/* Fixed Back Button */}
+        {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target"
+          aria-label="Close and go back to projects"
+          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:opacity-70"
         >
-          [ CLOSE CASE ]
+          {t('case.close')}
         </button>
 
-        {/* 1. HERO SECTION (Fullscreen Project) */}
-        <section id="CaseHero" className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden bg-[#0F172A]">
-          {/* Fullscreen Image Wrapper */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/legalray_cover.jpg" // Placeholder
-              alt="LegalRay Dashboard HighRes"
-              fill
-              className="object-cover opacity-70 contrast-125 saturate-50"
-              priority
-            />
-            {/* Subtle Grain Overlay (using CSS radial gradient for now as a fast approximation) */}
-            <div className="absolute inset-0 bg-[#0F172A]/30 mix-blend-multiply" />
-          </div>
+        {/* 1. HERO — dark themed, bottom-aligned like Adopt.me */}
+        <section className="relative w-full min-h-screen flex flex-col justify-end pb-[12vh] px-[4vw] overflow-hidden bg-[#111111]">
+          {/* Subtle grid */}
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(0deg, #fff 0px, transparent 1px, transparent 80px), repeating-linear-gradient(90deg, #fff 0px, transparent 1px, transparent 80px)",
+            }}
+          />
 
-          {/* Massive Overlay Title - Starts fully opaque so it perfectly matches the incoming transition */}
-          <div className="relative z-10 w-full px-[4vw] mix-blend-difference pointer-events-none text-center">
-            <motion.h1
-              initial={{ opacity: 1, scale: 1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="font-sans font-black text-[15vw] leading-none tracking-tighter text-white"
-            >
-              LegalRay.
-            </motion.h1>
-          </div>
+          {/* Radial glow */}
+          <div className="absolute top-0 left-0 w-[60vw] h-[60vh] bg-[radial-gradient(ellipse_at_0%_0%,_rgba(37,99,235,0.12),_transparent_60%)] pointer-events-none" />
 
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+          <Link
+            href="/#projects"
+            aria-label="Back to projects"
+            className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
-            <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/50">Scroll Down</span>
+            {t('case.back')}
+          </Link>
+
+          <div className="relative z-10">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-white/30 mb-6"
+            >
+              {t('legalray.subtitle')}
+            </motion.p>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="font-sans font-black leading-none tracking-tighter mb-8"
+              style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
+            >
+              LegalRay
+            </motion.h1>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+              className="flex flex-col gap-4 md:gap-6"
+            >
+              <p className="font-sans font-black text-2xl md:text-3xl text-white/90 tracking-tight max-w-xl leading-tight">
+                {t('legalray.tagline')}
+              </p>
+              <p className="text-base leading-[1.65] text-white/70 font-medium max-w-lg">
+                {t('legalray.desc')}
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="absolute bottom-10 right-[4vw] flex flex-col items-center gap-2"
+          >
             <div className="w-[1px] h-12 bg-white/30 overflow-hidden">
-              <motion.div
-                animate={{ y: [0, 48] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                className="w-full h-1/2 bg-white"
-              />
+              <motion.div animate={{ y: [0, 48] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="w-full h-1/2 bg-white" />
             </div>
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/40 [writing-mode:vertical-lr]">{t('case.scrolldown')}</span>
           </motion.div>
         </section>
 
-        {/* 2. PROJECT META (Grid Details Minimal) */}
-        <section id="ProjectMeta" className="py-[15vh] px-[4vw]">
+        {/* 2. PROJECT META — light theme */}
+        <section className="py-[15vh] px-[4vw] bg-[#F5F5F4] border-t border-[#111]/5">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-10%" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-              }
-            }}
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }}
             className="grid grid-cols-1 lg:grid-cols-12 gap-10"
           >
-            {/* Headline & Description */}
-            <div className="lg:col-span-7 flex flex-col gap-8">
-              <motion.h2
-                variants={{
-                  hidden: { opacity: 0, y: 40 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-                }}
-                className="font-sans font-black text-5xl md:text-7xl leading-[0.9] tracking-tighter text-[#111]"
-              >
-                Profesjonalna ochrona <br />prawna B2B.
-              </motion.h2>
-              <motion.p
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-                }}
-                className="text-[1.1rem] leading-[1.6] text-[#555] font-medium max-w-2xl"
-              >
-                Błyskawiczna analiza ryzyka i wykrywanie pułapek prawnych z wykorzystaniem modeli AI. LegalRay to system wspierający freelancerów, sektor MŚP i in-house działy prawne poprzez automatyzację żargonu prawnego i inteligentne generowanie bezpiecznych kontraktów.
-              </motion.p>
-            </div>
-
-            {/* Metadata Columns */}
-            <div className="lg:col-span-5 grid grid-cols-2 gap-x-6 gap-y-10 border-t lg:border-t-0 lg:border-l border-[#111]/10 pt-10 lg:pt-0 lg:pl-10">
-              {/* Roles */}
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-                <h4 className="text-[0.65rem] uppercase tracking-widest font-bold text-[#111]/50 mb-3">Roles</h4>
-                <ul className="text-sm font-bold text-[#111] space-y-1">
-                  <li>SaaS Architecture</li>
-                  <li>AI Integration</li>
-                  <li>UI/UX Design</li>
+            {/* Left — roles */}
+            <div className="lg:col-span-4 flex flex-col gap-10">
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
+                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.roles')}</h4>
+                <ul className="space-y-2">
+                  {[t('legalray.roles.1'), t('legalray.roles.2'), t('legalray.roles.3')].map((r) => (
+                    <li key={r} className="text-base font-bold text-[#111]/80">{r}</li>
+                  ))}
                 </ul>
               </motion.div>
-
-              {/* Tech Stack */}
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-                <h4 className="text-[0.65rem] uppercase tracking-widest font-bold text-[#111]/50 mb-3">Tech Stack</h4>
-                <ul className="text-sm font-bold text-[#111] space-y-1">
-                  <li>Next.js</li>
-                  <li>Gemini 3.0 Pro</li>
-                  <li>Gemini 2.5 Flash</li>
-                  <li>Tailwind CSS</li>
-                </ul>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
+                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.timeline')}</h4>
+                <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t('legalray.timeline')}</p>
               </motion.div>
-
-              {/* Timeline */}
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-                <h4 className="text-[0.65rem] uppercase tracking-widest font-bold text-[#111]/50 mb-3">Timeline</h4>
-                <p className="text-sm font-bold text-[#111]">Zakończono:<br />Marzec 2026</p>
-              </motion.div>
-
-              {/* Link */}
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-                <h4 className="text-[0.65rem] uppercase tracking-widest font-bold text-[#111]/50 mb-3">Live</h4>
-                <a href="https://legal-saas-rosy.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-[#111] border-b-2 border-[#111] pb-1 hover:text-[#2563EB] hover:border-[#2563EB] transition-colors magnetic-target inline-block">
-                  Visit Website
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
+                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.live')}</h4>
+                <a
+                  href="https://legal-saas-rosy.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit LegalRay website (opens in new tab)"
+                  className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
+                  style={{ color: BRAND, borderColor: BRAND }}
+                >
+                  {t('case.visitwebsite')} →
                 </a>
               </motion.div>
             </div>
+
+            {/* Center divider */}
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="w-[1px] h-full bg-[#111]/5 mx-auto" />
+            </div>
+
+            {/* Right — tech stack */}
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}
+              className="lg:col-span-7"
+            >
+              <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t('case.techstack')}</h4>
+              <ul className="flex flex-col gap-3">
+                {["Google Gemini 3.0 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
+                  <li key={tech} className="flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
+                    <span className="font-bold text-base text-[#111]/80">{tech}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </motion.div>
         </section>
 
-        {/* 3. APP FEATURES (Bento Grid Media) */}
-        {/* 3. APP FEATURES (Bento Grid Media) */}
-        <section id="AppFeatures" className="py-[5vh] px-[4vw]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-5 lg:gap-6 auto-rows-[350px]">
-          {/* Dashboard Overview - Video Loop (span 8) */}
-          <div className="md:col-span-2 lg:col-span-8 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
+        {/* 3. PROBLEM / SOLUTION / RESULT — light theme */}
+        <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { labelKey: 'legalray.problem.label', textKey: 'legalray.problem', bg: "#E4E4E7", color: "#111" },
+              { labelKey: 'legalray.solution.label', textKey: 'legalray.solution', bg: BRAND, color: "#fff" },
+              { labelKey: 'legalray.result.label', textKey: 'legalray.result', bg: "#111", color: "#F8F8F8" },
+            ].map(({ labelKey, textKey, bg, color }, i) => (
               <motion.div
-                style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] bg-[#D4D4D8] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
+                key={labelKey}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="p-10 rounded-[32px] flex flex-col gap-6"
+                style={{ backgroundColor: bg, color }}
               >
-                <span className="font-sans font-bold text-2xl text-[#111]/30">VIDEO: ai_contract_audit</span>
+                <span className="text-[0.65rem] font-bold uppercase tracking-widest opacity-50">{t(labelKey)}</span>
+                <p className="text-[0.95rem] leading-[1.65] font-medium opacity-80">{t(textKey)}</p>
               </motion.div>
-              {/* Label Overlay */}
+            ))}
+          </div>
+        </section>
+
+        {/* 4. CORE FEATURES — light theme, numbered boxes */}
+        <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/30">{t('case.corefeatures')}</span>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map(({ title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/8 bg-white hover:border-[#2563EB]/30 transition-colors duration-500 flex flex-col gap-4"
+              >
+                <span
+                  className="font-sans font-black text-5xl leading-none"
+                  style={{ color: BRAND }}
+                >
+                  0{i + 1}
+                </span>
+                <h3 className="font-sans font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#2563EB] transition-colors duration-300">
+                  {title}
+                </h3>
+                <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* 5. APP FEATURES — Bento Grid (light bg context) */}
+        <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-5 lg:gap-6 auto-rows-[350px]">
+            <div className="md:col-span-2 lg:col-span-8 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
+              <motion.div style={{ y: bentoParallax1 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
+                <video src="/legalray-audit.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80" />
+              </motion.div>
               <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                Audyt Umów B2B & NDA
+                AI Contract Audit
               </div>
             </div>
-
-            {/* Navigation System - Image Parallax (span 4) */}
-          <div className="md:col-span-2 lg:col-span-4 relative rounded-[32px] overflow-hidden bg-[#111111] group">
-              <motion.div
-                style={{ y: bentoParallax2 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] bg-[#222222] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
-              >
-                <span className="font-sans font-bold text-lg text-white/30 text-center">IMG: legalray_<br />court_docs</span>
+            <div className="md:col-span-2 lg:col-span-4 relative rounded-[32px] overflow-hidden bg-[#111111] group">
+              <motion.div style={{ y: bentoParallax2 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
+                <img src="/legalray-docs.jpg" alt="Legal analysis" className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
-              {/* Label Overlay */}
               <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-white z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                Tłumaczenie Pism Sądowych
+                Deep Legal Analysis
               </div>
             </div>
-
-            {/* Document Management - Image Parallax (span 6) */}
-          <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#111111] group">
-              <motion.div
-                style={{ y: bentoParallax2 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] bg-[#222222] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
-              >
-                <span className="font-sans font-bold text-2xl text-white/30">IMG: legalray_negotiation</span>
+            <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#111111] group">
+              <motion.div style={{ y: bentoParallax2 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
+                <img src="/legalray-negotiation.jpg" alt="AI Negotiation" className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
-              {/* Label Overlay */}
               <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-white z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                Asystent Negocjacji
+                Negotiation Assistant
               </div>
             </div>
-
-            {/* Client Portal - Video Loop (span 6) */}
-          <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
-              <motion.div
-                style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] bg-[#D4D4D8] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
-              >
-                <span className="font-sans font-bold text-2xl text-[#111]/30">VIDEO: property_market_check</span>
+            <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
+              <motion.div style={{ y: bentoParallax1 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
+                <video src="/legalray-paywall.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
-              {/* Label Overlay */}
               <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111] z-10 transition-transform duration-300 group-hover:-translate-y-1">
-                Rynek Nieruchomości
+                Blurred Risk Paywall
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4. RESULTS (Kinetic Typography Banner) */}
-        <section id="Results" className="py-[15vh] bg-[#111111] overflow-hidden flex flex-col gap-[2vw]">
-
-          {/* Row 1 (Left) */}
-          <div className="flex whitespace-nowrap">
-            <motion.h2
-              className="font-sans font-black text-[12vw] leading-[0.85] tracking-tighter text-[#2563EB] uppercase"
-              style={{ x: useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]) }}
+        {/* 6. VISIT WEBSITE */}
+        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
+          <a
+            href="https://legal-saas-rosy.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit LegalRay live website (opens in new tab)"
+            className="group inline-flex items-center gap-4"
+          >
+            <span
+              className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#2563EB]"
             >
-              BEZPIECZEŃSTWO ZERO-DATA • BEZPIECZEŃSTWO ZERO-DATA • BEZPIECZEŃSTWO ZERO-DATA •
-            </motion.h2>
-          </div>
-
-          {/* Row 2 (Right) */}
-          <div className="flex whitespace-nowrap">
-            <motion.h2
-              className="font-sans font-black text-[12vw] leading-[0.85] tracking-tighter text-white uppercase opacity-40"
-              style={{ x: useTransform(scrollYProgress, [0, 1], ["-50%", "0%"]) }}
-            >
-              GEMINI 3.0 ENTERPRISE • GEMINI 3.0 ENTERPRISE • GEMINI 3.0 ENTERPRISE •
-            </motion.h2>
-          </div>
-
-          {/* Row 3 (Left - Faster) */}
-          <div className="flex whitespace-nowrap">
-            <motion.h2
-              className="font-sans font-black text-[12vw] leading-[0.85] tracking-tighter text-[#2563EB] uppercase"
-              style={{ x: useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]) }}
-            >
-              ZGODNOŚĆ Z PRAWEM UE • ZGODNOŚĆ Z PRAWEM UE • ZGODNOŚĆ Z PRAWEM UE •
-            </motion.h2>
-          </div>
-
+              {t('case.visitwebsite')}
+            </span>
+            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </a>
         </section>
 
-        {/* 5. NEXT PROJECT TEASER */}
-        <section id="NextProject" className="py-[15vh] px-[4vw] bg-background flex flex-col items-center justify-center min-h-[70vh]">
+        {/* 7. MARQUEE */}
+        <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
+          {([
+            { keys: ['legalray.marquee.row1.1', 'legalray.marquee.row1.2', 'legalray.marquee.row1.3'], dir: 'left',  color: '#111', opacity: 0.08 },
+            { keys: ['legalray.marquee.row2.1', 'legalray.marquee.row2.2', 'legalray.marquee.row2.3'], dir: 'right', color: BRAND,  opacity: 0.25 },
+            { keys: ['legalray.marquee.row3.1', 'legalray.marquee.row3.2', 'legalray.marquee.row3.3'], dir: 'left',  color: '#111', opacity: 0.08 },
+          ] as const).map(({ keys, dir, color, opacity }, i) => {
+            const words = keys.map(k => t(k));
+            const repeated = [...words, ...words, ...words, ...words].join(' • ') + ' • ';
+            return (
+              <div
+                key={i}
+                className="whitespace-nowrap py-2 pointer-events-none"
+                style={{ animation: `marquee-${dir} 40s linear infinite` }}
+              >
+                <span
+                  className="font-sans font-black text-[4vw] uppercase tracking-tighter"
+                  style={{ color, opacity }}
+                >
+                  {repeated}
+                </span>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* 8. NEXT PROJECT */}
+        <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
           <div className="text-center mb-10">
-            <span className="text-[0.65rem] uppercase tracking-widest font-bold text-[#111]/50">Up Next</span>
+            <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t('case.upnext')}</span>
           </div>
-
           <a
             href="/projects/adoptme"
-            className="group relative w-full max-w-5xl h-[50vh] rounded-[40px] overflow-hidden flex items-center justify-center cursor-pointer"
-            data-cursor-text="NEXT CASE"
+            aria-label="View next project: Adopt.me"
+            className="group relative w-full max-w-5xl h-[40vh] rounded-[40px] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            {/* Background Image / Color Placeholder */}
-            <div className="absolute inset-0 bg-[#D97706] z-0 transition-transform duration-1000 group-hover:scale-105">
-              {/* Liquid Distortion simulation */}
+            <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
               <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
-
-            {/* Title */}
             <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter mix-blend-overlay">
-                Adopt.me
-              </h2>
+              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">Adopt.me</h2>
             </div>
           </a>
         </section>
 
-      </main>
+      </motion.main>
 
-      {/* EXIT TRANSITION OVERLAY */}
-      <AnimatePresence>
-        {isExiting && (
-          <motion.div
-            initial={{ clipPath: `circle(0px at ${isExiting.x}px ${isExiting.y}px)` }}
-            animate={{ clipPath: `circle(150vw at ${isExiting.x}px ${isExiting.y}px)` }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-[100] pointer-events-none bg-background"
-          />
-        )}
-      </AnimatePresence>
     </>
   );
 }
