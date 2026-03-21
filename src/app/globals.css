@@ -2,19 +2,18 @@
 
 @theme {
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-montserrat);
-  
+  --font-display: var(--font-montserrat);
+
   --color-background: #F5F5F4;
+  --color-surface: #F5F5F4;
+  --color-dark: #111111;
   --color-text-primary: #111111;
   --color-accent: #FACC15;
-}
+  --color-legalray: #2563EB;
+  --color-adoptme: #F97316;
 
-@layer utilities {
-  .grid-12 {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 2rem;
-  }
+  --radius-card: 32px;
+  --radius-lg: 40px;
 }
 
 body {
@@ -23,6 +22,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #FACC15;
+  color: #111;
 }
 
 /* ── Skip to content link ───────────────────────── */

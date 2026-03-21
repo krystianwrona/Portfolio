@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -13,6 +14,7 @@ export default function LegalRayCaseStudy() {
   const containerRef = useRef<HTMLElement>(null);
   const [isExiting, setIsExiting] = useState(false);
   const { t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const bentoParallax1 = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
@@ -45,7 +47,7 @@ export default function LegalRayCaseStudy() {
         <button
           onClick={handleBack}
           aria-label="Close and go back to projects"
-          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:opacity-70"
+          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t('case.close')}
         </button>
@@ -86,7 +88,7 @@ export default function LegalRayCaseStudy() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="font-sans font-black leading-none tracking-tighter mb-8"
+              className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
               LegalRay
@@ -98,7 +100,7 @@ export default function LegalRayCaseStudy() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="flex flex-col gap-4 md:gap-6"
             >
-              <p className="font-sans font-black text-2xl md:text-3xl text-white/90 tracking-tight max-w-xl leading-tight">
+              <p className="font-display font-black text-2xl md:text-3xl text-white/90 tracking-tight max-w-xl leading-tight">
                 {t('legalray.tagline')}
               </p>
               <p className="text-base leading-[1.65] text-white/70 font-medium max-w-lg">
@@ -115,7 +117,7 @@ export default function LegalRayCaseStudy() {
             className="absolute bottom-10 right-[4vw] flex flex-col items-center gap-2"
           >
             <div className="w-[1px] h-12 bg-white/30 overflow-hidden">
-              <motion.div animate={{ y: [0, 48] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="w-full h-1/2 bg-white" />
+              <motion.div animate={shouldReduceMotion ? {} : { y: [0, 48] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="w-full h-1/2 bg-white" />
             </div>
             <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/40 [writing-mode:vertical-lr]">{t('case.scrolldown')}</span>
           </motion.div>
@@ -133,7 +135,7 @@ export default function LegalRayCaseStudy() {
             {/* Left — roles */}
             <div className="lg:col-span-4 flex flex-col gap-10">
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.roles')}</h4>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.roles')}</p>
                 <ul className="space-y-2">
                   {[t('legalray.roles.1'), t('legalray.roles.2'), t('legalray.roles.3')].map((r) => (
                     <li key={r} className="text-base font-bold text-[#111]/80">{r}</li>
@@ -141,11 +143,11 @@ export default function LegalRayCaseStudy() {
                 </ul>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.timeline')}</h4>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.timeline')}</p>
                 <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t('legalray.timeline')}</p>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.live')}</h4>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.live')}</p>
                 <a
                   href="https://legal-saas-rosy.vercel.app/"
                   target="_blank"
@@ -169,7 +171,7 @@ export default function LegalRayCaseStudy() {
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}
               className="lg:col-span-7"
             >
-              <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t('case.techstack')}</h4>
+              <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t('case.techstack')}</p>
               <ul className="flex flex-col gap-3">
                 {["Google Gemini 3.0 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
@@ -196,7 +198,7 @@ export default function LegalRayCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="p-10 rounded-[32px] flex flex-col gap-6"
+                className="p-10 rounded-[var(--radius-card)] flex flex-col gap-6"
                 style={{ backgroundColor: bg, color }}
               >
                 <span className="text-[0.65rem] font-bold uppercase tracking-widest opacity-50">{t(labelKey)}</span>
@@ -225,7 +227,7 @@ export default function LegalRayCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/8 bg-white hover:border-[#2563EB]/30 transition-colors duration-500 flex flex-col gap-4"
+                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white hover:border-[#2563EB]/30 transition-colors duration-500 flex flex-col gap-4"
               >
                 <span
                   className="font-sans font-black text-5xl leading-none"
@@ -233,9 +235,9 @@ export default function LegalRayCaseStudy() {
                 >
                   0{i + 1}
                 </span>
-                <h3 className="font-sans font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#2563EB] transition-colors duration-300">
+                <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#2563EB] transition-colors duration-300">
                   {title}
-                </h3>
+                </h2>
                 <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
               </motion.div>
             ))}
@@ -245,7 +247,7 @@ export default function LegalRayCaseStudy() {
         {/* 5. APP FEATURES — Bento Grid (light bg context) */}
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-5 lg:gap-6 auto-rows-[350px]">
-            <div className="md:col-span-2 lg:col-span-8 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
+            <div className="md:col-span-2 lg:col-span-8 relative rounded-[var(--radius-card)] overflow-hidden bg-[#E4E4E7] group">
               <motion.div style={{ y: bentoParallax1 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
                 <video src="/legalray-audit.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
@@ -253,23 +255,23 @@ export default function LegalRayCaseStudy() {
                 AI Contract Audit
               </div>
             </div>
-            <div className="md:col-span-2 lg:col-span-4 relative rounded-[32px] overflow-hidden bg-[#111111] group">
+            <div className="md:col-span-2 lg:col-span-4 relative rounded-[var(--radius-card)] overflow-hidden bg-[#111111] group">
               <motion.div style={{ y: bentoParallax2 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
-                <img src="/legalray-docs.jpg" alt="Legal analysis" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+                <Image src="/legalray-docs.jpg" alt="Legal analysis" width={800} height={600} className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
               <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-white z-10 transition-transform duration-300 group-hover:-translate-y-1">
                 Deep Legal Analysis
               </div>
             </div>
-            <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#111111] group">
+            <div className="md:col-span-1 lg:col-span-6 relative rounded-[var(--radius-card)] overflow-hidden bg-[#111111] group">
               <motion.div style={{ y: bentoParallax2 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
-                <img src="/legalray-negotiation.jpg" alt="AI Negotiation" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+                <Image src="/legalray-negotiation.jpg" alt="AI Negotiation" width={800} height={600} className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
               <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-white z-10 transition-transform duration-300 group-hover:-translate-y-1">
                 Negotiation Assistant
               </div>
             </div>
-            <div className="md:col-span-1 lg:col-span-6 relative rounded-[32px] overflow-hidden bg-[#E4E4E7] group">
+            <div className="md:col-span-1 lg:col-span-6 relative rounded-[var(--radius-card)] overflow-hidden bg-[#E4E4E7] group">
               <motion.div style={{ y: bentoParallax1 }} className="absolute -inset-[15%] w-[130%] h-[130%] transition-transform duration-700 group-hover:scale-105">
                 <video src="/legalray-paywall.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80" />
               </motion.div>
@@ -332,7 +334,7 @@ export default function LegalRayCaseStudy() {
           <a
             href="/projects/adoptme"
             aria-label="View next project: Adopt.me"
-            className="group relative w-full max-w-5xl h-[40vh] rounded-[40px] overflow-hidden flex items-center justify-center cursor-pointer"
+            className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
             <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
               <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />

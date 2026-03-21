@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -13,6 +13,7 @@ export default function AdoptMeCaseStudy() {
   const containerRef = useRef<HTMLElement>(null);
   const [isExiting, setIsExiting] = useState(false);
   const { t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const bentoParallax1 = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
@@ -45,7 +46,7 @@ export default function AdoptMeCaseStudy() {
         <button
           onClick={handleBack}
           aria-label="Close and go back to projects"
-          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:opacity-70"
+          className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t('case.close')}
         </button>
@@ -86,7 +87,7 @@ export default function AdoptMeCaseStudy() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="font-sans font-black leading-none tracking-tighter mb-8"
+              className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
               Adopt.me
@@ -98,7 +99,7 @@ export default function AdoptMeCaseStudy() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="flex flex-col gap-4 md:gap-6"
             >
-              <p className="font-sans font-black text-2xl md:text-3xl text-white/80 tracking-tight max-w-xl leading-tight whitespace-pre-line">
+              <p className="font-display font-black text-2xl md:text-3xl text-white/80 tracking-tight max-w-xl leading-tight whitespace-pre-line">
                 {t('adoptme.headline')}
               </p>
               <p className="text-base leading-[1.65] text-white/60 font-medium max-w-lg">
@@ -115,7 +116,7 @@ export default function AdoptMeCaseStudy() {
             className="absolute bottom-10 right-[4vw] flex flex-col items-center gap-2"
           >
             <div className="w-[1px] h-12 bg-white/20 overflow-hidden">
-              <motion.div animate={{ y: [0, 48] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="w-full h-1/2 bg-white/60" />
+              <motion.div animate={shouldReduceMotion ? {} : { y: [0, 48] }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="w-full h-1/2 bg-white/60" />
             </div>
             <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/20 [writing-mode:vertical-lr]">{t('case.scrolldown')}</span>
           </motion.div>
@@ -133,7 +134,7 @@ export default function AdoptMeCaseStudy() {
             {/* Left — roles */}
             <div className="lg:col-span-4 flex flex-col gap-10">
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.roles')}</h4>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.roles')}</p>
                 <ul className="space-y-2">
                   {[t('adoptme.roles.1'), t('adoptme.roles.2'), t('adoptme.roles.3')].map((r) => (
                     <li key={r} className="text-base font-bold text-[#111]/80">{r}</li>
@@ -141,7 +142,7 @@ export default function AdoptMeCaseStudy() {
                 </ul>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.status')}</h4>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t('case.status')}</p>
                 <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t('adoptme.status')}</p>
               </motion.div>
             </div>
@@ -156,7 +157,7 @@ export default function AdoptMeCaseStudy() {
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}
               className="lg:col-span-7"
             >
-              <h4 className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t('case.techstack')}</h4>
+              <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t('case.techstack')}</p>
               <ul className="flex flex-col gap-3">
                 {[
                   "Next.js 15 (React)",
@@ -189,7 +190,7 @@ export default function AdoptMeCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="p-10 rounded-[32px] flex flex-col gap-6"
+                className="p-10 rounded-[var(--radius-card)] flex flex-col gap-6"
                 style={{ backgroundColor: bg, color }}
               >
                 <span className="text-[0.65rem] font-bold uppercase tracking-widest opacity-50">{t(labelKey)}</span>
@@ -218,7 +219,7 @@ export default function AdoptMeCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/8 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#F97316]/30"
+                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#F97316]/30"
               >
                 <span
                   className="font-sans font-black text-5xl leading-none"
@@ -226,9 +227,9 @@ export default function AdoptMeCaseStudy() {
                 >
                   0{i + 1}
                 </span>
-                <h3 className="font-sans font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#F97316] transition-colors duration-300">
+                <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#F97316] transition-colors duration-300">
                   {title}
-                </h3>
+                </h2>
                 <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
               </motion.div>
             ))}
@@ -239,14 +240,15 @@ export default function AdoptMeCaseStudy() {
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5" style={{ gridTemplateRows: "auto" }}>
             {/* Large left card */}
-            <div className="relative overflow-hidden rounded-[32px] bg-[#E4E4E7] md:row-span-2" style={{ minHeight: "480px" }}>
+            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] md:row-span-2" style={{ minHeight: "480px" }}>
               <motion.div
                 style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
+                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
               >
-                <span className="font-sans font-black text-3xl md:text-4xl text-[#111]/10 text-center leading-tight select-none">
-                  [ VIDEO:<br />QUIZ / MATCHING ]
-                </span>
+                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-6 rounded-2xl select-none">
+                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
+                  <span className="font-black text-sm text-[#111]/40">Quiz / Matching Video</span>
+                </div>
               </motion.div>
               <div
                 className="absolute top-6 left-6 backdrop-blur-md border px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest z-10"
@@ -257,14 +259,15 @@ export default function AdoptMeCaseStudy() {
             </div>
 
             {/* Top-right card */}
-            <div className="relative overflow-hidden rounded-[32px] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
+            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
               <motion.div
                 style={{ y: bentoParallax2 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
+                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
               >
-                <span className="font-sans font-black text-2xl text-[#111]/10 text-center select-none">
-                  [ IMG: MAP / GEOLOCATION ]
-                </span>
+                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-5 rounded-2xl select-none">
+                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
+                  <span className="font-black text-sm text-[#111]/40">Map / Geolocation</span>
+                </div>
               </motion.div>
               <div className="absolute top-6 left-6 bg-white/60 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/60 z-10">
                 Interactive Map
@@ -272,14 +275,15 @@ export default function AdoptMeCaseStudy() {
             </div>
 
             {/* Bottom-right card */}
-            <div className="relative overflow-hidden rounded-[32px] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
+            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
               <motion.div
                 style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center transition-transform duration-700 group-hover:scale-105"
+                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
               >
-                <span className="font-sans font-black text-2xl text-[#111]/10 text-center select-none">
-                  [ IMG: MOBILE UI ]
-                </span>
+                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-5 rounded-2xl select-none">
+                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
+                  <span className="font-black text-sm text-[#111]/40">Mobile UI</span>
+                </div>
               </motion.div>
               <div className="absolute top-6 left-6 bg-white/60 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/60 z-10">
                 App Experience
@@ -291,7 +295,9 @@ export default function AdoptMeCaseStudy() {
         {/* 6. VISIT WEBSITE */}
         <section className="py-[12vh] px-[4vw] bg-[#F5F5F4] flex items-center justify-center">
           <a
-            href="#"
+            href="https://adoptme-red.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-4"
           >
             <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-[#111] transition-colors duration-300 group-hover:text-[#F97316]">
@@ -335,7 +341,7 @@ export default function AdoptMeCaseStudy() {
           <a
             href="/projects/classified"
             aria-label="View next project: Classified"
-            className="group relative w-full max-w-5xl h-[40vh] rounded-[40px] overflow-hidden flex items-center justify-center cursor-pointer"
+            className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
             <div className="absolute inset-0 bg-[#1A1A1A] z-0 transition-transform duration-1000 group-hover:scale-105 border border-white/5" />
             <div className="relative z-10 text-center">

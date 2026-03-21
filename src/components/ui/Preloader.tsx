@@ -11,7 +11,7 @@ export function Preloader() {
     const timer = setTimeout(() => {
       setIsVisible(false);
       document.body.style.overflow = "";
-    }, 2400);
+    }, 1800);
     return () => {
       clearTimeout(timer);
       document.body.style.overflow = "";
@@ -27,7 +27,7 @@ export function Preloader() {
           aria-label="Loading page"
           aria-live="polite"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.5, ease: "easeIn" } }}
+          exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
           className="fixed inset-0 z-[999999] bg-[#111111] flex flex-col items-center justify-center"
         >
           <motion.div
@@ -46,7 +46,7 @@ export function Preloader() {
               className="h-full bg-white/40"
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
-              transition={{ duration: 2.0, ease: "linear", delay: 0.3 }}
+              transition={{ duration: 1.4, ease: "linear", delay: 0.3 }}
             />
           </div>
         </motion.div>

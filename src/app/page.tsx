@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect, useMemo, Suspense } from "react";
 import {
   motion, useScroll, AnimatePresence,
-  useInView, useMotionValue, useSpring, useTransform, animate,
+  useInView, useMotionValue, useSpring, useTransform, animate, useReducedMotion,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -203,9 +203,9 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
       let mouseInfluence = 0;
       if (isHoveringRef.current) {
         const adjusted = mouseRef.current.x - 0.15;
-        mouseInfluence = adjusted * 0.5;
+        mouseInfluence = adjusted * 0.3;
       }
-      target = Math.max(-0.55, Math.min(0.55, idle + mouseInfluence));
+      target = Math.max(-0.3, Math.min(0.3, idle + mouseInfluence));
     }
     headRotation.current += (target - headRotation.current) * dt * 1.4;
     uniforms.uHeadRotationY.value = headRotation.current;
@@ -291,9 +291,9 @@ function ProjectRow({ project, onClick, index }: {
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
         <h3
-          className="font-sans font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
+          className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
           style={{
-            WebkitTextStroke: isHovered ? "0px transparent" : "0.8px rgba(255,255,255,0.4)",
+            WebkitTextStroke: isHovered ? "0px transparent" : "1.5px rgba(255,255,255,0.35)",
             color: isHovered ? project.color : "#111111",
             paintOrder: 'stroke fill',
           }}
@@ -317,12 +317,14 @@ function MagneticHeading({ children, onClick, className, ariaLabel }: {
   ariaLabel?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 100, damping: 15 });
   const springY = useSpring(y, { stiffness: 100, damping: 15 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (reduce) return;
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     x.set((e.clientX - (rect.left + rect.width  / 2)) * 0.15);
@@ -358,6 +360,8 @@ function MagneticHeading({ children, onClick, className, ariaLabel }: {
 
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const { t } = useLanguage();
 
@@ -372,7 +376,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center justify-center py-20 text-center"
       >
-        <h3 className="font-sans font-black text-4xl text-white mb-4">{t('contact.form.success.title')}</h3>
+        <h3 className="font-display font-black text-4xl text-white mb-4">{t('contact.form.success.title')}</h3>
         <p className="text-white/60 font-medium mb-8">{t('contact.form.success.text')}</p>
         <button onClick={onClose} className="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors magnetic-target focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
           {t('contact.form.success.close')}
@@ -386,7 +390,24 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setSubmitError(false);
+        try {
+          const res = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+          });
+          if (!res.ok) throw new Error("failed");
+          setSubmitted(true);
+        } catch {
+          setSubmitError(true);
+        } finally {
+          setSubmitting(false);
+        }
+      }}
       className="w-full max-w-2xl mx-auto py-10 flex flex-col gap-6"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -445,6 +466,11 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           className={`${inputCls} resize-none`}
         />
       </div>
+      {submitError && (
+        <p role="alert" className="text-red-400 text-xs font-bold uppercase tracking-widest text-center">
+          Something went wrong. Please try again.
+        </p>
+      )}
       <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4">
         <button type="button" onClick={onClose} className="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
           {t('contact.form.cancel')}
@@ -452,11 +478,12 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         <motion.button
           type="submit"
           aria-label="Send message"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full sm:w-auto px-10 py-4 min-h-[48px] bg-white text-[#111] font-black uppercase tracking-widest text-sm rounded-full magnetic-target focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          disabled={submitting}
+          whileHover={submitting ? undefined : { scale: 1.02 }}
+          whileTap={submitting ? undefined : { scale: 0.98 }}
+          className="w-full sm:w-auto px-10 py-4 min-h-[48px] bg-white text-[#111] font-black uppercase tracking-widest text-sm rounded-full magnetic-target focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {t('contact.form.send')}
+          {submitting ? "Sending…" : t('contact.form.send')}
         </motion.button>
       </div>
     </motion.form>
@@ -470,6 +497,7 @@ export default function Home() {
   const [isExiting, setIsExiting] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const { t } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
 
   const handleProjectClick = (e: React.MouseEvent, projectId: string, route: string, color: string) => {
     e.preventDefault();
@@ -521,7 +549,7 @@ export default function Home() {
         >
           <h1
             id="hero-heading"
-            className="font-sans font-black leading-[0.85] tracking-tighter text-center uppercase"
+            className="font-display font-black leading-[0.85] tracking-tighter text-center uppercase"
             style={{ fontSize: 'clamp(60px, 9vw, 160px)' }}
           >
             <span style={{ color: '#F5F5F4', WebkitTextStroke: '2px rgba(17, 17, 17, 0.12)', paintOrder: 'stroke fill' }}>
@@ -540,14 +568,16 @@ export default function Home() {
 
         {/* Canvas bird — decorative illustration */}
         <div role="img" aria-label="Animated crow illustration made of particles" className="absolute inset-0 z-10">
-          <Canvas
-            style={{ width: "100%", height: "100%" }}
-            camera={{ position: [0, 0, 5], fov: 45 }}
-            dpr={[1, 2]}
-            gl={{ alpha: true, antialias: true }}
-          >
-            <CrowShaderMesh scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
-          </Canvas>
+          <Suspense fallback={<div className="absolute inset-0 bg-[#F5F5F4]" />}>
+            <Canvas
+              style={{ width: "100%", height: "100%" }}
+              camera={{ position: [0, 0, 5], fov: 45 }}
+              dpr={[1, 2]}
+              gl={{ alpha: true, antialias: true }}
+            >
+              <CrowShaderMesh scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
+            </Canvas>
+          </Suspense>
         </div>
 
         {/* Mobile hero text — variant C, scroll-revealed */}
@@ -562,7 +592,11 @@ export default function Home() {
 
         {/* Scroll indicator — decorative */}
         <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20">
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }} className="w-[1px] h-[32px] bg-[#555]" />
+          <motion.div
+            animate={shouldReduceMotion ? {} : { y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+            className="w-[1px] h-[32px] bg-[#555]"
+          />
         </div>
       </section>
 
@@ -595,7 +629,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="font-sans font-black text-[12vw] lg:text-[6vw] leading-[1.15] tracking-tighter"
+              className="font-display font-black text-[12vw] lg:text-[6vw] leading-[1.15] tracking-tighter"
             >
               {t('about.title.1')} <br /><span className="text-yellow-400">{t('about.title.2')}</span>
             </motion.h2>
@@ -613,7 +647,7 @@ export default function Home() {
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
               className="p-10 rounded-[32px] bg-[#E4E4E7]/40 text-[#111]"
             >
-              <h3 className="font-sans font-black text-2xl mb-4">{t('about.philosophy.title')}</h3>
+              <h3 className="font-display font-black text-2xl mb-4">{t('about.philosophy.title')}</h3>
               <p className="text-[1rem] leading-[1.6] opacity-80 font-medium max-w-[720px]">
                 {t('about.philosophy.text')}
               </p>
@@ -654,7 +688,7 @@ export default function Home() {
                   className="flex-1 p-8 rounded-[32px] bg-[#111] text-[#F8F8F8] flex flex-col justify-between min-h-[160px]"
                 >
                   <p
-                    className="font-sans font-black text-5xl tracking-tighter mb-2"
+                    className="font-display font-black text-5xl tracking-tighter mb-2"
                     aria-label={stat.infinity ? t(stat.labelKey) : `${stat.to}${stat.suffix} ${t(stat.labelKey)}`}
                   >
                     <span aria-hidden="true">
@@ -677,13 +711,13 @@ export default function Home() {
             ariaLabel={contactOpen ? "Close contact form" : "Open contact form"}
             className="cursor-pointer select-none group focus-visible:outline-none"
           >
-            <h2 id="contact-heading" className="font-sans font-black text-[8vw] md:text-[7vw] leading-[0.85] tracking-tighter text-center transition-colors duration-500">
+            <h2 id="contact-heading" className="font-display font-black text-[8vw] md:text-[7vw] leading-[0.85] tracking-tighter text-center transition-colors duration-500">
               {t('contact.headline.1')}<br />{t('contact.headline.2')} <span className="group-hover:text-[#FACC15] transition-colors duration-300">{t('contact.headline.3')}</span>
             </h2>
             <motion.p
               aria-hidden="true"
               className="text-center text-xs font-bold uppercase tracking-widest text-white/60 mt-10 pointer-events-none"
-              animate={{ y: [0, 5, 0] }}
+              animate={shouldReduceMotion ? {} : { y: [0, 5, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
             >
               {t('contact.cta')}
@@ -711,9 +745,9 @@ export default function Home() {
             &copy; {new Date().getFullYear()} KRYSTIAN.WRONA. {t('footer.rights')}
           </p>
           <ul className="flex gap-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label="Social media links">
-            <li><a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn — opens in new tab" className="cursor-pointer hover:text-[#FACC15] transition-colors duration-300 magnetic-target min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:text-[#FACC15] focus-visible:underline focus-visible:underline-offset-4">LinkedIn</a></li>
-            <li><a href="#" target="_blank" rel="noopener noreferrer" aria-label="Behance — opens in new tab" className="cursor-pointer hover:text-[#FACC15] transition-colors duration-300 magnetic-target min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:text-[#FACC15] focus-visible:underline focus-visible:underline-offset-4">Behance</a></li>
-            <li><a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram — opens in new tab" className="cursor-pointer hover:text-[#FACC15] transition-colors duration-300 magnetic-target min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:text-[#FACC15] focus-visible:underline focus-visible:underline-offset-4">Instagram</a></li>
+            <li><a href="#" aria-label="LinkedIn (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">LinkedIn</a></li>
+            <li><a href="#" aria-label="Behance (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Behance</a></li>
+            <li><a href="#" aria-label="Instagram (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Instagram</a></li>
           </ul>
         </div>
       </section>
