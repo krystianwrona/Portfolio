@@ -23,8 +23,8 @@ interface ProjectEntry {
 }
 
 const PROJECT_DATA: ProjectEntry[] = [
+  { id: "adoptme",    title: "Adoptio",      categoryKey: "works.adoptme.category",      logo: "AM", color: "#F97316" },
   { id: "legalray",   title: "LegalRay",     categoryKey: "works.legalray.category",     logo: "LR", logoUrl: "/logo-LR.png", color: "#2563EB" },
-  { id: "adoptme",    title: "Adopt.me",     categoryKey: "works.adoptme.category",      logo: "AM", color: "#F97316" },
   { id: "classified", title: "Confidential", categoryKey: "works.confidential.category", logo: "XX", color: "#1A1A1A" },
 ];
 

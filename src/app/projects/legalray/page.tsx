@@ -52,7 +52,7 @@ export default function LegalRayCaseStudy() {
           {t('case.close')}
         </button>
 
-        {/* 1. HERO — dark themed, bottom-aligned like Adopt.me */}
+        {/* 1. HERO — dark themed, bottom-aligned like Adoptio */}
         <section className="relative w-full min-h-screen flex flex-col justify-end pb-[12vh] px-[4vw] overflow-hidden bg-[#111111]">
           {/* Subtle grid */}
           <div
@@ -332,15 +332,13 @@ export default function LegalRayCaseStudy() {
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t('case.upnext')}</span>
           </div>
           <a
-            href="/projects/adoptme"
-            aria-label="View next project: Adopt.me"
+            href="/projects/classified"
+            aria-label="View next project: Confidential"
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
-              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
-            </div>
+            <div className="absolute inset-0 bg-[#1A1A1A] z-0 transition-transform duration-1000 group-hover:scale-105 border border-white/5" />
             <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">Adopt.me</h2>
+              <h2 className="font-sans font-black text-6xl md:text-9xl text-white/10 tracking-tighter">???</h2>
             </div>
           </a>
         </section>

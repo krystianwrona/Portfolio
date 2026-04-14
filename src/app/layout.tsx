@@ -5,6 +5,8 @@ import { Navbar } from "@/components/ui/Navbar";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { Preloader } from "@/components/ui/Preloader";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,6 +50,8 @@ export default function RootLayout({
             {children}
           </SmoothScrollProvider>
         </LanguageProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -16,8 +17,15 @@ export default function AdoptMeCaseStudy() {
   const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
-  const bentoParallax1 = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const bentoParallax1 = useTransform(scrollYProgress, [0, 1], ["0%",  "15%"]);
   const bentoParallax2 = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const bentoParallax3 = useTransform(scrollYProgress, [0, 1], ["0%",  "12%"]);
+  const bentoParallax4 = useTransform(scrollYProgress, [0, 1], ["0%",  "-8%"]);
+  const bentoParallax5 = useTransform(scrollYProgress, [0, 1], ["0%",  "10%"]);
+  const bentoParallax6 = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
+  const bentoParallax7 = useTransform(scrollYProgress, [0, 1], ["0%",   "8%"]);
+  const bentoParallax8 = useTransform(scrollYProgress, [0, 1], ["0%", "-15%"]);
+  const bentoParallax9 = useTransform(scrollYProgress, [0, 1], ["0%",  "10%"]);
 
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -90,7 +98,7 @@ export default function AdoptMeCaseStudy() {
               className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
-              Adopt.me
+              Adoptio
             </motion.h1>
 
             <motion.div
@@ -164,7 +172,7 @@ export default function AdoptMeCaseStudy() {
                   "Supabase (PostgreSQL, Auth, Storage)",
                   "Tailwind CSS & Framer Motion",
                   "TypeScript",
-                  "Google Gemini 3.0 Pro Integration",
+                  "Google Gemini 2.5 Flash Integration",
                 ].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
@@ -236,19 +244,29 @@ export default function AdoptMeCaseStudy() {
           </div>
         </section>
 
-        {/* 5. MEDIA BENTO GRID — light bg context */}
+        {/* 5. MEDIA BENTO GRID — 8 cards */}
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5" style={{ gridTemplateRows: "auto" }}>
-            {/* Large left card */}
-            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] md:row-span-2" style={{ minHeight: "480px" }}>
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5"
+            style={{ gridAutoRows: "280px" }}
+          >
+
+            {/* 1 — Hero / Smart Matching — col-span-2 row-span-2 */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#111] md:col-span-2 md:row-span-2"
+              style={{ minHeight: "480px" }}
+            >
               <motion.div
                 style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
               >
-                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-6 rounded-2xl select-none">
-                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
-                  <span className="font-black text-sm text-[#111]/40">Quiz / Matching Video</span>
-                </div>
+                <Image
+                  src="/adoptio-hero.png"
+                  alt="AdoptMe strona główna z algorytmem smart matching"
+                  width={1200}
+                  height={760}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
               </motion.div>
               <div
                 className="absolute top-6 left-6 backdrop-blur-md border px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest z-10"
@@ -258,44 +276,195 @@ export default function AdoptMeCaseStudy() {
               </div>
             </div>
 
-            {/* Top-right card */}
-            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
+            {/* 2 — Search & Filters */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7]"
+              style={{ minHeight: "280px" }}
+            >
               <motion.div
                 style={{ y: bentoParallax2 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
               >
-                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-5 rounded-2xl select-none">
-                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
-                  <span className="font-black text-sm text-[#111]/40">Map / Geolocation</span>
-                </div>
+                <Image
+                  src="/adoptio-search.png"
+                  alt="AdoptMe wyszukiwarka z aktywnymi filtrami"
+                  width={1100}
+                  height={720}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
               </motion.div>
-              <div className="absolute top-6 left-6 bg-white/60 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/60 z-10">
-                Interactive Map
+              <div className="absolute top-6 left-6 bg-white/70 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/70 z-10">
+                Search &amp; Filters
               </div>
             </div>
 
-            {/* Bottom-right card */}
-            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7] group" style={{ minHeight: "230px" }}>
+            {/* 3 — Pet Profile */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7]"
+              style={{ minHeight: "280px" }}
+            >
               <motion.div
-                style={{ y: bentoParallax1 }}
-                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
+                style={{ y: bentoParallax3 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
               >
-                <div className="flex flex-col items-center gap-3 bg-[#CACACA]/50 px-8 py-5 rounded-2xl select-none">
-                  <span className="font-bold text-[0.6rem] uppercase tracking-widest text-[#111]/40">Coming Soon</span>
-                  <span className="font-black text-sm text-[#111]/40">Mobile UI</span>
-                </div>
+                <Image
+                  src="/adoptio-pet.png"
+                  alt="Profil zwierzęcia Duszek na AdoptMe"
+                  width={1100}
+                  height={720}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
               </motion.div>
-              <div className="absolute top-6 left-6 bg-white/60 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/60 z-10">
-                App Experience
+              <div className="absolute top-6 left-6 bg-white/70 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/70 z-10">
+                Pet Profile
               </div>
             </div>
+
+            {/* 4 — Lifestyle Quiz — row-span-2 */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#111] md:row-span-2"
+              style={{ minHeight: "480px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax4 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
+              >
+                <Image
+                  src="/adoptio-quiz.png"
+                  alt="Quiz dopasowania stylu życia na AdoptMe"
+                  width={480}
+                  height={880}
+                  className="h-[90%] w-auto object-contain"
+                />
+              </motion.div>
+              <div
+                className="absolute top-6 left-6 backdrop-blur-md border px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest z-10"
+                style={{ backgroundColor: `${BRAND}20`, borderColor: `${BRAND}40`, color: BRAND }}
+              >
+                Lifestyle Quiz
+              </div>
+            </div>
+
+            {/* 5 — Specialists */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7]"
+              style={{ minHeight: "280px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax5 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
+              >
+                <Image
+                  src="/adoptio-specialist.png"
+                  alt="Profil specjalisty na Adoptio"
+                  width={1100}
+                  height={720}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
+              </motion.div>
+              <div className="absolute top-6 left-6 bg-white/70 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/70 z-10">
+                Specialists
+              </div>
+            </div>
+
+            {/* 6 — Blog */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7]"
+              style={{ minHeight: "280px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax9 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
+              >
+                <Image
+                  src="/adoptio-blog.png"
+                  alt="Sekcja blogowa na Adoptio"
+                  width={1100}
+                  height={720}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
+              </motion.div>
+              <div className="absolute top-6 left-6 bg-white/70 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/70 z-10">
+                Blog
+              </div>
+            </div>
+
+            {/* 6 — Shelter Dashboard — col-span-2 row-span-2 */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#111] md:col-span-2 md:row-span-2"
+              style={{ minHeight: "480px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax6 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
+              >
+                <Image
+                  src="/adoptio-dashboard.png"
+                  alt="Panel administracyjny schroniska z KPI"
+                  width={1180}
+                  height={780}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
+              </motion.div>
+              <div className="absolute top-6 left-6 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-white z-10">
+                Shelter Dashboard
+              </div>
+            </div>
+
+            {/* 7 — Kanban Board */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#E4E4E7]"
+              style={{ minHeight: "280px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax7 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%]"
+              >
+                <Image
+                  src="/adoptio-kanban.png"
+                  alt="Kanban zgłoszeń adopcyjnych w panelu admina"
+                  width={1100}
+                  height={720}
+                  className="w-full h-full object-cover object-top opacity-90"
+                />
+              </motion.div>
+              <div className="absolute top-6 left-6 bg-white/70 backdrop-blur-md border border-[#111]/10 px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/70 z-10">
+                Kanban Board
+              </div>
+            </div>
+
+            {/* 8 — Mobile Experience */}
+            <div
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-[#111]"
+              style={{ minHeight: "280px" }}
+            >
+              <motion.div
+                style={{ y: bentoParallax8 }}
+                className="absolute -inset-[15%] w-[130%] h-[130%] flex items-center justify-center"
+              >
+                <Image
+                  src="/adoptio-mobile.png"
+                  alt="Trzy widoki mobilne aplikacji AdoptMe"
+                  width={880}
+                  height={760}
+                  className="h-[90%] w-auto object-contain"
+                />
+              </motion.div>
+              <div
+                className="absolute top-6 left-6 backdrop-blur-md border px-4 py-2 rounded-full text-[0.65rem] font-bold uppercase tracking-widest z-10"
+                style={{ backgroundColor: `${BRAND}20`, borderColor: `${BRAND}40`, color: BRAND }}
+              >
+                Mobile Experience
+              </div>
+            </div>
+
           </div>
         </section>
 
         {/* 6. VISIT WEBSITE */}
         <section className="py-[12vh] px-[4vw] bg-[#F5F5F4] flex items-center justify-center">
           <a
-            href="https://adoptme-red.vercel.app/"
+            href="https://adoptio.pl"
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-4"
@@ -339,13 +508,15 @@ export default function AdoptMeCaseStudy() {
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t('case.upnext')}</span>
           </div>
           <a
-            href="/projects/classified"
-            aria-label="View next project: Classified"
+            href="/projects/legalray"
+            aria-label="View next project: LegalRay"
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#1A1A1A] z-0 transition-transform duration-1000 group-hover:scale-105 border border-white/5" />
+            <div className="absolute inset-0 bg-[#2563EB] z-0 transition-transform duration-1000 group-hover:scale-105">
+              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
+            </div>
             <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-6xl md:text-9xl text-white/10 tracking-tighter">???</h2>
+              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">LegalRay</h2>
             </div>
           </a>
         </section>

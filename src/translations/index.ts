@@ -86,7 +86,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.roles.2': 'AI Integration',
     'legalray.roles.3': 'UI/UX Design',
 
-    // ── Case Study — Adopt.me ──
+    // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Case Study — 2026',
     'adoptme.headline': 'Connect hearts,\nnot just profiles.',
     'adoptme.desc': 'An innovative social platform connecting animal shelters with conscious adopters. A smart matching system based on lifestyle, housing conditions, and personal preferences ensures every pet gets a chance to find the perfect, safe home.',
@@ -120,7 +120,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.marquee.row3.2': 'NEGOTIATION ASSISTANT',
     'legalray.marquee.row3.3': 'B2B SAAS',
 
-    // ── Adopt.me Marquee ──
+    // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'SMART MATCHING',
     'adoptme.marquee.row1.2': 'REGIONAL SEARCH',
     'adoptme.marquee.row1.3': 'SHELTER NETWORK',
@@ -223,7 +223,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.roles.2': 'Integracja AI',
     'legalray.roles.3': 'Projektowanie UI/UX',
 
-    // ── Case Study — Adopt.me ──
+    // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Case Study — 2026',
     'adoptme.headline': 'Łącz serca,\nnie tylko profile.',
     'adoptme.desc': 'Innowacyjna platforma społecznościowa łącząca schroniska ze świadomymi adoptującymi. Inteligentny system matchingu oparty na stylu życia, warunkach mieszkaniowych i osobistych preferencjach daje każdemu zwierzęciu szansę na znalezienie idealnego, bezpiecznego domu.',
@@ -257,7 +257,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.marquee.row3.2': 'ASYSTENT NEGOCJACJI',
     'legalray.marquee.row3.3': 'B2B SAAS',
 
-    // ── Adopt.me Marquee ──
+    // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'INTELIGENTNY MATCHING',
     'adoptme.marquee.row1.2': 'LOKALNE WYSZUKIWANIE',
     'adoptme.marquee.row1.3': 'SIEĆ SCHRONISK',
