@@ -60,7 +60,9 @@ export default function AdoptMeCaseStudy() {
     const slide = slideRefs.current[index];
     const carousel = carouselRef.current;
     if (slide && carousel) {
-      carousel.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+      const scrollTarget =
+        carousel.scrollLeft + slide.getBoundingClientRect().left - carousel.getBoundingClientRect().left;
+      carousel.scrollTo({ left: scrollTarget, behavior: "smooth" });
     }
   }, []);
 
@@ -310,11 +312,12 @@ export default function AdoptMeCaseStudy() {
         {/* 5. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
           <div className="relative">
-            {/* Scroll track */}
+            {/* Scroll track — fixed height, items centered */}
             <div
               ref={carouselRef}
-              className="flex gap-4 md:gap-5 overflow-x-auto pl-[4vw]"
+              className="flex items-center gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw]"
               style={{
+                height: "clamp(500px, 70vh, 800px)",
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -329,18 +332,17 @@ export default function AdoptMeCaseStudy() {
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
                   className="flex-shrink-0 flex flex-col gap-3 select-none"
-                  style={{ scrollSnapAlign: "start", width: "min(80vw, 1200px)" }}
+                  style={{ scrollSnapAlign: "start", width: "min(80vw, 1200px)", height: "90%" }}
                 >
                   <span
-                    className="block text-[11px] font-semibold uppercase"
+                    className="flex-shrink-0 block text-[11px] font-semibold uppercase"
                     style={{ color: BRAND, letterSpacing: "0.15em" }}
                   >
                     {slide.label}
                   </span>
                   <div
-                    className="relative overflow-hidden rounded-[12px] bg-[#E4E4E7]"
+                    className="relative flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7]"
                     style={{
-                      height: "clamp(220px, 52vh, 660px)",
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
                     }}
@@ -355,7 +357,7 @@ export default function AdoptMeCaseStudy() {
                       alt={slide.alt}
                       fill
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 85vw, min(80vw, 1200px)"
-                      className="object-cover object-top"
+                      className="object-contain object-center"
                       draggable={false}
                     />
                   </div>
@@ -371,7 +373,7 @@ export default function AdoptMeCaseStudy() {
               disabled={activeSlide === 0}
               aria-label="Previous slide"
               className="hidden md:flex absolute left-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "calc(50% + 14px)", transform: "translateY(-50%)" }}
+              style={{ top: "50%", transform: "translateY(-50%)" }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -384,7 +386,7 @@ export default function AdoptMeCaseStudy() {
               disabled={activeSlide === SLIDES.length - 1}
               aria-label="Next slide"
               className="hidden md:flex absolute right-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "calc(50% + 14px)", transform: "translateY(-50%)" }}
+              style={{ top: "50%", transform: "translateY(-50%)" }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
