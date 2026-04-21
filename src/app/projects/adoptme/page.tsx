@@ -262,7 +262,7 @@ export default function AdoptMeCaseStudy() {
               >
                 <Image
                   src="/adoptio-hero.png"
-                  alt="AdoptMe strona główna z algorytmem smart matching"
+                  alt="Adoptio strona główna z algorytmem smart matching"
                   width={1200}
                   height={760}
                   className="w-full h-full object-cover object-top opacity-90"
@@ -287,7 +287,7 @@ export default function AdoptMeCaseStudy() {
               >
                 <Image
                   src="/adoptio-search.png"
-                  alt="AdoptMe wyszukiwarka z aktywnymi filtrami"
+                  alt="Adoptio wyszukiwarka z aktywnymi filtrami"
                   width={1100}
                   height={720}
                   className="w-full h-full object-cover object-top opacity-90"
@@ -309,7 +309,7 @@ export default function AdoptMeCaseStudy() {
               >
                 <Image
                   src="/adoptio-pet.png"
-                  alt="Profil zwierzęcia Duszek na AdoptMe"
+                  alt="Profil zwierzęcia Duszek na Adoptio"
                   width={1100}
                   height={720}
                   className="w-full h-full object-cover object-top opacity-90"
@@ -331,7 +331,7 @@ export default function AdoptMeCaseStudy() {
               >
                 <Image
                   src="/adoptio-quiz.png"
-                  alt="Quiz dopasowania stylu życia na AdoptMe"
+                  alt="Quiz dopasowania stylu życia na Adoptio"
                   width={480}
                   height={880}
                   className="h-[90%] w-auto object-contain"
@@ -444,7 +444,7 @@ export default function AdoptMeCaseStudy() {
               >
                 <Image
                   src="/adoptio-mobile.png"
-                  alt="Trzy widoki mobilne aplikacji AdoptMe"
+                  alt="Trzy widoki mobilne aplikacji Adoptio"
                   width={880}
                   height={760}
                   className="h-[90%] w-auto object-contain"
