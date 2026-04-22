@@ -9,16 +9,18 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const BRAND = "#F97316";
 
-const SLIDES = [
-  { src: "/adoptio-hero.png",       label: "SMART MATCHING",    alt: "Adoptio strona główna z algorytmem smart matching" },
-  { src: "/adoptio-search.png",     label: "SEARCH & FILTERS",  alt: "Adoptio wyszukiwarka z aktywnymi filtrami" },
-  { src: "/adoptio-quiz.png",       label: "LIFESTYLE QUIZ",    alt: "Quiz dopasowania stylu życia na Adoptio" },
-  { src: "/adoptio-pet.png",        label: "PET PROFILE",       alt: "Profil zwierzęcia Duszek na Adoptio" },
-  { src: "/adoptio-mobile.png",     label: "MOBILE EXPERIENCE", alt: "Trzy widoki mobilne aplikacji Adoptio" },
-  { src: "/adoptio-dashboard.png",  label: "SHELTER DASHBOARD", alt: "Panel administracyjny schroniska z KPI" },
-  { src: "/adoptio-specialist.png", label: "SPECIALISTS",       alt: "Profil specjalisty na Adoptio" },
-  { src: "/adoptio-kanban.png",     label: "ADOPTION KANBAN",   alt: "Kanban zgłoszeń adopcyjnych w panelu admina" },
-  { src: "/adoptio-blog.png",       label: "BLOG",              alt: "Sekcja blogowa na Adoptio" },
+type SlideType = "macbook" | "flat" | "mobile";
+
+const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
+  { src: "/adoptio-hero.png",       label: "SMART MATCHING",    alt: "Adoptio strona główna z algorytmem smart matching", type: "macbook" },
+  { src: "/adoptio-search.png",     label: "SEARCH & FILTERS",  alt: "Adoptio wyszukiwarka z aktywnymi filtrami",          type: "flat"    },
+  { src: "/adoptio-quiz.png",       label: "LIFESTYLE QUIZ",    alt: "Quiz dopasowania stylu życia na Adoptio",            type: "macbook" },
+  { src: "/adoptio-pet.png",        label: "PET PROFILE",       alt: "Profil zwierzęcia Duszek na Adoptio",                type: "flat"    },
+  { src: "/adoptio-mobile.png",     label: "MOBILE EXPERIENCE", alt: "Trzy widoki mobilne aplikacji Adoptio",              type: "mobile"  },
+  { src: "/adoptio-dashboard.png",  label: "SHELTER DASHBOARD", alt: "Panel administracyjny schroniska z KPI",             type: "macbook" },
+  { src: "/adoptio-specialist.png", label: "SPECIALISTS",       alt: "Profil specjalisty na Adoptio",                      type: "flat"    },
+  { src: "/adoptio-kanban.png",     label: "ADOPTION KANBAN",   alt: "Kanban zgłoszeń adopcyjnych w panelu admina",        type: "flat"    },
+  { src: "/adoptio-blog.png",       label: "BLOG",              alt: "Sekcja blogowa na Adoptio",                          type: "flat"    },
 ];
 
 export default function AdoptMeCaseStudy() {
@@ -319,9 +321,8 @@ export default function AdoptMeCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw]"
+              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw] h-auto md:h-[70vh]"
               style={{
-                height: "clamp(480px, 70vh, 860px)",
                 scrollSnapType: "x mandatory",
                 scrollPaddingLeft: "4vw",
                 scrollbarWidth: "none",
@@ -336,8 +337,8 @@ export default function AdoptMeCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw]"
-                  style={{ scrollSnapAlign: "start", height: "100%" }}
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw] h-auto md:h-full"
+                  style={{ scrollSnapAlign: "start" }}
                 >
                   <span
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
@@ -346,7 +347,7 @@ export default function AdoptMeCaseStudy() {
                     {slide.label}
                   </span>
                   <div
-                    className="flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7]"
+                    className="flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -363,7 +364,11 @@ export default function AdoptMeCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px", display: "block" }}
+                      style={
+                        slide.type === "flat"
+                          ? { width: "80%", height: "auto", maxHeight: "70vh", objectFit: "contain", margin: "0 auto", display: "block", borderRadius: "12px" }
+                          : { width: "auto", height: "70vh", maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: "12px" }
+                      }
                       draggable={false}
                     />
                   </div>
