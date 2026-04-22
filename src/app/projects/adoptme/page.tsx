@@ -321,10 +321,9 @@ export default function AdoptMeCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw] h-auto md:h-[70vh]"
+              className="flex items-start gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-auto"
               style={{
                 scrollSnapType: "x mandatory",
-                scrollPaddingLeft: "4vw",
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
                 cursor: isDragging ? "grabbing" : "grab",
@@ -337,8 +336,8 @@ export default function AdoptMeCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw] h-auto md:h-full"
-                  style={{ scrollSnapAlign: "start" }}
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px]"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   <span
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
@@ -364,18 +363,12 @@ export default function AdoptMeCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={
-                        slide.type === "flat"
-                          ? { width: "80%", height: "auto", maxHeight: "70vh", objectFit: "contain", margin: "0 auto", display: "block", borderRadius: "12px" }
-                          : { width: "auto", height: "70vh", maxWidth: "100%", objectFit: "contain", display: "block", borderRadius: "12px" }
-                      }
+                      style={{ width: "100%", height: "auto", maxHeight: "65vh", objectFit: "contain", display: "block", borderRadius: "12px" }}
                       draggable={false}
                     />
                   </div>
                 </div>
               ))}
-              {/* Trailing spacer — mirrors left padding */}
-              <div className="flex-shrink-0 w-[4vw]" aria-hidden="true" />
             </div>
 
             {/* Prev arrow — desktop only, hidden on first slide */}
@@ -383,7 +376,8 @@ export default function AdoptMeCaseStudy() {
               <button
                 onClick={goPrev}
                 aria-label="Previous slide"
-                className="hidden md:flex absolute left-0 z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
                 style={{ top: "50%", transform: "translateY(-50%)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -397,8 +391,8 @@ export default function AdoptMeCaseStudy() {
               <button
                 onClick={goNext}
                 aria-label="Next slide"
-                className="hidden md:flex absolute right-0 z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
-                style={{ top: "50%", transform: "translateY(-50%)" }}
+                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
