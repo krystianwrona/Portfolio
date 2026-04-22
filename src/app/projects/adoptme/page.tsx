@@ -244,7 +244,7 @@ export default function AdoptMeCaseStudy() {
                   "Supabase (PostgreSQL, Auth, Storage)",
                   "Tailwind CSS & Framer Motion",
                   "TypeScript",
-                  "Google Gemini 2.5 Flash Integration",
+                  "Google Gemini 3.0 Flash Integration",
                 ].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
@@ -418,7 +418,7 @@ export default function AdoptMeCaseStudy() {
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-4"
           >
-            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-[#111] transition-colors duration-300 group-hover:text-[#F97316]">
+            <span className="font-sans font-black text-[8vw] md:text-[6vw] tracking-tighter text-[#111] transition-colors duration-300 group-hover:text-[#F97316]">
               {t("case.visitwebsite")}
             </span>
             <span className="text-[2vw] text-[#111] group-hover:translate-x-2 transition-transform duration-300">→</span>
