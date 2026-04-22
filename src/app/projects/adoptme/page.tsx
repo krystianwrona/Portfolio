@@ -321,7 +321,7 @@ export default function AdoptMeCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-start gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-auto"
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -336,7 +336,7 @@ export default function AdoptMeCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px]"
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px] h-full items-center justify-center"
                   style={{ scrollSnapAlign: "center" }}
                 >
                   <span
@@ -346,7 +346,7 @@ export default function AdoptMeCaseStudy() {
                     {slide.label}
                   </span>
                   <div
-                    className="flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -363,7 +363,7 @@ export default function AdoptMeCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "100%", height: "auto", maxHeight: "65vh", objectFit: "contain", display: "block", borderRadius: "12px" }}
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px" }}
                       draggable={false}
                     />
                   </div>
