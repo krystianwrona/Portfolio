@@ -319,9 +319,8 @@ export default function AdoptMeCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw]"
+              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw] md:[height:clamp(480px,70vh,860px)]"
               style={{
-                height: "clamp(480px, 70vh, 860px)",
                 scrollSnapType: "x mandatory",
                 scrollPaddingLeft: "4vw",
                 scrollbarWidth: "none",
@@ -336,8 +335,8 @@ export default function AdoptMeCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw]"
-                  style={{ scrollSnapAlign: "start", height: "100%" }}
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw] md:h-full"
+                  style={{ scrollSnapAlign: "start" }}
                 >
                   <span
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
@@ -346,7 +345,7 @@ export default function AdoptMeCaseStudy() {
                     {slide.label}
                   </span>
                   <div
-                    className="flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7]"
+                    className="overflow-hidden rounded-[12px] bg-[#E4E4E7] md:flex-1"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -363,7 +362,8 @@ export default function AdoptMeCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px", display: "block" }}
+                      className="w-full h-auto max-h-[50vh] object-contain md:h-full md:max-h-none md:object-cover"
+                      style={{ display: "block" }}
                       draggable={false}
                     />
                   </div>
@@ -404,7 +404,7 @@ export default function AdoptMeCaseStudy() {
 
           {/* Slide counter */}
           <div className="flex justify-end px-[4vw] mt-5">
-            <span className="font-mono text-sm font-medium text-[#111111]">
+            <span className="font-mono text-base md:text-sm font-medium text-[#111111]">
               {String(activeSlide + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SLIDES.length).padStart(2, "0")}
             </span>
           </div>
