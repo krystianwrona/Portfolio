@@ -11,13 +11,13 @@ const BRAND = "#F97316";
 
 const SLIDES = [
   { src: "/adoptio-hero.png",       label: "SMART MATCHING",    alt: "Adoptio strona główna z algorytmem smart matching" },
-  { src: "/adoptio-quiz.png",       label: "LIFESTYLE QUIZ",    alt: "Quiz dopasowania stylu życia na Adoptio" },
-  { src: "/adoptio-mobile.png",     label: "MOBILE EXPERIENCE", alt: "Trzy widoki mobilne aplikacji Adoptio" },
   { src: "/adoptio-search.png",     label: "SEARCH & FILTERS",  alt: "Adoptio wyszukiwarka z aktywnymi filtrami" },
+  { src: "/adoptio-quiz.png",       label: "LIFESTYLE QUIZ",    alt: "Quiz dopasowania stylu życia na Adoptio" },
   { src: "/adoptio-pet.png",        label: "PET PROFILE",       alt: "Profil zwierzęcia Duszek na Adoptio" },
+  { src: "/adoptio-mobile.png",     label: "MOBILE EXPERIENCE", alt: "Trzy widoki mobilne aplikacji Adoptio" },
   { src: "/adoptio-dashboard.png",  label: "SHELTER DASHBOARD", alt: "Panel administracyjny schroniska z KPI" },
-  { src: "/adoptio-kanban.png",     label: "ADOPTION KANBAN",   alt: "Kanban zgłoszeń adopcyjnych w panelu admina" },
   { src: "/adoptio-specialist.png", label: "SPECIALISTS",       alt: "Profil specjalisty na Adoptio" },
+  { src: "/adoptio-kanban.png",     label: "ADOPTION KANBAN",   alt: "Kanban zgłoszeń adopcyjnych w panelu admina" },
   { src: "/adoptio-blog.png",       label: "BLOG",              alt: "Sekcja blogowa na Adoptio" },
 ];
 
@@ -60,9 +60,13 @@ export default function AdoptMeCaseStudy() {
     const slide = slideRefs.current[index];
     const carousel = carouselRef.current;
     if (slide && carousel) {
+      const scrollPL = parseFloat(getComputedStyle(carousel).scrollPaddingLeft) || carousel.clientWidth * 0.04;
       const scrollTarget =
-        carousel.scrollLeft + slide.getBoundingClientRect().left - carousel.getBoundingClientRect().left;
-      carousel.scrollTo({ left: scrollTarget, behavior: "smooth" });
+        carousel.scrollLeft +
+        slide.getBoundingClientRect().left -
+        carousel.getBoundingClientRect().left -
+        scrollPL;
+      carousel.scrollTo({ left: Math.max(0, scrollTarget), behavior: "smooth" });
     }
   }, []);
 
@@ -312,13 +316,13 @@ export default function AdoptMeCaseStudy() {
         {/* 5. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
           <div className="relative">
-            {/* Scroll track — fixed height, items centered */}
+            {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-center gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw]"
+              className="flex items-start gap-4 md:gap-5 overflow-x-auto overflow-y-hidden pl-[4vw]"
               style={{
-                height: "clamp(500px, 70vh, 800px)",
                 scrollSnapType: "x mandatory",
+                scrollPaddingLeft: "4vw",
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
                 cursor: isDragging ? "grabbing" : "grab",
@@ -331,17 +335,17 @@ export default function AdoptMeCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none"
-                  style={{ scrollSnapAlign: "start", width: "min(80vw, 1200px)", height: "90%" }}
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[95vw] md:w-[90vw] lg:w-[80vw]"
+                  style={{ scrollSnapAlign: "start" }}
                 >
                   <span
-                    className="flex-shrink-0 block text-[11px] font-semibold uppercase"
+                    className="flex-shrink-0 block text-[10px] font-semibold uppercase"
                     style={{ color: BRAND, letterSpacing: "0.15em" }}
                   >
                     {slide.label}
                   </span>
                   <div
-                    className="relative flex-1 overflow-hidden rounded-[12px] bg-[#E4E4E7]"
+                    className="overflow-hidden rounded-[12px] bg-[#E4E4E7]"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -355,43 +359,46 @@ export default function AdoptMeCaseStudy() {
                     <Image
                       src={slide.src}
                       alt={slide.alt}
-                      fill
-                      sizes="(max-width: 768px) 95vw, (max-width: 1024px) 85vw, min(80vw, 1200px)"
-                      className="object-contain object-center"
+                      width={1600}
+                      height={1000}
+                      sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
+                      style={{ width: "100%", height: "auto", maxHeight: "75vh", objectFit: "contain", display: "block" }}
                       draggable={false}
                     />
                   </div>
                 </div>
               ))}
-              {/* Trailing spacer so last slide scrolls fully into view */}
+              {/* Trailing spacer — mirrors left padding */}
               <div className="flex-shrink-0 w-[4vw]" aria-hidden="true" />
             </div>
 
-            {/* Prev arrow — desktop only */}
-            <button
-              onClick={goPrev}
-              disabled={activeSlide === 0}
-              aria-label="Previous slide"
-              className="hidden md:flex absolute left-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {/* Prev arrow — desktop only, hidden on first slide */}
+            {activeSlide > 0 && (
+              <button
+                onClick={goPrev}
+                aria-label="Previous slide"
+                className="hidden md:flex absolute left-0 z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ top: "50%", transform: "translateY(-50%)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
 
-            {/* Next arrow — desktop only */}
-            <button
-              onClick={goNext}
-              disabled={activeSlide === SLIDES.length - 1}
-              aria-label="Next slide"
-              className="hidden md:flex absolute right-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "50%", transform: "translateY(-50%)" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {/* Next arrow — desktop only, hidden on last slide */}
+            {activeSlide < SLIDES.length - 1 && (
+              <button
+                onClick={goNext}
+                aria-label="Next slide"
+                className="hidden md:flex absolute right-0 z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ top: "50%", transform: "translateY(-50%)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Slide counter */}
