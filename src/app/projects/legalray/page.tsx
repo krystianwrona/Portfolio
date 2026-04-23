@@ -9,14 +9,15 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const BRAND = "#2563EB";
 
-// TODO: drop legalray-*.png files into /public/ to populate the carousel
-const SLIDES = [
-  { src: "/legalray-hero.png",        label: "AI CONTRACT AUDIT",    alt: "LegalRay główny ekran audytu umów AI" },
-  { src: "/legalray-analysis.png",    label: "DEEP ANALYSIS",        alt: "LegalRay szczegółowa analiza prawna" },
-  { src: "/legalray-negotiation.png", label: "NEGOTIATION ASSISTANT", alt: "LegalRay asystent negocjacji" },
-  { src: "/legalray-paywall.png",     label: "RISK PAYWALL",         alt: "LegalRay zamazane ryzyka — paywall" },
-  { src: "/legalray-dashboard.png",   label: "DASHBOARD",            alt: "LegalRay panel użytkownika" },
-  { src: "/legalray-upload.png",      label: "DOCUMENT UPLOAD",      alt: "LegalRay upload dokumentu" },
+type SlideType = "macbook" | "flat" | "mobile";
+
+const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
+  { src: "/legalray-report.png",  label: "LEGAL REPORT",      alt: "LegalRay raport prawny",             type: "macbook" },
+  { src: "/legalray-hero.png",    label: "LANDING PAGE",      alt: "LegalRay strona główna",             type: "macbook" },
+  { src: "/legalray-mobile.png",  label: "MOBILE APP",        alt: "LegalRay aplikacja mobilna",         type: "mobile"  },
+  { src: "/legalray-team.png",    label: "TEAM MANAGEMENT",   alt: "LegalRay zarządzanie zespołem",      type: "flat"    },
+  { src: "/legalray-loading.png", label: "AI ANALYSIS",       alt: "LegalRay analiza AI w toku",         type: "flat"    },
+  { src: "/legalray-paywall.png", label: "MONETIZATION",      alt: "LegalRay zamazane ryzyka — paywall", type: "flat"    },
 ];
 
 export default function LegalRayCaseStudy() {
@@ -58,7 +59,13 @@ export default function LegalRayCaseStudy() {
     const slide = slideRefs.current[index];
     const carousel = carouselRef.current;
     if (slide && carousel) {
-      carousel.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+      const scrollPL = parseFloat(getComputedStyle(carousel).scrollPaddingLeft) || carousel.clientWidth * 0.04;
+      const scrollTarget =
+        carousel.scrollLeft +
+        slide.getBoundingClientRect().left -
+        carousel.getBoundingClientRect().left -
+        scrollPL;
+      carousel.scrollTo({ left: Math.max(0, scrollTarget), behavior: "smooth" });
     }
   }, []);
 
@@ -318,7 +325,7 @@ export default function LegalRayCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex gap-4 md:gap-5 overflow-x-auto pl-[4vw]"
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -333,24 +340,24 @@ export default function LegalRayCaseStudy() {
                 <div
                   key={slide.src}
                   ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none"
-                  style={{ scrollSnapAlign: "start", width: "min(80vw, 1200px)" }}
+                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px] h-full items-center justify-center"
+                  style={{ scrollSnapAlign: "center" }}
                 >
                   <span
-                    className="block text-[11px] font-semibold uppercase"
+                    className="flex-shrink-0 block text-[10px] font-semibold uppercase"
                     style={{ color: BRAND, letterSpacing: "0.15em" }}
                   >
                     {slide.label}
                   </span>
                   <div
-                    className="relative overflow-hidden rounded-[12px] bg-[#E4E4E7]"
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
                     style={{
-                      height: "clamp(220px, 52vh, 660px)",
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
                     }}
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
+                      if (window.innerWidth < 768) return;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
@@ -358,42 +365,44 @@ export default function LegalRayCaseStudy() {
                     <Image
                       src={slide.src}
                       alt={slide.alt}
-                      fill
-                      sizes="(max-width: 768px) 95vw, (max-width: 1024px) 85vw, min(80vw, 1200px)"
-                      className="object-cover object-top"
+                      width={1600}
+                      height={1000}
+                      sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px" }}
                       draggable={false}
                     />
                   </div>
                 </div>
               ))}
-              <div className="flex-shrink-0 w-[4vw]" aria-hidden="true" />
             </div>
 
-            {/* Prev arrow — desktop only */}
-            <button
-              onClick={goPrev}
-              disabled={activeSlide === 0}
-              aria-label="Previous slide"
-              className="hidden md:flex absolute left-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "calc(50% + 14px)", transform: "translateY(-50%)" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {/* Prev arrow — desktop only, hidden on first slide */}
+            {activeSlide > 0 && (
+              <button
+                onClick={goPrev}
+                aria-label="Previous slide"
+                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
 
-            {/* Next arrow — desktop only */}
-            <button
-              onClick={goNext}
-              disabled={activeSlide === SLIDES.length - 1}
-              aria-label="Next slide"
-              className="hidden md:flex absolute right-2 z-10 w-12 h-12 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
-              style={{ top: "calc(50% + 14px)", transform: "translateY(-50%)" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            {/* Next arrow — desktop only, hidden on last slide */}
+            {activeSlide < SLIDES.length - 1 && (
+              <button
+                onClick={goNext}
+                aria-label="Next slide"
+                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Slide counter */}
