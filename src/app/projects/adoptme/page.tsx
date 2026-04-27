@@ -167,7 +167,7 @@ export default function AdoptMeCaseStudy() {
               className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
-              Adoptio
+              ADOPTIO
             </motion.h1>
 
             <motion.div
@@ -353,6 +353,7 @@ export default function AdoptMeCaseStudy() {
                     }}
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
+                      if (window.innerWidth < 768) return;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}

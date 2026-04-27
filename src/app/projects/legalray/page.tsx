@@ -164,7 +164,7 @@ export default function LegalRayCaseStudy() {
               className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
-              LegalRay
+              LEGALRAY
             </motion.h1>
 
             <motion.div
