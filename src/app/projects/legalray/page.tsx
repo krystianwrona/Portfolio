@@ -368,7 +368,7 @@ export default function LegalRayCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.125)", transformOrigin: "center center" } : {}) }}
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
                       draggable={false}
                     />
                   </div>
