@@ -10,6 +10,7 @@
 
 ## Struktura
 - `src/app/page.tsx` — główna strona (hero, projekty, beyond the code, kontakt)
+- `src/app/projects/folk-culture-center/page.tsx` — case study Centrum Kultury Ludowej (praca magisterska 2023)
 - `src/app/projects/legalray/page.tsx` — case study LegalRay
 - `src/app/projects/adoptme/page.tsx` — case study Adoptio
 - `src/app/projects/classified/page.tsx` — case study Confidential
@@ -28,9 +29,15 @@
 - Case study: ciemny hero z brand color + jasny content poniżej
 
 ## Brand colors
+- Folk Culture Center: no brand color (white on dark / black on light)
 - LegalRay: #2563EB (Blue-600)
 - Adoptio: #F97316 (Orange-500)
 - Confidential: #1A1A1A
+
+## Projects order (homepage + Up Next chain)
+1. Folk Culture Center → /projects/folk-culture-center → Up Next: Adoptio
+2. Adoptio → /projects/adoptme → Up Next: LegalRay
+3. LegalRay → /projects/legalray → Up Next: Folk Culture Center
 
 ## Ważne
 - NIGDY nie zmieniaj logiki ptaka (CrowShaderMesh) bez pytania

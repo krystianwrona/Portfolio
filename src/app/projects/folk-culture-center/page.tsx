@@ -7,20 +7,19 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
-const BRAND = "#2563EB";
-
-type SlideType = "macbook" | "flat" | "mobile";
+type SlideType = "flat";
 
 const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
-  { src: "/legalray-report.png",  label: "LEGAL REPORT",      alt: "LegalRay raport prawny",             type: "macbook" },
-  { src: "/legalray-hero.png",    label: "LANDING PAGE",      alt: "LegalRay strona główna",             type: "macbook" },
-  { src: "/legalray-mobile.png",  label: "MOBILE APP",        alt: "LegalRay aplikacja mobilna",         type: "mobile"  },
-  { src: "/legalray-team.png",    label: "TEAM MANAGEMENT",   alt: "LegalRay zarządzanie zespołem",      type: "flat"    },
-  { src: "/legalray-loading.png", label: "AI ANALYSIS",       alt: "LegalRay analiza AI w toku",         type: "flat"    },
-  { src: "/legalray-paywall.png", label: "MONETIZATION",      alt: "LegalRay zamazane ryzyka — paywall", type: "flat"    },
+  { src: "/ckl-aerial.jpg",       label: "AERIAL VIEW",         alt: "Folk Culture Center — aerial view of the site",          type: "flat" },
+  { src: "/ckl-axonometry.jpg",   label: "EXPLODED AXONOMETRY", alt: "Folk Culture Center — exploded axonometric drawing",     type: "flat" },
+  { src: "/ckl-site.jpg",         label: "SITE ANALYSIS",       alt: "Folk Culture Center — site analysis diagram",            type: "flat" },
+  { src: "/ckl-plans.jpg",        label: "FLOOR PLANS",         alt: "Folk Culture Center — underground floor plans",          type: "flat" },
+  { src: "/ckl-underground.jpg",  label: "UNDERGROUND LEVELS",  alt: "Folk Culture Center — underground level section",        type: "flat" },
+  { src: "/ckl-sections-bc.jpg",  label: "SECTIONS B-C",        alt: "Folk Culture Center — building sections B and C",        type: "flat" },
+  { src: "/ckl-concert-hall.jpg", label: "CONCERT HALL",        alt: "Folk Culture Center — concert hall interior rendering",  type: "flat" },
 ];
 
-export default function LegalRayCaseStudy() {
+export default function FolkCultureCenterCaseStudy() {
   const router = useRouter();
   const containerRef = useRef<HTMLElement>(null);
   const [isExiting, setIsExiting] = useState(false);
@@ -103,11 +102,11 @@ export default function LegalRayCaseStudy() {
     setTimeout(() => router.push("/"), 250);
   };
 
-  const features = [
-    { title: t("legalray.feature1.title"), desc: t("legalray.feature1.desc") },
-    { title: t("legalray.feature2.title"), desc: t("legalray.feature2.desc") },
-    { title: t("legalray.feature3.title"), desc: t("legalray.feature3.desc") },
-    { title: t("legalray.feature4.title"), desc: t("legalray.feature4.desc") },
+  const decisions = [
+    { title: t("ckl.feature1.title"), desc: t("ckl.feature1.desc") },
+    { title: t("ckl.feature2.title"), desc: t("ckl.feature2.desc") },
+    { title: t("ckl.feature3.title"), desc: t("ckl.feature3.desc") },
+    { title: t("ckl.feature4.title"), desc: t("ckl.feature4.desc") },
   ];
 
   return (
@@ -137,7 +136,7 @@ export default function LegalRayCaseStudy() {
                 "repeating-linear-gradient(0deg, #fff 0px, transparent 1px, transparent 80px), repeating-linear-gradient(90deg, #fff 0px, transparent 1px, transparent 80px)",
             }}
           />
-          <div className="absolute top-0 left-0 w-[60vw] h-[60vh] bg-[radial-gradient(ellipse_at_0%_0%,_rgba(37,99,235,0.12),_transparent_60%)] pointer-events-none" />
+          <div className="absolute top-0 left-0 w-[60vw] h-[60vh] bg-[radial-gradient(ellipse_at_0%_0%,_rgba(255,255,255,0.04),_transparent_60%)] pointer-events-none" />
 
           <Link
             href="/#projects"
@@ -154,17 +153,17 @@ export default function LegalRayCaseStudy() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-white/30 mb-6"
             >
-              {t("legalray.subtitle")}
+              {t("ckl.subtitle")}
             </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="font-display font-black leading-none tracking-tighter mb-8"
-              style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
+              className="font-display font-black leading-none tracking-tighter mb-4 text-white"
+              style={{ fontSize: "clamp(3rem, 8vw, 9rem)" }}
             >
-              LEGALRAY
+              CENTRUM<br />KULTURY<br />LUDOWEJ
             </motion.h1>
 
             <motion.div
@@ -173,11 +172,11 @@ export default function LegalRayCaseStudy() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="flex flex-col gap-4 md:gap-6"
             >
-              <p className="font-display font-black text-2xl md:text-3xl text-white/90 tracking-tight max-w-xl leading-tight">
-                {t("legalray.tagline")}
+              <p className="font-display font-black text-2xl md:text-3xl text-white/80 tracking-tight max-w-xl leading-tight">
+                {t("ckl.tagline")}
               </p>
-              <p className="text-base leading-[1.65] text-white/70 font-medium max-w-lg">
-                {t("legalray.desc")}
+              <p className="text-base leading-[1.65] text-white/60 font-medium max-w-lg">
+                {t("ckl.desc")}
               </p>
             </motion.div>
           </div>
@@ -188,14 +187,14 @@ export default function LegalRayCaseStudy() {
             transition={{ delay: 1.2, duration: 0.8 }}
             className="absolute bottom-10 right-[4vw] flex flex-col items-center gap-2"
           >
-            <div className="w-[1px] h-12 bg-white/30 overflow-hidden">
+            <div className="w-[1px] h-12 bg-white/20 overflow-hidden">
               <motion.div
                 animate={shouldReduceMotion ? {} : { y: [0, 48] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                className="w-full h-1/2 bg-white"
+                className="w-full h-1/2 bg-white/60"
               />
             </div>
-            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/40 [writing-mode:vertical-lr]">
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/20 [writing-mode:vertical-lr]">
               {t("case.scrolldown")}
             </span>
           </motion.div>
@@ -217,27 +216,14 @@ export default function LegalRayCaseStudy() {
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
                 <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.roles")}</p>
                 <ul className="space-y-2">
-                  {[t("legalray.roles.1"), t("legalray.roles.2"), t("legalray.roles.3")].map((r) => (
+                  {[t("ckl.roles.1"), t("ckl.roles.2"), t("ckl.roles.3")].map((r) => (
                     <li key={r} className="text-base font-bold text-[#111]/80">{r}</li>
                   ))}
                 </ul>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.timeline")}</p>
-                <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t("legalray.timeline")}</p>
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.live")}</p>
-                <a
-                  href="https://legal-saas-rosy.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit LegalRay website (opens in new tab)"
-                  className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
-                  style={{ color: BRAND, borderColor: BRAND }}
-                >
-                  {t("case.visitwebsite")} →
-                </a>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.context")}</p>
+                <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t("ckl.context")}</p>
               </motion.div>
             </div>
 
@@ -249,12 +235,18 @@ export default function LegalRayCaseStudy() {
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}
               className="lg:col-span-7"
             >
-              <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.techstack")}</p>
+              <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.skills")}</p>
               <ul className="flex flex-col gap-3">
-                {["Google Gemini 3.0 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
-                  <li key={tech} className="flex items-center gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
-                    <span className="font-bold text-base text-[#111]/80">{tech}</span>
+                {[
+                  t("ckl.skill.1"),
+                  t("ckl.skill.2"),
+                  t("ckl.skill.3"),
+                  t("ckl.skill.4"),
+                  t("ckl.skill.5"),
+                ].map((skill) => (
+                  <li key={skill} className="flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[#111]" />
+                    <span className="font-bold text-base text-[#111]/80">{skill}</span>
                   </li>
                 ))}
               </ul>
@@ -266,27 +258,27 @@ export default function LegalRayCaseStudy() {
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { labelKey: "legalray.problem.label", textKey: "legalray.problem", bg: "#E4E4E7", color: "#111" },
-              { labelKey: "legalray.solution.label", textKey: "legalray.solution", bg: BRAND,    color: "#fff" },
-              { labelKey: "legalray.result.label",   textKey: "legalray.result",   bg: "#111",   color: "#F8F8F8" },
-            ].map(({ labelKey, textKey, bg, color }, i) => (
+              { labelKey: "ckl.problem.label", textKey: "ckl.problem", bg: "#E4E4E7", color: "#111",    border: false },
+              { labelKey: "ckl.solution.label", textKey: "ckl.solution", bg: "#111111", color: "#fff",  border: false },
+              { labelKey: "ckl.result.label",   textKey: "ckl.result",   bg: "#FFFFFF", color: "#111",  border: true  },
+            ].map(({ labelKey, textKey, bg, color, border }, i) => (
               <motion.div
                 key={labelKey}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="p-10 rounded-[var(--radius-card)] flex flex-col gap-6"
+                className={`p-10 rounded-[var(--radius-card)] flex flex-col gap-6${border ? " border border-[#111]/10" : ""}`}
                 style={{ backgroundColor: bg, color }}
               >
                 <span className="text-[0.65rem] font-bold uppercase tracking-widest opacity-50">{t(labelKey)}</span>
-                <p className="text-[0.95rem] leading-[1.65] font-medium opacity-80">{t(textKey)}</p>
+                <p className="text-[0.95rem] leading-[1.7] font-medium opacity-80">{t(textKey)}</p>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* 4. CORE FEATURES */}
+        {/* 4. CORE DECISIONS */}
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -295,22 +287,22 @@ export default function LegalRayCaseStudy() {
             transition={{ duration: 0.6 }}
             className="mb-12"
           >
-            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/30">{t("case.corefeatures")}</span>
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/30">{t("case.coredecisions")}</span>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map(({ title, desc }, i) => (
+            {decisions.map(({ title, desc }, i) => (
               <motion.div
                 key={title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white hover:border-[#2563EB]/30 transition-colors duration-500 flex flex-col gap-4"
+                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#111]/25"
               >
-                <span className="font-sans font-black text-5xl leading-none" style={{ color: BRAND }}>
+                <span className="font-sans font-black text-5xl leading-none text-[#111]">
                   0{i + 1}
                 </span>
-                <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight group-hover:text-[#2563EB] transition-colors duration-300">
+                <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight">
                   {title}
                 </h2>
                 <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
@@ -322,7 +314,6 @@ export default function LegalRayCaseStudy() {
         {/* 5. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
           <div className="relative">
-            {/* Scroll track */}
             <div
               ref={carouselRef}
               className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
@@ -345,7 +336,7 @@ export default function LegalRayCaseStudy() {
                 >
                   <span
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
-                    style={{ color: BRAND, letterSpacing: "0.15em" }}
+                    style={{ color: "#111111", letterSpacing: "0.15em" }}
                   >
                     {slide.label}
                   </span>
@@ -368,7 +359,7 @@ export default function LegalRayCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", transform: "scale(1.2375)", transformOrigin: "center center" }}
                       draggable={false}
                     />
                   </div>
@@ -376,7 +367,6 @@ export default function LegalRayCaseStudy() {
               ))}
             </div>
 
-            {/* Prev arrow — desktop only, hidden on first slide */}
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
@@ -390,7 +380,6 @@ export default function LegalRayCaseStudy() {
               </button>
             )}
 
-            {/* Next arrow — desktop only, hidden on last slide */}
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
@@ -405,36 +394,25 @@ export default function LegalRayCaseStudy() {
             )}
           </div>
 
-          {/* Slide counter */}
           <div className="flex justify-end px-[4vw] mt-5">
             <span className="font-mono text-sm font-medium text-[#111111]">
               {String(activeSlide + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SLIDES.length).padStart(2, "0")}
             </span>
           </div>
+
+          <div className="px-[4vw] mt-6">
+            <p className="text-[0.65rem] text-[#111]/40 font-medium leading-relaxed">
+              * All drawings and visualizations: Krystian Wrona, Master&apos;s Thesis, Silesian University of Technology, 2023
+            </p>
+          </div>
         </section>
 
-        {/* 6. VISIT WEBSITE */}
-        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
-          <a
-            href="https://legal-saas-rosy.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit LegalRay live website (opens in new tab)"
-            className="group inline-flex items-center gap-4"
-          >
-            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#2563EB]">
-              {t("case.visitwebsite")}
-            </span>
-            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
-          </a>
-        </section>
-
-        {/* 7. MARQUEE */}
+        {/* 6. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
-            { keys: ["legalray.marquee.row1.1", "legalray.marquee.row1.2", "legalray.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
-            { keys: ["legalray.marquee.row2.1", "legalray.marquee.row2.2", "legalray.marquee.row2.3"] as const, dir: "right", color: BRAND,  opacity: 0.25 },
-            { keys: ["legalray.marquee.row3.1", "legalray.marquee.row3.2", "legalray.marquee.row3.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["ckl.marquee.row1.1", "ckl.marquee.row1.2", "ckl.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["ckl.marquee.row2.1", "ckl.marquee.row2.2", "ckl.marquee.row2.3"] as const, dir: "right", color: "#111", opacity: 0.16 },
+            { keys: ["ckl.marquee.row3.1", "ckl.marquee.row3.2", "ckl.marquee.row3.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
           ]).map(({ keys, dir, color, opacity }, i) => {
             const words = keys.map((k) => t(k));
             const repeated = [...words, ...words, ...words, ...words].join(" • ") + " • ";
@@ -455,21 +433,21 @@ export default function LegalRayCaseStudy() {
           })}
         </section>
 
-        {/* 8. NEXT PROJECT */}
+        {/* 7. NEXT PROJECT */}
         <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
           <div className="text-center mb-10">
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
           </div>
           <a
-            href="/projects/folk-culture-center"
-            aria-label="View next project: Folk Culture Center"
+            href="/projects/adoptme"
+            aria-label="View next project: Adoptio"
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#1A1A1A] z-0 transition-transform duration-1000 group-hover:scale-105">
-              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.06),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
+            <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
+              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
             <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-4xl md:text-8xl text-white tracking-tighter">Folk Culture<br />Center</h2>
+              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">Adoptio</h2>
             </div>
           </a>
         </section>
@@ -488,7 +466,6 @@ export default function LegalRayCaseStudy() {
             style={{ backgroundColor: "rgba(0,0,0,0.92)" }}
             onClick={() => setLightboxOpen(false)}
           >
-            {/* Close */}
             <button
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
               aria-label="Close lightbox"
@@ -497,7 +474,6 @@ export default function LegalRayCaseStudy() {
               ✕
             </button>
 
-            {/* Prev */}
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
               aria-label="Previous image"
@@ -509,7 +485,6 @@ export default function LegalRayCaseStudy() {
               </svg>
             </button>
 
-            {/* Image + label */}
             <motion.div
               key={lightboxIndex}
               initial={{ opacity: 0, scale: 0.96 }}
@@ -528,14 +503,13 @@ export default function LegalRayCaseStudy() {
                 style={{ maxWidth: "90vw", maxHeight: "82vh", width: "auto", height: "auto" }}
               />
               <span
-                className="text-[11px] font-semibold uppercase"
-                style={{ color: BRAND, letterSpacing: "0.15em" }}
+                className="text-[11px] font-semibold uppercase text-white/60"
+                style={{ letterSpacing: "0.15em" }}
               >
                 {SLIDES[lightboxIndex].label}
               </span>
             </motion.div>
 
-            {/* Next */}
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
               aria-label="Next image"

@@ -23,9 +23,10 @@ interface ProjectEntry {
 }
 
 const PROJECT_DATA: ProjectEntry[] = [
-  { id: "adoptme",    title: "Adoptio",      categoryKey: "works.adoptme.category",      logo: "AM", color: "#F97316" },
-  { id: "legalray",   title: "LegalRay",     categoryKey: "works.legalray.category",     logo: "LR", logoUrl: "/logo-LR.png", color: "#2563EB" },
-  { id: "classified", title: "Confidential", categoryKey: "works.confidential.category", logo: "XX", color: "#1A1A1A" },
+  { id: "folk-culture-center", title: "Folk Culture Center", categoryKey: "works.ckl.category",      logo: "CK", color: "#FFFFFF" },
+  { id: "adoptme",             title: "Adoptio",             categoryKey: "works.adoptme.category",  logo: "AM", color: "#F97316" },
+  { id: "legalray",            title: "LegalRay",            categoryKey: "works.legalray.category", logo: "LR", logoUrl: "/logo-LR.png", color: "#2563EB" },
+  { id: "classified",          title: "Confidential",        categoryKey: "works.confidential.category", logo: "XX", color: "#1A1A1A" },
 ];
 
 const TECH_ITEMS = [
@@ -678,7 +679,7 @@ export default function Home() {
             {/* Stats — count up */}
             <div className="flex flex-col sm:flex-row gap-4">
               {[
-                { to: 3,  suffix: "+", labelKey: "about.stats.projects", infinity: false },
+                { to: 4,  suffix: "+", labelKey: "about.stats.projects", infinity: false },
                 { to: 8,  suffix: "+", labelKey: "about.stats.tools",    infinity: false },
                 { to: 0,  suffix: "",  labelKey: "about.stats.curiosity", infinity: true  },
               ].map((stat, i) => (
