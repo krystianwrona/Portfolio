@@ -316,7 +316,7 @@ export const translations: Record<string, Record<string, string>> = {
     // ── Case Study — Folk Culture Center (CKL) ──
     'ckl.subtitle': "Projekt magisterski — 2023",
     'ckl.tagline': "Jeden budynek, trzy światy. Żaden nie koliduje z drugim.",
-    'ckl.desc': "Centrum kultury i sala koncertowa zaprojektowane dla Zespołu Pieśni i Tańca „Śląsk" w Koszęcinie. Kluczowe wyzwanie: wcisnąć program o powierzchni 4 400 m² — salę koncertową na 450 osób, muzeum folkloru i administrację — na chronionym terenie parkowym bez ingerencji w krajobraz. Odpowiedzią było schowanie całego budynku pod ziemią.",
+    'ckl.desc': "Centrum kultury i sala koncertowa zaprojektowane dla Zespołu Pieśni i Tańca \"Śląsk\" w Koszęcinie. Kluczowe wyzwanie: wcisnąć program o powierzchni 4 400 m² — salę koncertową na 450 osób, muzeum folkloru i administrację — na chronionym terenie parkowym bez ingerencji w krajobraz. Odpowiedzią było schowanie całego budynku pod ziemią.",
     'ckl.problem.label': '01 — Problem',
     'ckl.problem': "Chroniony park przy historycznym pałacu nie miał miejsca na dużą instytucję kultury — a rezydujący zespół potrzebował profesjonalnej sali koncertowej i muzeum. Jakiekolwiek widoczne struktury zakłóciłyby chroniony krajobraz dziedzictwa. Trzy grupy użytkowników o sprzecznych potrzebach musiały dzielić jedną przestrzeń bez wzajemnych kolizji.",
     'ckl.solution.label': '02 — Rozwiązanie',
