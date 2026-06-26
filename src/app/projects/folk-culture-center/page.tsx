@@ -341,7 +341,7 @@ export default function FolkCultureCenterCaseStudy() {
                     {slide.label}
                   </span>
                   <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -359,7 +359,7 @@ export default function FolkCultureCenterCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", transform: "scale(1.2375)", transformOrigin: "center center" }}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                       draggable={false}
                     />
                   </div>

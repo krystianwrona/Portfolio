@@ -20,6 +20,8 @@ export const translations: Record<string, Record<string, string>> = {
     'works.legalray.category': 'LawTech App',
     'works.adoptme.category': 'Social Platform',
     'works.confidential.category': 'Coming Soon',
+    'works.fashionhero.category': 'Fashion Tech / E-commerce',
+    'works.aniak.category': 'Branding / Campaign',
 
     // ── Beyond the code ──
     'about.title.1': 'Beyond the',
@@ -198,6 +200,8 @@ export const translations: Record<string, Record<string, string>> = {
     'works.legalray.category': 'Aplikacja LawTech',
     'works.adoptme.category': 'Platforma społecznościowa',
     'works.confidential.category': 'Wkrótce',
+    'works.fashionhero.category': 'Fashion Tech / E-commerce',
+    'works.aniak.category': 'Branding / Kampania',
 
     // ── Beyond the code ──
     'about.title.1': 'Poza',

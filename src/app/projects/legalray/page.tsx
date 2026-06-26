@@ -461,15 +461,15 @@ export default function LegalRayCaseStudy() {
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
           </div>
           <a
-            href="/projects/folk-culture-center"
-            aria-label="View next project: Folk Culture Center"
+            href="/projects/fashionhero"
+            aria-label="View next project: FashionHero"
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#1A1A1A] z-0 transition-transform duration-1000 group-hover:scale-105">
-              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.06),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
+            <div className="absolute inset-0 bg-[#E11D48] z-0 transition-transform duration-1000 group-hover:scale-105">
+              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
             <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-4xl md:text-8xl text-white tracking-tighter">Folk Culture<br />Center</h2>
+              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">FashionHero</h2>
             </div>
           </a>
         </section>
