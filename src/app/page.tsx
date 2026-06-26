@@ -296,8 +296,8 @@ function ProjectRow({ project, onClick, index }: {
           className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
           style={{
             WebkitTextStroke: isHovered ? "0px transparent" : "1.5px rgba(255,255,255,0.35)",
-            color: isHovered ? project.color : "#111111",
-            paintOrder: 'stroke fill',
+            color: isHovered ? project.color : "transparent",
+            paintOrder: 'fill stroke',
           }}
         >
           {project.title}
