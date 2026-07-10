@@ -9,14 +9,14 @@ import { useLanguage } from "@/context/LanguageContext";
 
 type SlideType = "flat";
 
-const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
-  { src: "/ckl-aerial.jpg",       label: "AERIAL VIEW",         alt: "Folk Culture Center — aerial view of the site",          type: "flat" },
-  { src: "/ckl-axonometry.jpg",   label: "EXPLODED AXONOMETRY", alt: "Folk Culture Center — exploded axonometric drawing",     type: "flat" },
-  { src: "/ckl-site.jpg",         label: "SITE ANALYSIS",       alt: "Folk Culture Center — site analysis diagram",            type: "flat" },
-  { src: "/ckl-plans.jpg",        label: "FLOOR PLANS",         alt: "Folk Culture Center — underground floor plans",          type: "flat" },
-  { src: "/ckl-underground.jpg",  label: "UNDERGROUND LEVELS",  alt: "Folk Culture Center — underground level section",        type: "flat" },
-  { src: "/ckl-sections-bc.jpg",  label: "SECTIONS B-C",        alt: "Folk Culture Center — building sections B and C",        type: "flat" },
-  { src: "/ckl-concert-hall.jpg", label: "CONCERT HALL",        alt: "Folk Culture Center — concert hall interior rendering",  type: "flat" },
+const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
+  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      alt: "Folk Culture Center — aerial view of the site",          type: "flat" },
+  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  alt: "Folk Culture Center — exploded axonometric drawing",     type: "flat" },
+  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        alt: "Folk Culture Center — site analysis diagram",            type: "flat" },
+  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       alt: "Folk Culture Center — underground floor plans",          type: "flat" },
+  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", alt: "Folk Culture Center — underground level section",        type: "flat" },
+  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    alt: "Folk Culture Center — building sections B and C",        type: "flat" },
+  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", alt: "Folk Culture Center — concert hall interior rendering",  type: "flat" },
 ];
 
 export default function FolkCultureCenterCaseStudy() {
@@ -338,7 +338,7 @@ export default function FolkCultureCenterCaseStudy() {
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
                     style={{ color: "#111111", letterSpacing: "0.15em" }}
                   >
-                    {slide.label}
+                    {t(slide.labelKey)}
                   </span>
                   <div
                     className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center"
@@ -506,7 +506,7 @@ export default function FolkCultureCenterCaseStudy() {
                 className="text-[11px] font-semibold uppercase text-white/60"
                 style={{ letterSpacing: "0.15em" }}
               >
-                {SLIDES[lightboxIndex].label}
+                {t(SLIDES[lightboxIndex].labelKey)}
               </span>
             </motion.div>
 

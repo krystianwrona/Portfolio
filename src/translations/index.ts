@@ -126,6 +126,14 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.marquee.row3.2': 'NEGOTIATION ASSISTANT',
     'legalray.marquee.row3.3': 'B2B SAAS',
 
+    // ── LegalRay Slides ──
+    'legalray.slide.report': 'LEGAL REPORT',
+    'legalray.slide.landing': 'LANDING PAGE',
+    'legalray.slide.mobile': 'MOBILE APP',
+    'legalray.slide.team': 'TEAM MANAGEMENT',
+    'legalray.slide.ai': 'AI ANALYSIS',
+    'legalray.slide.monetization': 'MONETIZATION',
+
     // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'SMART MATCHING',
     'adoptme.marquee.row1.2': 'REGIONAL SEARCH',
@@ -136,6 +144,17 @@ export const translations: Record<string, Record<string, string>> = {
     'adoptme.marquee.row3.1': 'PET ADOPTION',
     'adoptme.marquee.row3.2': 'GEOLOCATION',
     'adoptme.marquee.row3.3': 'MODERN UI',
+
+    // ── Adoptio Slides ──
+    'adoptme.slide.matching': 'SMART MATCHING',
+    'adoptme.slide.search': 'SEARCH & FILTERS',
+    'adoptme.slide.quiz': 'LIFESTYLE QUIZ',
+    'adoptme.slide.pet': 'PET PROFILE',
+    'adoptme.slide.mobile': 'MOBILE EXPERIENCE',
+    'adoptme.slide.dashboard': 'SHELTER DASHBOARD',
+    'adoptme.slide.specialists': 'SPECIALISTS',
+    'adoptme.slide.kanban': 'ADOPTION KANBAN',
+    'adoptme.slide.blog': 'BLOG',
 
     // ── Case Study — Folk Culture Center (CKL) ──
     'ckl.subtitle': "Master's Degree Project — 2023",
@@ -173,6 +192,13 @@ export const translations: Record<string, Record<string, string>> = {
     'ckl.marquee.row3.1': 'CULTURAL VENUE',
     'ckl.marquee.row3.2': 'CONCERT HALL',
     'ckl.marquee.row3.3': 'FOLK MUSEUM',
+    'ckl.slide.aerial': 'AERIAL VIEW',
+    'ckl.slide.axonometry': 'EXPLODED AXONOMETRY',
+    'ckl.slide.site': 'SITE ANALYSIS',
+    'ckl.slide.plans': 'FLOOR PLANS',
+    'ckl.slide.underground': 'UNDERGROUND LEVELS',
+    'ckl.slide.sections': 'SECTIONS B-C',
+    'ckl.slide.concerthall': 'CONCERT HALL',
 
     // ── Confidential ──
     'confidential.text': 'This project is currently under development.',
@@ -306,6 +332,14 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.marquee.row3.2': 'ASYSTENT NEGOCJACJI',
     'legalray.marquee.row3.3': 'B2B SAAS',
 
+    // ── LegalRay Slides ──
+    'legalray.slide.report': 'RAPORT PRAWNY',
+    'legalray.slide.landing': 'STRONA GŁÓWNA',
+    'legalray.slide.mobile': 'APLIKACJA MOBILNA',
+    'legalray.slide.team': 'ZARZĄDZANIE ZESPOŁEM',
+    'legalray.slide.ai': 'ANALIZA AI',
+    'legalray.slide.monetization': 'MONETYZACJA',
+
     // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'INTELIGENTNY MATCHING',
     'adoptme.marquee.row1.2': 'LOKALNE WYSZUKIWANIE',
@@ -316,6 +350,17 @@ export const translations: Record<string, Record<string, string>> = {
     'adoptme.marquee.row3.1': 'ADOPCJA ZWIERZĄT',
     'adoptme.marquee.row3.2': 'GEOLOKALIZACJA',
     'adoptme.marquee.row3.3': 'NOWOCZESNY UI',
+
+    // ── Adoptio Slides ──
+    'adoptme.slide.matching': 'INTELIGENTNY MATCHING',
+    'adoptme.slide.search': 'WYSZUKIWANIE I FILTRY',
+    'adoptme.slide.quiz': 'QUIZ STYLU ŻYCIA',
+    'adoptme.slide.pet': 'PROFIL ZWIERZĘCIA',
+    'adoptme.slide.mobile': 'WERSJA MOBILNA',
+    'adoptme.slide.dashboard': 'PANEL SCHRONISKA',
+    'adoptme.slide.specialists': 'SPECJALIŚCI',
+    'adoptme.slide.kanban': 'KANBAN ADOPCJI',
+    'adoptme.slide.blog': 'BLOG',
 
     // ── Case Study — Folk Culture Center (CKL) ──
     'ckl.subtitle': "Projekt magisterski — 2023",
@@ -353,6 +398,13 @@ export const translations: Record<string, Record<string, string>> = {
     'ckl.marquee.row3.1': 'OBIEKT KULTURALNY',
     'ckl.marquee.row3.2': 'SALA KONCERTOWA',
     'ckl.marquee.row3.3': 'MUZEUM FOLKLORU',
+    'ckl.slide.aerial': 'WIDOK Z LOTU PTAKA',
+    'ckl.slide.axonometry': 'AKSONOMETRIA ROZŁOŻONA',
+    'ckl.slide.site': 'ANALIZA TERENU',
+    'ckl.slide.plans': 'RZUTY KONDYGNACJI',
+    'ckl.slide.underground': 'POZIOMY PODZIEMNE',
+    'ckl.slide.sections': 'PRZEKROJE B-C',
+    'ckl.slide.concerthall': 'SALA KONCERTOWA',
 
     // ── Confidential ──
     'confidential.text': 'Ten projekt jest w fazie rozwoju.',

@@ -44,7 +44,7 @@ export default function AniaKampaniaPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-[0.65rem] font-bold uppercase tracking-widest text-white/30 block mb-8">Branding / Campaign</span>
+            <span className="text-[0.65rem] font-bold uppercase tracking-widest text-white/30 block mb-8">{t('works.aniak.category')}</span>
             <h1
               className="font-sans font-black leading-none tracking-tighter select-none"
               style={{ fontSize: "clamp(4rem, 15vw, 14rem)", color: BRAND, opacity: 0.15 }}

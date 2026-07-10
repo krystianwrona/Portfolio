@@ -11,16 +11,16 @@ const BRAND = "#F97316";
 
 type SlideType = "macbook" | "flat" | "mobile";
 
-const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
-  { src: "/adoptio-hero.png",       label: "SMART MATCHING",    alt: "Adoptio strona główna z algorytmem smart matching", type: "macbook" },
-  { src: "/adoptio-search.png",     label: "SEARCH & FILTERS",  alt: "Adoptio wyszukiwarka z aktywnymi filtrami",          type: "flat"    },
-  { src: "/adoptio-quiz.png",       label: "LIFESTYLE QUIZ",    alt: "Quiz dopasowania stylu życia na Adoptio",            type: "macbook" },
-  { src: "/adoptio-pet.png",        label: "PET PROFILE",       alt: "Profil zwierzęcia Duszek na Adoptio",                type: "flat"    },
-  { src: "/adoptio-mobile.png",     label: "MOBILE EXPERIENCE", alt: "Trzy widoki mobilne aplikacji Adoptio",              type: "mobile"  },
-  { src: "/adoptio-dashboard.png",  label: "SHELTER DASHBOARD", alt: "Panel administracyjny schroniska z KPI",             type: "macbook" },
-  { src: "/adoptio-specialist.png", label: "SPECIALISTS",       alt: "Profil specjalisty na Adoptio",                      type: "flat"    },
-  { src: "/adoptio-kanban.png",     label: "ADOPTION KANBAN",   alt: "Kanban zgłoszeń adopcyjnych w panelu admina",        type: "flat"    },
-  { src: "/adoptio-blog.png",       label: "BLOG",              alt: "Sekcja blogowa na Adoptio",                          type: "flat"    },
+const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
+  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",   alt: "Adoptio strona główna z algorytmem smart matching", type: "macbook" },
+  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",     alt: "Adoptio wyszukiwarka z aktywnymi filtrami",          type: "flat"    },
+  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",       alt: "Quiz dopasowania stylu życia na Adoptio",            type: "macbook" },
+  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",        alt: "Profil zwierzęcia Duszek na Adoptio",                type: "flat"    },
+  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",     alt: "Trzy widoki mobilne aplikacji Adoptio",              type: "mobile"  },
+  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",  alt: "Panel administracyjny schroniska z KPI",             type: "macbook" },
+  { src: "/adoptio-specialist.png", labelKey: "adoptme.slide.specialists", alt: "Profil specjalisty na Adoptio",                     type: "flat"    },
+  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",     alt: "Kanban zgłoszeń adopcyjnych w panelu admina",        type: "flat"    },
+  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",       alt: "Sekcja blogowa na Adoptio",                          type: "flat"    },
 ];
 
 export default function AdoptMeCaseStudy() {
@@ -343,7 +343,7 @@ export default function AdoptMeCaseStudy() {
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
                     style={{ color: BRAND, letterSpacing: "0.15em" }}
                   >
-                    {slide.label}
+                    {t(slide.labelKey)}
                   </span>
                   <div
                     className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
@@ -526,7 +526,7 @@ export default function AdoptMeCaseStudy() {
                 className="text-[11px] font-semibold uppercase"
                 style={{ color: BRAND, letterSpacing: "0.15em" }}
               >
-                {SLIDES[lightboxIndex].label}
+                {t(SLIDES[lightboxIndex].labelKey)}
               </span>
             </motion.div>
 

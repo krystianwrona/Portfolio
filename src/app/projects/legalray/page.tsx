@@ -11,13 +11,13 @@ const BRAND = "#2563EB";
 
 type SlideType = "macbook" | "flat" | "mobile";
 
-const SLIDES: { src: string; label: string; alt: string; type: SlideType }[] = [
-  { src: "/legalray-report.png",  label: "LEGAL REPORT",      alt: "LegalRay raport prawny",             type: "macbook" },
-  { src: "/legalray-hero.png",    label: "LANDING PAGE",      alt: "LegalRay strona główna",             type: "macbook" },
-  { src: "/legalray-mobile.png",  label: "MOBILE APP",        alt: "LegalRay aplikacja mobilna",         type: "mobile"  },
-  { src: "/legalray-team.png",    label: "TEAM MANAGEMENT",   alt: "LegalRay zarządzanie zespołem",      type: "flat"    },
-  { src: "/legalray-loading.png", label: "AI ANALYSIS",       alt: "LegalRay analiza AI w toku",         type: "flat"    },
-  { src: "/legalray-paywall.png", label: "MONETIZATION",      alt: "LegalRay zamazane ryzyka — paywall", type: "flat"    },
+const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
+  { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  alt: "LegalRay raport prawny",             type: "macbook" },
+  { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", alt: "LegalRay strona główna",             type: "macbook" },
+  { src: "/legalray-mobile.png",  labelKey: "legalray.slide.mobile",  alt: "LegalRay aplikacja mobilna",         type: "mobile"  },
+  { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    alt: "LegalRay zarządzanie zespołem",      type: "flat"    },
+  { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      alt: "LegalRay analiza AI w toku",         type: "flat"    },
+  { src: "/legalray-paywall.png", labelKey: "legalray.slide.monetization", alt: "LegalRay zamazane ryzyka — paywall", type: "flat"    },
 ];
 
 export default function LegalRayCaseStudy() {
@@ -347,7 +347,7 @@ export default function LegalRayCaseStudy() {
                     className="flex-shrink-0 block text-[10px] font-semibold uppercase"
                     style={{ color: BRAND, letterSpacing: "0.15em" }}
                   >
-                    {slide.label}
+                    {t(slide.labelKey)}
                   </span>
                   <div
                     className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
@@ -531,7 +531,7 @@ export default function LegalRayCaseStudy() {
                 className="text-[11px] font-semibold uppercase"
                 style={{ color: BRAND, letterSpacing: "0.15em" }}
               >
-                {SLIDES[lightboxIndex].label}
+                {t(SLIDES[lightboxIndex].labelKey)}
               </span>
             </motion.div>
 
