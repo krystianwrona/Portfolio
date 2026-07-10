@@ -90,7 +90,7 @@ export default function FashionHeroPage() {
           aria-label="View next project: Ania Kampania"
           className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
         >
-          <div className="absolute inset-0 bg-[#7C3AED] z-0 transition-transform duration-1000 group-hover:scale-105">
+          <div className="absolute inset-0 bg-[#B25818] z-0 transition-transform duration-1000 group-hover:scale-105">
             <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
           </div>
           <div className="relative z-10 text-center">

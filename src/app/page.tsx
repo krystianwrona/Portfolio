@@ -27,7 +27,7 @@ const PROJECT_DATA: ProjectEntry[] = [
   { id: "adoptio",             title: "Adoptio",             categoryKey: "works.adoptme.category",      logo: "AM", color: "#F97316" },
   { id: "legalray",            title: "LegalRay",            categoryKey: "works.legalray.category",     logo: "LR", logoUrl: "/logo-LR.png", color: "#2563EB" },
   { id: "fashionhero",         title: "FashionHero",         categoryKey: "works.fashionhero.category",  logo: "FH", color: "#E11D48" },
-  { id: "ania-kampania",       title: "Ania Kampania",       categoryKey: "works.aniak.category",        logo: "AK", color: "#7C3AED" },
+  { id: "ania-kampania",       title: "Ania Kampania",       categoryKey: "works.aniak.category",        logo: "AK", color: "#B25818" },
 ];
 
 const TECH_ITEMS = [
