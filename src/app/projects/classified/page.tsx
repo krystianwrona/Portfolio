@@ -85,7 +85,7 @@ export default function ClassifiedPage() {
           <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t('case.upnext')}</span>
         </div>
         <a
-          href="/projects/adoptme"
+          href="/projects/adoptio"
           aria-label="View next project: Adoptio"
           className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
         >
