@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 
 // Three.js/@react-three bundle is code-split into its own chunk and
 // only fetched on the client, after first paint, instead of blocking
@@ -23,18 +24,23 @@ interface ProjectEntry {
   id: string;
   title: string;
   categoryKey: string;
-  logo: string;
-  logoUrl?: string;
   color: string;
 }
 
-const PROJECT_DATA: ProjectEntry[] = [
-  { id: "folk-culture-center", title: "Folk Culture Center", categoryKey: "works.ckl.category",          logo: "CK", color: "#FFFFFF" },
-  { id: "adoptio",             title: "Adoptio",             categoryKey: "works.adoptme.category",      logo: "AM", color: "#F97316" },
-  { id: "legalray",            title: "LegalRay",            categoryKey: "works.legalray.category",     logo: "LR", logoUrl: "/logo-LR.png", color: "#2563EB" },
-  { id: "fashionhero",         title: "FashionHero",         categoryKey: "works.fashionhero.category",  logo: "FH", color: "#E11D48" },
-  { id: "ania-kampania",       title: "Ania Kampania",       categoryKey: "works.aniak.category",        logo: "AK", color: "#B25818" },
-];
+const CATEGORY_KEYS: Record<string, string> = {
+  "folk-culture-center": "works.ckl.category",
+  "adoptio": "works.adoptme.category",
+  "legalray": "works.legalray.category",
+  "fashionhero": "works.fashionhero.category",
+  "ania-kampania": "works.aniak.category",
+};
+
+const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
+  id,
+  title: PROJECTS[id].title,
+  categoryKey: CATEGORY_KEYS[id],
+  color: PROJECTS[id].brand,
+}));
 
 const TECH_ITEMS = [
   { name: "React / Next.js", bg: "#0F172A", color: "#61DAFB", rotation: -2   },

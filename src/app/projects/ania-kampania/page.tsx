@@ -6,8 +6,9 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { PROJECTS } from "@/lib/projects";
 
-const BRAND = "#B25818";
+const BRAND = PROJECTS["ania-kampania"].brand;
 
 type SlideType = "macbook" | "flat" | "mobile";
 
