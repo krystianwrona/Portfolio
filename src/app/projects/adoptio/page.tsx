@@ -11,16 +11,16 @@ const BRAND = "#F97316";
 
 type SlideType = "macbook" | "flat" | "mobile";
 
-const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
-  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",   alt: "Adoptio strona główna z algorytmem smart matching", type: "macbook" },
-  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",     alt: "Adoptio wyszukiwarka z aktywnymi filtrami",          type: "flat"    },
-  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",       alt: "Quiz dopasowania stylu życia na Adoptio",            type: "macbook" },
-  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",        alt: "Profil zwierzęcia Duszek na Adoptio",                type: "flat"    },
-  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",     alt: "Trzy widoki mobilne aplikacji Adoptio",              type: "mobile"  },
-  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",  alt: "Panel administracyjny schroniska z KPI",             type: "macbook" },
-  { src: "/adoptio-specialist.png", labelKey: "adoptme.slide.specialists", alt: "Profil specjalisty na Adoptio",                     type: "flat"    },
-  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",     alt: "Kanban zgłoszeń adopcyjnych w panelu admina",        type: "flat"    },
-  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",       alt: "Sekcja blogowa na Adoptio",                          type: "flat"    },
+const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
+  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",    altKey: "adoptme.alt.matching",    type: "macbook" },
+  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",      altKey: "adoptme.alt.search",      type: "flat"    },
+  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",        altKey: "adoptme.alt.quiz",        type: "macbook" },
+  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",         altKey: "adoptme.alt.pet",         type: "flat"    },
+  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",      altKey: "adoptme.alt.mobile",      type: "mobile"  },
+  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",   altKey: "adoptme.alt.dashboard",   type: "macbook" },
+  { src: "/adoptio-specialist.png", labelKey: "adoptme.slide.specialists", altKey: "adoptme.alt.specialists", type: "flat"    },
+  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban",      type: "flat"    },
+  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",        altKey: "adoptme.alt.blog",        type: "flat"    },
 ];
 
 export default function AdoptMeCaseStudy() {
@@ -143,7 +143,7 @@ export default function AdoptMeCaseStudy() {
         {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          aria-label="Close and go back to projects"
+          aria-label={t("case.aria.closeandback")}
           className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t("case.close")}
@@ -162,7 +162,7 @@ export default function AdoptMeCaseStudy() {
 
           <Link
             href="/#projects"
-            aria-label="Back to projects"
+            aria-label={t("case.aria.backtoprojects")}
             className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
             {t("case.back")}
@@ -341,7 +341,7 @@ export default function AdoptMeCaseStudy() {
               ref={carouselRef}
               tabIndex={0}
               role="region"
-              aria-label="Project media carousel"
+              aria-label={t("case.aria.medialabel")}
               className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
@@ -396,7 +396,7 @@ export default function AdoptMeCaseStudy() {
                   >
                     <Image
                       src={slide.src}
-                      alt={slide.alt}
+                      alt={t(slide.altKey)}
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
@@ -412,7 +412,7 @@ export default function AdoptMeCaseStudy() {
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
-                aria-label="Previous slide"
+                aria-label={t("case.aria.previousslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -426,7 +426,7 @@ export default function AdoptMeCaseStudy() {
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
-                aria-label="Next slide"
+                aria-label={t("case.aria.nextslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -493,7 +493,7 @@ export default function AdoptMeCaseStudy() {
           </div>
           <a
             href="/projects/legalray"
-            aria-label="View next project: LegalRay"
+            aria-label={`${t("case.aria.viewnextproject")} LegalRay`}
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
             <div className="absolute inset-0 bg-[#2563EB] z-0 transition-transform duration-1000 group-hover:scale-105">
@@ -514,7 +514,7 @@ export default function AdoptMeCaseStudy() {
             ref={lightboxRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Image lightbox"
+            aria-label={t("case.aria.imagelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -527,7 +527,7 @@ export default function AdoptMeCaseStudy() {
             <button
               ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close lightbox"
+              aria-label={t("case.aria.closelightbox")}
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               ✕
@@ -536,7 +536,7 @@ export default function AdoptMeCaseStudy() {
             {/* Prev */}
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous image"
+              aria-label={t("case.aria.previousimage")}
               disabled={lightboxIndex === 0}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.max(0, i - 1)); }}
             >
@@ -557,7 +557,7 @@ export default function AdoptMeCaseStudy() {
             >
               <Image
                 src={SLIDES[lightboxIndex].src}
-                alt={SLIDES[lightboxIndex].alt}
+                alt={t(SLIDES[lightboxIndex].altKey)}
                 width={1400}
                 height={900}
                 className="rounded-xl object-contain"
@@ -574,7 +574,7 @@ export default function AdoptMeCaseStudy() {
             {/* Next */}
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next image"
+              aria-label={t("case.aria.nextimage")}
               disabled={lightboxIndex === SLIDES.length - 1}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)); }}
             >

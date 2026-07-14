@@ -9,14 +9,14 @@ import { useLanguage } from "@/context/LanguageContext";
 
 type SlideType = "flat";
 
-const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
-  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      alt: "Folk Culture Center — aerial view of the site",          type: "flat" },
-  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  alt: "Folk Culture Center — exploded axonometric drawing",     type: "flat" },
-  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        alt: "Folk Culture Center — site analysis diagram",            type: "flat" },
-  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       alt: "Folk Culture Center — underground floor plans",          type: "flat" },
-  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", alt: "Folk Culture Center — underground level section",        type: "flat" },
-  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    alt: "Folk Culture Center — building sections B and C",        type: "flat" },
-  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", alt: "Folk Culture Center — concert hall interior rendering",  type: "flat" },
+const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
+  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      altKey: "ckl.alt.aerial",      type: "flat" },
+  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  altKey: "ckl.alt.axonometry",  type: "flat" },
+  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        altKey: "ckl.alt.site",        type: "flat" },
+  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       altKey: "ckl.alt.plans",        type: "flat" },
+  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", altKey: "ckl.alt.underground", type: "flat" },
+  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    altKey: "ckl.alt.sections",    type: "flat" },
+  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", altKey: "ckl.alt.concerthall", type: "flat" },
 ];
 
 export default function FolkCultureCenterCaseStudy() {
@@ -139,7 +139,7 @@ export default function FolkCultureCenterCaseStudy() {
         {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          aria-label="Close and go back to projects"
+          aria-label={t("case.aria.closeandback")}
           className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t("case.close")}
@@ -158,7 +158,7 @@ export default function FolkCultureCenterCaseStudy() {
 
           <Link
             href="/#projects"
-            aria-label="Back to projects"
+            aria-label={t("case.aria.backtoprojects")}
             className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
             {t("case.back")}
@@ -336,7 +336,7 @@ export default function FolkCultureCenterCaseStudy() {
               ref={carouselRef}
               tabIndex={0}
               role="region"
-              aria-label="Project media carousel"
+              aria-label={t("case.aria.medialabel")}
               className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
@@ -391,7 +391,7 @@ export default function FolkCultureCenterCaseStudy() {
                   >
                     <Image
                       src={slide.src}
-                      alt={slide.alt}
+                      alt={t(slide.altKey)}
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
@@ -406,7 +406,7 @@ export default function FolkCultureCenterCaseStudy() {
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
-                aria-label="Previous slide"
+                aria-label={t("case.aria.previousslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -419,7 +419,7 @@ export default function FolkCultureCenterCaseStudy() {
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
-                aria-label="Next slide"
+                aria-label={t("case.aria.nextslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -438,7 +438,7 @@ export default function FolkCultureCenterCaseStudy() {
 
           <div className="px-[4vw] mt-6">
             <p className="text-[0.65rem] text-[#111]/40 font-medium leading-relaxed">
-              * All drawings and visualizations: Krystian Wrona, Master&apos;s Thesis, Silesian University of Technology, 2023
+              {t("ckl.attribution")}
             </p>
           </div>
         </section>
@@ -476,7 +476,7 @@ export default function FolkCultureCenterCaseStudy() {
           </div>
           <a
             href="/projects/adoptio"
-            aria-label="View next project: Adoptio"
+            aria-label={`${t("case.aria.viewnextproject")} Adoptio`}
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
             <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
@@ -497,7 +497,7 @@ export default function FolkCultureCenterCaseStudy() {
             ref={lightboxRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Image lightbox"
+            aria-label={t("case.aria.imagelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -509,7 +509,7 @@ export default function FolkCultureCenterCaseStudy() {
             <button
               ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close lightbox"
+              aria-label={t("case.aria.closelightbox")}
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               ✕
@@ -517,7 +517,7 @@ export default function FolkCultureCenterCaseStudy() {
 
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous image"
+              aria-label={t("case.aria.previousimage")}
               disabled={lightboxIndex === 0}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.max(0, i - 1)); }}
             >
@@ -537,7 +537,7 @@ export default function FolkCultureCenterCaseStudy() {
             >
               <Image
                 src={SLIDES[lightboxIndex].src}
-                alt={SLIDES[lightboxIndex].alt}
+                alt={t(SLIDES[lightboxIndex].altKey)}
                 width={1400}
                 height={900}
                 className="rounded-xl object-contain"
@@ -553,7 +553,7 @@ export default function FolkCultureCenterCaseStudy() {
 
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next image"
+              aria-label={t("case.aria.nextimage")}
               disabled={lightboxIndex === SLIDES.length - 1}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)); }}
             >

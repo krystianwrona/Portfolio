@@ -142,7 +142,7 @@ export function Navbar() {
           onClick={(e) => handleNavClick(e, "#")}
           className="font-display font-black text-2xl tracking-tighter text-[#111111] flex items-baseline gap-0 focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm focus-visible:outline-none"
           style={{ letterSpacing: "-0.05em" }}
-          aria-label="Krystian Wrona — go to top"
+          aria-label={t('nav.aria.gototop')}
         >
           <span>KRYSTIAN.</span>
           <AnimatePresence mode="wait" initial={false}>
@@ -192,7 +192,7 @@ export function Navbar() {
             ref={hamburgerRef}
             onClick={() => setMenuOpen((v) => !v)}
             className="md:hidden text-[0.75rem] font-black uppercase tracking-widest text-[#111111] hover:opacity-60 focus-visible:opacity-60 focus-visible:underline underline-offset-4 transition-opacity focus-visible:outline-none"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t('nav.aria.closemenu') : t('nav.aria.openmenu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
@@ -208,7 +208,7 @@ export function Navbar() {
             id="mobile-menu"
             key="mobile-menu"
             role="navigation"
-            aria-label="Mobile navigation"
+            aria-label={t('nav.aria.mobilenav')}
             onKeyDown={handleMenuKeyDown}
             initial={shouldReduceMotion ? false : { opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}

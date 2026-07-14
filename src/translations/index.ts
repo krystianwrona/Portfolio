@@ -5,6 +5,11 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.projects': 'PROJECTS',
     'nav.about': 'ABOUT ME',
     'nav.contact': 'CONTACT',
+    'nav.aria.mobilenav': 'Mobile navigation',
+    'nav.aria.loading': 'Loading page',
+    'nav.aria.gototop': 'Krystian Wrona — go to top',
+    'nav.aria.openmenu': 'Open menu',
+    'nav.aria.closemenu': 'Close menu',
 
     // ── Hero ──
     'hero.headline.where': 'Where',
@@ -13,6 +18,7 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.tagline.1': 'Architect turned',
     'hero.tagline.2': 'digital creator',
     'hero.scroll': 'Scroll',
+    'hero.aria.crow': 'Animated crow illustration made of particles',
 
     // ── Selected Works ──
     'works.title': 'Selected Works 2026',
@@ -32,6 +38,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.stats.projects': 'Projects built',
     'about.stats.tools': 'Tools & technologies',
     'about.stats.curiosity': 'Curiosity & drive',
+    'about.aria.stack': 'Core technology stack',
 
     // ── Contact ──
     'contact.headline.1': "let's build",
@@ -49,10 +56,15 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.success.title': 'Message sent.',
     'contact.form.success.text': "I'll get back to you soon.",
     'contact.form.success.close': 'Close',
+    'contact.aria.send': 'Send message',
 
     // ── Footer ──
     'footer.rights': 'All rights reserved.',
     'footer.back': '← Back to projects',
+    'footer.aria.sociallinks': 'Social media links',
+    'footer.aria.linkedin': 'LinkedIn (coming soon)',
+    'footer.aria.behance': 'Behance (coming soon)',
+    'footer.aria.instagram': 'Instagram (coming soon)',
 
     // ── Case Study — shared ──
     'case.close': '[ CLOSE CASE ]',
@@ -71,6 +83,21 @@ export const translations: Record<string, Record<string, string>> = {
     'case.skills': 'Skills & Methods',
     'case.mediacomingsoon': 'Visuals coming soon.',
     'case.openimage': 'open full image',
+    'case.aria.closeandback': 'Close and go back to projects',
+    'case.aria.backtoprojects': 'Back to projects',
+    'case.aria.medialabel': 'Project media carousel',
+    'case.aria.previousslide': 'Previous slide',
+    'case.aria.nextslide': 'Next slide',
+    'case.aria.imagelightbox': 'Image lightbox',
+    'case.aria.certificatelightbox': 'Certificate lightbox',
+    'case.aria.closelightbox': 'Close lightbox',
+    'case.aria.previousimage': 'Previous image',
+    'case.aria.nextimage': 'Next image',
+    'case.aria.viewnextproject': 'View next project:',
+    'case.aria.visitwebsite': 'Visit',
+    'case.aria.website': 'website (opens in new tab)',
+    'case.aria.liveprototype': 'live prototype (opens in new tab)',
+    'case.aria.livewebsite': 'live website (opens in new tab)',
 
     // ── Case Study — LegalRay ──
     'legalray.subtitle': 'Case Study — 2026',
@@ -137,6 +164,12 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.slide.team': 'TEAM MANAGEMENT',
     'legalray.slide.ai': 'AI ANALYSIS',
     'legalray.slide.monetization': 'MONETIZATION',
+    'legalray.alt.report': 'LegalRay legal audit report',
+    'legalray.alt.landing': 'LegalRay landing page',
+    'legalray.alt.mobile': 'LegalRay mobile app',
+    'legalray.alt.team': 'LegalRay team management',
+    'legalray.alt.ai': 'LegalRay AI analysis in progress',
+    'legalray.alt.monetization': 'LegalRay blurred-risk paywall',
 
     // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'SMART MATCHING',
@@ -159,6 +192,15 @@ export const translations: Record<string, Record<string, string>> = {
     'adoptme.slide.specialists': 'SPECIALISTS',
     'adoptme.slide.kanban': 'ADOPTION KANBAN',
     'adoptme.slide.blog': 'BLOG',
+    'adoptme.alt.matching': 'Adoptio homepage with the smart matching algorithm',
+    'adoptme.alt.search': 'Adoptio search page with active filters',
+    'adoptme.alt.quiz': 'Adoptio lifestyle-matching quiz',
+    'adoptme.alt.pet': 'Adoptio pet profile page',
+    'adoptme.alt.mobile': 'Three mobile views of the Adoptio app',
+    'adoptme.alt.dashboard': 'Adoptio shelter admin dashboard with KPIs',
+    'adoptme.alt.specialists': 'Adoptio specialist profile page',
+    'adoptme.alt.kanban': 'Adoptio adoption request Kanban board in the admin panel',
+    'adoptme.alt.blog': 'Adoptio blog section',
 
     // ── Case Study — FashionHero ──
     'fashionhero.subtitle': 'Product Strategy / AI-Driven Retention',
@@ -209,6 +251,15 @@ export const translations: Record<string, Record<string, string>> = {
     'fashionhero.slide.catalog': 'PRODUCT CATALOG',
     'fashionhero.slide.analytics': 'MARKET ANALYTICS',
     'fashionhero.slide.mobile': 'MOBILE EXPERIENCE',
+    'fashionhero.alt.dashboard': 'FashionHero real-time ROI dashboard',
+    'fashionhero.alt.promote': 'FashionHero one-click promote flow modal',
+    'fashionhero.alt.catalog': 'FashionHero smart product catalog',
+    'fashionhero.alt.analytics': 'FashionHero market and trend analytics',
+    'fashionhero.alt.mobile': 'FashionHero mobile dashboard',
+    'fashionhero.certificate.alt': 'AI Product Heroes 2 — completion certificate for Krystian Wrona',
+    'fashionhero.aria.downloadpdf': 'Download full FashionHero strategy deck (PDF)',
+    'fashionhero.aria.viewcert': 'View AI Product Heroes 2 certificate',
+    'fashionhero.aria.closecert': 'Close certificate',
 
     // ── Case Study — Ania Kampania ──
     'aniak.subtitle': 'Case Study — 2026',
@@ -247,6 +298,12 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.slide.mobile': 'MOBILE EXPERIENCE',
     'aniak.slide.packages': 'PACKAGES',
     'aniak.slide.booking': 'BOOKING',
+    'aniak.alt.hero': 'Ania Kampania homepage',
+    'aniak.alt.brandstory': 'Ania Kampania brand manifest section',
+    'aniak.alt.gallery': "Ania Kampania gallery — Frames from the Campaign",
+    'aniak.alt.mobile': 'Ania Kampania mobile version',
+    'aniak.alt.packages': 'Ania Kampania travel packages',
+    'aniak.alt.booking': 'Ania Kampania Cal.eu booking widget',
 
     // ── Case Study — Folk Culture Center (CKL) ──
     'ckl.subtitle': "Master's Degree Project — 2023",
@@ -291,6 +348,14 @@ export const translations: Record<string, Record<string, string>> = {
     'ckl.slide.underground': 'UNDERGROUND LEVELS',
     'ckl.slide.sections': 'SECTIONS B-C',
     'ckl.slide.concerthall': 'CONCERT HALL',
+    'ckl.alt.aerial': 'Folk Culture Center — aerial view of the site',
+    'ckl.alt.axonometry': 'Folk Culture Center — exploded axonometric drawing',
+    'ckl.alt.site': 'Folk Culture Center — site analysis diagram',
+    'ckl.alt.plans': 'Folk Culture Center — underground floor plans',
+    'ckl.alt.underground': 'Folk Culture Center — underground level section',
+    'ckl.alt.sections': 'Folk Culture Center — building sections B and C',
+    'ckl.alt.concerthall': 'Folk Culture Center — concert hall interior rendering',
+    'ckl.attribution': "* All drawings and visualizations: Krystian Wrona, Master's Thesis, Silesian University of Technology, 2023",
 
     // ── Confidential ──
     'confidential.text': 'This project is currently under development.',
@@ -303,6 +368,11 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.projects': 'PROJEKTY',
     'nav.about': 'O MNIE',
     'nav.contact': 'KONTAKT',
+    'nav.aria.mobilenav': 'Nawigacja mobilna',
+    'nav.aria.loading': 'Ładowanie strony',
+    'nav.aria.gototop': 'Krystian Wrona — przewiń na górę',
+    'nav.aria.openmenu': 'Otwórz menu',
+    'nav.aria.closemenu': 'Zamknij menu',
 
     // ── Hero ──
     'hero.headline.where': 'Gdzie',
@@ -311,6 +381,7 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.tagline.1': 'Architekt, który został',
     'hero.tagline.2': 'twórcą cyfrowym',
     'hero.scroll': 'Przewiń',
+    'hero.aria.crow': 'Animowana ilustracja wrony z cząsteczek',
 
     // ── Selected Works ──
     'works.title': 'Wybrane projekty 2026',
@@ -330,6 +401,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.stats.projects': 'Zrealizowane projekty',
     'about.stats.tools': 'Narzędzia i technologie',
     'about.stats.curiosity': 'Ciekawość i pasja',
+    'about.aria.stack': 'Podstawowe technologie',
 
     // ── Contact ──
     'contact.headline.1': 'zbudujmy',
@@ -347,10 +419,15 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.success.title': 'Wiadomość wysłana.',
     'contact.form.success.text': 'Odezwę się wkrótce.',
     'contact.form.success.close': 'Zamknij',
+    'contact.aria.send': 'Wyślij wiadomość',
 
     // ── Footer ──
     'footer.rights': 'Wszelkie prawa zastrzeżone.',
     'footer.back': '← Wróć do projektów',
+    'footer.aria.sociallinks': 'Linki do mediów społecznościowych',
+    'footer.aria.linkedin': 'LinkedIn (wkrótce)',
+    'footer.aria.behance': 'Behance (wkrótce)',
+    'footer.aria.instagram': 'Instagram (wkrótce)',
 
     // ── Case Study — shared ──
     'case.close': '[ ZAMKNIJ ]',
@@ -369,6 +446,21 @@ export const translations: Record<string, Record<string, string>> = {
     'case.skills': 'Umiejętności i metody',
     'case.mediacomingsoon': 'Wizualizacje wkrótce.',
     'case.openimage': 'otwórz pełny obraz',
+    'case.aria.closeandback': 'Zamknij i wróć do projektów',
+    'case.aria.backtoprojects': 'Wróć do projektów',
+    'case.aria.medialabel': 'Karuzela materiałów projektu',
+    'case.aria.previousslide': 'Poprzedni slajd',
+    'case.aria.nextslide': 'Następny slajd',
+    'case.aria.imagelightbox': 'Podgląd obrazu',
+    'case.aria.certificatelightbox': 'Podgląd certyfikatu',
+    'case.aria.closelightbox': 'Zamknij podgląd',
+    'case.aria.previousimage': 'Poprzedni obraz',
+    'case.aria.nextimage': 'Następny obraz',
+    'case.aria.viewnextproject': 'Zobacz następny projekt:',
+    'case.aria.visitwebsite': 'Odwiedź',
+    'case.aria.website': 'stronę (otwiera się w nowej karcie)',
+    'case.aria.liveprototype': 'działający prototyp (otwiera się w nowej karcie)',
+    'case.aria.livewebsite': 'stronę na żywo (otwiera się w nowej karcie)',
 
     // ── Case Study — LegalRay ──
     'legalray.subtitle': 'Case Study — 2026',
@@ -435,6 +527,12 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.slide.team': 'ZARZĄDZANIE ZESPOŁEM',
     'legalray.slide.ai': 'ANALIZA AI',
     'legalray.slide.monetization': 'MONETYZACJA',
+    'legalray.alt.report': 'LegalRay raport prawny',
+    'legalray.alt.landing': 'LegalRay strona główna',
+    'legalray.alt.mobile': 'LegalRay aplikacja mobilna',
+    'legalray.alt.team': 'LegalRay zarządzanie zespołem',
+    'legalray.alt.ai': 'LegalRay analiza AI w toku',
+    'legalray.alt.monetization': 'LegalRay zamazane ryzyka — paywall',
 
     // ── Adoptio Marquee ──
     'adoptme.marquee.row1.1': 'INTELIGENTNY MATCHING',
@@ -457,6 +555,15 @@ export const translations: Record<string, Record<string, string>> = {
     'adoptme.slide.specialists': 'SPECJALIŚCI',
     'adoptme.slide.kanban': 'KANBAN ADOPCJI',
     'adoptme.slide.blog': 'BLOG',
+    'adoptme.alt.matching': 'Adoptio strona główna z algorytmem smart matching',
+    'adoptme.alt.search': 'Adoptio wyszukiwarka z aktywnymi filtrami',
+    'adoptme.alt.quiz': 'Quiz dopasowania stylu życia na Adoptio',
+    'adoptme.alt.pet': 'Profil zwierzęcia Duszek na Adoptio',
+    'adoptme.alt.mobile': 'Trzy widoki mobilne aplikacji Adoptio',
+    'adoptme.alt.dashboard': 'Panel administracyjny schroniska z KPI',
+    'adoptme.alt.specialists': 'Profil specjalisty na Adoptio',
+    'adoptme.alt.kanban': 'Kanban zgłoszeń adopcyjnych w panelu admina',
+    'adoptme.alt.blog': 'Sekcja blogowa na Adoptio',
 
     // ── Case Study — FashionHero ──
     'fashionhero.subtitle': 'Strategia produktowa / Retencja napędzana AI',
@@ -507,6 +614,15 @@ export const translations: Record<string, Record<string, string>> = {
     'fashionhero.slide.catalog': 'KATALOG PRODUKTÓW',
     'fashionhero.slide.analytics': 'ANALITYKA RYNKU',
     'fashionhero.slide.mobile': 'WERSJA MOBILNA',
+    'fashionhero.alt.dashboard': 'Dashboard ROI FashionHero w czasie rzeczywistym',
+    'fashionhero.alt.promote': 'Modal flow promocji jednym kliknięciem w FashionHero',
+    'fashionhero.alt.catalog': 'Inteligentny katalog produktów FashionHero',
+    'fashionhero.alt.analytics': 'Analityka rynku i trendów FashionHero',
+    'fashionhero.alt.mobile': 'Dashboard mobilny FashionHero',
+    'fashionhero.certificate.alt': 'AI Product Heroes 2 — certyfikat ukończenia dla Krystiana Wrony',
+    'fashionhero.aria.downloadpdf': 'Pobierz pełny deck strategiczny FashionHero (PDF)',
+    'fashionhero.aria.viewcert': 'Zobacz certyfikat AI Product Heroes 2',
+    'fashionhero.aria.closecert': 'Zamknij certyfikat',
 
     // ── Case Study — Ania Kampania ──
     'aniak.subtitle': 'Case Study — 2026',
@@ -545,6 +661,12 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.slide.mobile': 'WERSJA MOBILNA',
     'aniak.slide.packages': 'PAKIETY',
     'aniak.slide.booking': 'REZERWACJA',
+    'aniak.alt.hero': 'Ania Kampania strona główna',
+    'aniak.alt.brandstory': 'Ania Kampania sekcja manifestu marki',
+    'aniak.alt.gallery': 'Ania Kampania galeria Kadry z Kampanii',
+    'aniak.alt.mobile': 'Ania Kampania wersja mobilna',
+    'aniak.alt.packages': 'Ania Kampania pakiety podróżne',
+    'aniak.alt.booking': 'Ania Kampania widget rezerwacji Cal.eu',
 
     // ── Case Study — Folk Culture Center (CKL) ──
     'ckl.subtitle': "Projekt magisterski — 2023",
@@ -589,6 +711,14 @@ export const translations: Record<string, Record<string, string>> = {
     'ckl.slide.underground': 'POZIOMY PODZIEMNE',
     'ckl.slide.sections': 'PRZEKROJE B-C',
     'ckl.slide.concerthall': 'SALA KONCERTOWA',
+    'ckl.alt.aerial': 'Centrum Kultury Ludowej — widok z lotu ptaka na teren',
+    'ckl.alt.axonometry': 'Centrum Kultury Ludowej — rozłożona aksonometria',
+    'ckl.alt.site': 'Centrum Kultury Ludowej — analiza terenu',
+    'ckl.alt.plans': 'Centrum Kultury Ludowej — podziemne rzuty kondygnacji',
+    'ckl.alt.underground': 'Centrum Kultury Ludowej — przekrój poziomu podziemnego',
+    'ckl.alt.sections': 'Centrum Kultury Ludowej — przekroje budynku B i C',
+    'ckl.alt.concerthall': 'Centrum Kultury Ludowej — wizualizacja wnętrza sali koncertowej',
+    'ckl.attribution': '* Wszystkie rysunki i wizualizacje: Krystian Wrona, praca magisterska, Politechnika Śląska, 2023',
 
     // ── Confidential ──
     'confidential.text': 'Ten projekt jest w fazie rozwoju.',

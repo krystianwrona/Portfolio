@@ -303,7 +303,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         </button>
         <motion.button
           type="submit"
-          aria-label="Send message"
+          aria-label={t('contact.aria.send')}
           disabled={submitting}
           whileHover={submitting ? undefined : { scale: 1.02 }}
           whileTap={submitting ? undefined : { scale: 0.98 }}
@@ -393,7 +393,7 @@ export default function Home() {
         </motion.div>
 
         {/* Canvas bird — decorative illustration */}
-        <div role="img" aria-label="Animated crow illustration made of particles" className="absolute inset-0 z-10">
+        <div role="img" aria-label={t('hero.aria.crow')} className="absolute inset-0 z-10">
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>
 
@@ -476,7 +476,7 @@ export default function Home() {
               className="p-10 rounded-[32px] bg-[#111111] text-white"
             >
               <p className="text-xs font-bold uppercase tracking-widest opacity-50 block mb-6">{t('about.stack')}</p>
-              <ul className="flex flex-wrap gap-3 list-none p-0 m-0" aria-label="Core technology stack">
+              <ul className="flex flex-wrap gap-3 list-none p-0 m-0" aria-label={t('about.aria.stack')}>
                 {TECH_ITEMS.map((tech) => (
                   <li key={tech.name}>
                     <motion.span
@@ -561,10 +561,10 @@ export default function Home() {
           <p className="text-[0.85rem] opacity-60 font-medium">
             &copy; {new Date().getFullYear()} KRYSTIAN.WRONA. {t('footer.rights')}
           </p>
-          <ul className="flex gap-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label="Social media links">
-            <li><a href="#" aria-label="LinkedIn (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">LinkedIn</a></li>
-            <li><a href="#" aria-label="Behance (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Behance</a></li>
-            <li><a href="#" aria-label="Instagram (coming soon)" className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Instagram</a></li>
+          <ul className="flex gap-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
+            <li><a href="#" aria-label={t('footer.aria.linkedin')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">LinkedIn</a></li>
+            <li><a href="#" aria-label={t('footer.aria.behance')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Behance</a></li>
+            <li><a href="#" aria-label={t('footer.aria.instagram')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Instagram</a></li>
           </ul>
         </div>
       </section>
