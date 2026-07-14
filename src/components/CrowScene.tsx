@@ -88,7 +88,7 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   isHoveringRef: { current: boolean };
 }) {
   const { viewport, camera } = useThree();
-  const texture = useTexture("/crow-particles.png");
+  const texture = useTexture("/crow-particles.webp");
   texture.colorSpace = THREE.SRGBColorSpace;
   const meshW = Math.min(viewport.width * 0.85, 6.0);
   const meshH = meshW / 2;
