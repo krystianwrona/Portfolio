@@ -21,8 +21,14 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Krystian Wrona — Frontend Developer & UI/UX Designer",
-  description: "Portfolio of Krystian Wrona — architect turned digital creator specializing in UI/UX design, frontend development, and AI-powered workflows.",
+  metadataBase: new URL("https://krystianwrona.com"),
+  title: {
+    default: "Krystian Wrona — AI Product Builder & UI/UX Designer",
+    template: "%s | Krystian Wrona",
+  },
+  description: "Portfolio of Krystian Wrona — architect turned digital creator building AI-powered products and interfaces, from UI/UX design to production-ready code.",
+  alternates: { canonical: "/" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

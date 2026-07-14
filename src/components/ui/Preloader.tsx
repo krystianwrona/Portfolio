@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 export function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -24,7 +26,7 @@ export function Preloader() {
         <motion.div
           key="preloader"
           role="status"
-          aria-label="Loading page"
+          aria-label={t('nav.aria.loading')}
           aria-live="polite"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}

@@ -6,18 +6,19 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { PROJECTS } from "@/lib/projects";
 
-const BRAND = "#E11D48";
+const BRAND = PROJECTS.fashionhero.brand;
 const LIVE_URL = "https://fashionhero-hub.vercel.app/";
 
 type SlideType = "macbook" | "mobile";
 
-const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
-  { src: "/fashionhero-dashboard.png", labelKey: "fashionhero.slide.dashboard", alt: "FashionHero real-time ROI dashboard", type: "macbook" },
-  { src: "/fashionhero-promote.png",   labelKey: "fashionhero.slide.promote",   alt: "FashionHero one-click promote flow modal",  type: "macbook" },
-  { src: "/fashionhero-catalog.png",   labelKey: "fashionhero.slide.catalog",   alt: "FashionHero smart product catalog",         type: "macbook" },
-  { src: "/fashionhero-analytics.png", labelKey: "fashionhero.slide.analytics", alt: "FashionHero market and trend analytics",    type: "macbook" },
-  { src: "/fashionhero-mobile.png",    labelKey: "fashionhero.slide.mobile",    alt: "FashionHero mobile dashboard",              type: "mobile"  },
+const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
+  { src: "/fashionhero-dashboard.png", labelKey: "fashionhero.slide.dashboard", altKey: "fashionhero.alt.dashboard", type: "macbook" },
+  { src: "/fashionhero-promote.png",   labelKey: "fashionhero.slide.promote",   altKey: "fashionhero.alt.promote",   type: "macbook" },
+  { src: "/fashionhero-catalog.png",   labelKey: "fashionhero.slide.catalog",   altKey: "fashionhero.alt.catalog",   type: "macbook" },
+  { src: "/fashionhero-analytics.png", labelKey: "fashionhero.slide.analytics", altKey: "fashionhero.alt.analytics", type: "macbook" },
+  { src: "/fashionhero-mobile.png",    labelKey: "fashionhero.slide.mobile",    altKey: "fashionhero.alt.mobile",    type: "mobile"  },
 ];
 
 export default function FashionHeroCaseStudy() {
@@ -37,9 +38,17 @@ export default function FashionHeroCaseStudy() {
   // Lightbox — carousel
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
 
   // Lightbox — certificate
   const [certOpen, setCertOpen] = useState(false);
+  const certRef = useRef<HTMLDivElement>(null);
+  const certCloseBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Shared: element that opened whichever dialog is currently active,
+  // so focus returns there on close.
+  const activeTriggerRef = useRef<HTMLElement | null>(null);
 
   // Track active slide via IntersectionObserver
   useEffect(() => {
@@ -81,24 +90,40 @@ export default function FashionHeroCaseStudy() {
     [activeSlide, scrollToSlide]
   );
 
-  // Lightbox: keyboard nav + body scroll lock
+  // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
     if (!lightboxOpen && !certOpen) {
       document.body.style.overflow = "";
+      activeTriggerRef.current?.focus();
       return;
     }
     document.body.style.overflow = "hidden";
+    const activeDialogRef = lightboxOpen ? lightboxRef : certRef;
+    const activeCloseBtnRef = lightboxOpen ? lightboxCloseBtnRef : certCloseBtnRef;
+    const focusId = setTimeout(() => activeCloseBtnRef.current?.focus(), 0);
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setLightboxOpen(false); setCertOpen(false); }
+      if (e.key === "Escape") { setLightboxOpen(false); setCertOpen(false); return; }
       if (lightboxOpen) {
         if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
         if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
+      }
+      if (e.key === "Tab") {
+        const focusables = activeDialogRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
       }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      clearTimeout(focusId);
     };
   }, [lightboxOpen, certOpen]);
 
@@ -124,6 +149,7 @@ export default function FashionHeroCaseStudy() {
   return (
     <>
       <motion.main
+        id="main-content"
         className="w-full min-h-screen bg-[#F5F5F4]"
         ref={containerRef}
         initial={{ opacity: 0 }}
@@ -133,7 +159,7 @@ export default function FashionHeroCaseStudy() {
         {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          aria-label="Close and go back to projects"
+          aria-label={t("case.aria.closeandback")}
           className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t("case.close")}
@@ -152,7 +178,7 @@ export default function FashionHeroCaseStudy() {
 
           <Link
             href="/#projects"
-            aria-label="Back to projects"
+            aria-label={t("case.aria.backtoprojects")}
             className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
             {t("case.back")}
@@ -243,7 +269,7 @@ export default function FashionHeroCaseStudy() {
                   href={LIVE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Visit FashionHero live prototype (opens in new tab)"
+                  aria-label={`${t("case.aria.visitwebsite")} FashionHero ${t("case.aria.liveprototype")}`}
                   className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
                   style={{ color: BRAND, borderColor: BRAND }}
                 >
@@ -254,7 +280,7 @@ export default function FashionHeroCaseStudy() {
                 <a
                   href="/FashionHero-Pitch-KrystianWrona.pdf"
                   download="FashionHero-Pitch-KrystianWrona.pdf"
-                  aria-label="Download full FashionHero strategy deck (PDF)"
+                  aria-label={t("fashionhero.aria.downloadpdf")}
                   className="inline-flex items-center gap-2 text-sm font-bold text-[#111] border border-[#111]/15 rounded-full px-5 py-3 hover:border-[#111]/40 transition-colors duration-300"
                 >
                   {t("fashionhero.download")} ↓
@@ -262,8 +288,8 @@ export default function FashionHeroCaseStudy() {
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
                 <button
-                  onClick={() => setCertOpen(true)}
-                  aria-label="View AI Product Heroes 2 certificate"
+                  onClick={(e) => { activeTriggerRef.current = e.currentTarget; setCertOpen(true); }}
+                  aria-label={t("fashionhero.aria.viewcert")}
                   className="group text-left w-full max-w-xs rounded-2xl border border-[#111]/10 bg-white p-5 hover:border-[#E11D48]/40 transition-colors duration-300"
                 >
                   <p className="text-[0.6rem] uppercase tracking-widest font-bold" style={{ color: BRAND }}>
@@ -406,7 +432,10 @@ export default function FashionHeroCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+              tabIndex={0}
+              role="region"
+              aria-label={t("case.aria.medialabel")}
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -416,6 +445,10 @@ export default function FashionHeroCaseStudy() {
               onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
               onPointerUp={() => setIsDragging(false)}
               onPointerLeave={() => setIsDragging(false)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+                if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+              }}
             >
               {SLIDES.map((slide, i) => (
                 <div
@@ -431,7 +464,10 @@ export default function FashionHeroCaseStudy() {
                     {t(slide.labelKey)}
                   </span>
                   <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${t(slide.labelKey)} — ${t("case.openimage")}`}
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -439,13 +475,21 @@ export default function FashionHeroCaseStudy() {
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                       if (window.innerWidth < 768) return;
+                      activeTriggerRef.current = e.currentTarget;
+                      setLightboxIndex(i);
+                      setLightboxOpen(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" && e.key !== " ") return;
+                      e.preventDefault();
+                      activeTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
                   >
                     <Image
                       src={slide.src}
-                      alt={slide.alt}
+                      alt={t(slide.altKey)}
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
@@ -461,7 +505,7 @@ export default function FashionHeroCaseStudy() {
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
-                aria-label="Previous slide"
+                aria-label={t("case.aria.previousslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -475,7 +519,7 @@ export default function FashionHeroCaseStudy() {
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
-                aria-label="Next slide"
+                aria-label={t("case.aria.nextslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -500,7 +544,7 @@ export default function FashionHeroCaseStudy() {
             href={LIVE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Visit FashionHero live prototype (opens in new tab)"
+            aria-label={`${t("case.aria.visitwebsite")} FashionHero ${t("case.aria.liveprototype")}`}
             className="group inline-flex items-center gap-4"
           >
             <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#E11D48]">
@@ -513,9 +557,9 @@ export default function FashionHeroCaseStudy() {
         {/* 8. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
-            { keys: ["fashionhero.marquee.row1.1", "fashionhero.marquee.row1.2"] as const, dir: "left",  color: "#111", opacity: 0.08 },
-            { keys: ["fashionhero.marquee.row2.1", "fashionhero.marquee.row2.2"] as const, dir: "right", color: BRAND,  opacity: 0.25 },
-            { keys: ["fashionhero.marquee.row3.1", "fashionhero.marquee.row3.2"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["fashionhero.marquee.row1.1", "fashionhero.marquee.row1.2", "fashionhero.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["fashionhero.marquee.row2.1", "fashionhero.marquee.row2.2", "fashionhero.marquee.row2.3"] as const, dir: "right", color: BRAND,  opacity: 0.25 },
+            { keys: ["fashionhero.marquee.row3.1", "fashionhero.marquee.row3.2", "fashionhero.marquee.row3.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
           ]).map(({ keys, dir, color, opacity }, i) => {
             const words = keys.map((k) => t(k));
             const repeated = [...words, ...words, ...words, ...words].join(" • ") + " • ";
@@ -543,10 +587,10 @@ export default function FashionHeroCaseStudy() {
           </div>
           <a
             href="/projects/ania-kampania"
-            aria-label="View next project: Ania Kampania"
+            aria-label={`${t("case.aria.viewnextproject")} Ania Kampania`}
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#B25818] z-0 transition-transform duration-1000 group-hover:scale-105">
+            <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-105" style={{ backgroundColor: PROJECTS["ania-kampania"].brand }}>
               <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
             <div className="relative z-10 text-center">
@@ -561,6 +605,10 @@ export default function FashionHeroCaseStudy() {
         {lightboxOpen && (
           <motion.div
             key="lightbox"
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("case.aria.imagelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -571,8 +619,9 @@ export default function FashionHeroCaseStudy() {
           >
             {/* Close */}
             <button
+              ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close lightbox"
+              aria-label={t("case.aria.closelightbox")}
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               ✕
@@ -581,7 +630,7 @@ export default function FashionHeroCaseStudy() {
             {/* Prev */}
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous image"
+              aria-label={t("case.aria.previousimage")}
               disabled={lightboxIndex === 0}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.max(0, i - 1)); }}
             >
@@ -602,7 +651,7 @@ export default function FashionHeroCaseStudy() {
             >
               <Image
                 src={SLIDES[lightboxIndex].src}
-                alt={SLIDES[lightboxIndex].alt}
+                alt={t(SLIDES[lightboxIndex].altKey)}
                 width={1400}
                 height={900}
                 className="rounded-xl object-contain"
@@ -619,7 +668,7 @@ export default function FashionHeroCaseStudy() {
             {/* Next */}
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next image"
+              aria-label={t("case.aria.nextimage")}
               disabled={lightboxIndex === SLIDES.length - 1}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)); }}
             >
@@ -636,6 +685,10 @@ export default function FashionHeroCaseStudy() {
         {certOpen && (
           <motion.div
             key="cert-lightbox"
+            ref={certRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("case.aria.certificatelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -645,8 +698,9 @@ export default function FashionHeroCaseStudy() {
             onClick={() => setCertOpen(false)}
           >
             <button
+              ref={certCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close certificate"
+              aria-label={t("fashionhero.aria.closecert")}
               onClick={(e) => { e.stopPropagation(); setCertOpen(false); }}
             >
               ✕
@@ -661,7 +715,7 @@ export default function FashionHeroCaseStudy() {
             >
               <Image
                 src="/certyfikat-KW.png"
-                alt="AI Product Heroes 2 — completion certificate for Krystian Wrona"
+                alt={t("fashionhero.certificate.alt")}
                 width={1600}
                 height={1130}
                 className="rounded-xl object-contain"

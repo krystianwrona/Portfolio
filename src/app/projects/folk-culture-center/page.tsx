@@ -6,17 +6,18 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { PROJECTS } from "@/lib/projects";
 
 type SlideType = "flat";
 
-const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
-  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      alt: "Folk Culture Center — aerial view of the site",          type: "flat" },
-  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  alt: "Folk Culture Center — exploded axonometric drawing",     type: "flat" },
-  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        alt: "Folk Culture Center — site analysis diagram",            type: "flat" },
-  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       alt: "Folk Culture Center — underground floor plans",          type: "flat" },
-  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", alt: "Folk Culture Center — underground level section",        type: "flat" },
-  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    alt: "Folk Culture Center — building sections B and C",        type: "flat" },
-  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", alt: "Folk Culture Center — concert hall interior rendering",  type: "flat" },
+const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
+  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      altKey: "ckl.alt.aerial",      type: "flat" },
+  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  altKey: "ckl.alt.axonometry",  type: "flat" },
+  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        altKey: "ckl.alt.site",        type: "flat" },
+  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       altKey: "ckl.alt.plans",        type: "flat" },
+  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", altKey: "ckl.alt.underground", type: "flat" },
+  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    altKey: "ckl.alt.sections",    type: "flat" },
+  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", altKey: "ckl.alt.concerthall", type: "flat" },
 ];
 
 export default function FolkCultureCenterCaseStudy() {
@@ -36,6 +37,9 @@ export default function FolkCultureCenterCaseStudy() {
   // Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
+  const lightboxTriggerRef = useRef<HTMLElement | null>(null);
 
   // Track active slide via IntersectionObserver
   useEffect(() => {
@@ -77,22 +81,36 @@ export default function FolkCultureCenterCaseStudy() {
     [activeSlide, scrollToSlide]
   );
 
-  // Lightbox: keyboard nav + body scroll lock
+  // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
     if (!lightboxOpen) {
       document.body.style.overflow = "";
+      lightboxTriggerRef.current?.focus();
       return;
     }
     document.body.style.overflow = "hidden";
+    const focusId = setTimeout(() => lightboxCloseBtnRef.current?.focus(), 0);
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "Escape") { setLightboxOpen(false); return; }
       if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
       if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
+      if (e.key === "Tab") {
+        const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      clearTimeout(focusId);
     };
   }, [lightboxOpen]);
 
@@ -112,6 +130,7 @@ export default function FolkCultureCenterCaseStudy() {
   return (
     <>
       <motion.main
+        id="main-content"
         className="w-full min-h-screen bg-[#F5F5F4]"
         ref={containerRef}
         initial={{ opacity: 0 }}
@@ -121,7 +140,7 @@ export default function FolkCultureCenterCaseStudy() {
         {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          aria-label="Close and go back to projects"
+          aria-label={t("case.aria.closeandback")}
           className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t("case.close")}
@@ -140,7 +159,7 @@ export default function FolkCultureCenterCaseStudy() {
 
           <Link
             href="/#projects"
-            aria-label="Back to projects"
+            aria-label={t("case.aria.backtoprojects")}
             className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
             {t("case.back")}
@@ -316,7 +335,10 @@ export default function FolkCultureCenterCaseStudy() {
           <div className="relative">
             <div
               ref={carouselRef}
-              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+              tabIndex={0}
+              role="region"
+              aria-label={t("case.aria.medialabel")}
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -326,6 +348,10 @@ export default function FolkCultureCenterCaseStudy() {
               onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
               onPointerUp={() => setIsDragging(false)}
               onPointerLeave={() => setIsDragging(false)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+                if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+              }}
             >
               {SLIDES.map((slide, i) => (
                 <div
@@ -341,7 +367,10 @@ export default function FolkCultureCenterCaseStudy() {
                     {t(slide.labelKey)}
                   </span>
                   <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${t(slide.labelKey)} — ${t("case.openimage")}`}
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -349,13 +378,21 @@ export default function FolkCultureCenterCaseStudy() {
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                       if (window.innerWidth < 768) return;
+                      lightboxTriggerRef.current = e.currentTarget;
+                      setLightboxIndex(i);
+                      setLightboxOpen(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" && e.key !== " ") return;
+                      e.preventDefault();
+                      lightboxTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
                   >
                     <Image
                       src={slide.src}
-                      alt={slide.alt}
+                      alt={t(slide.altKey)}
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
@@ -370,7 +407,7 @@ export default function FolkCultureCenterCaseStudy() {
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
-                aria-label="Previous slide"
+                aria-label={t("case.aria.previousslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -383,7 +420,7 @@ export default function FolkCultureCenterCaseStudy() {
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
-                aria-label="Next slide"
+                aria-label={t("case.aria.nextslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -402,7 +439,7 @@ export default function FolkCultureCenterCaseStudy() {
 
           <div className="px-[4vw] mt-6">
             <p className="text-[0.65rem] text-[#111]/40 font-medium leading-relaxed">
-              * All drawings and visualizations: Krystian Wrona, Master&apos;s Thesis, Silesian University of Technology, 2023
+              {t("ckl.attribution")}
             </p>
           </div>
         </section>
@@ -440,10 +477,10 @@ export default function FolkCultureCenterCaseStudy() {
           </div>
           <a
             href="/projects/adoptio"
-            aria-label="View next project: Adoptio"
+            aria-label={`${t("case.aria.viewnextproject")} Adoptio`}
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#F97316] z-0 transition-transform duration-1000 group-hover:scale-105">
+            <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-105" style={{ backgroundColor: PROJECTS.adoptio.brand }}>
               <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
             <div className="relative z-10 text-center">
@@ -458,6 +495,10 @@ export default function FolkCultureCenterCaseStudy() {
         {lightboxOpen && (
           <motion.div
             key="lightbox"
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("case.aria.imagelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -467,8 +508,9 @@ export default function FolkCultureCenterCaseStudy() {
             onClick={() => setLightboxOpen(false)}
           >
             <button
+              ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close lightbox"
+              aria-label={t("case.aria.closelightbox")}
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               ✕
@@ -476,7 +518,7 @@ export default function FolkCultureCenterCaseStudy() {
 
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous image"
+              aria-label={t("case.aria.previousimage")}
               disabled={lightboxIndex === 0}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.max(0, i - 1)); }}
             >
@@ -496,7 +538,7 @@ export default function FolkCultureCenterCaseStudy() {
             >
               <Image
                 src={SLIDES[lightboxIndex].src}
-                alt={SLIDES[lightboxIndex].alt}
+                alt={t(SLIDES[lightboxIndex].altKey)}
                 width={1400}
                 height={900}
                 className="rounded-xl object-contain"
@@ -512,7 +554,7 @@ export default function FolkCultureCenterCaseStudy() {
 
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next image"
+              aria-label={t("case.aria.nextimage")}
               disabled={lightboxIndex === SLIDES.length - 1}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)); }}
             >

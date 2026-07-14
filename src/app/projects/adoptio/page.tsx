@@ -6,21 +6,22 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { PROJECTS } from "@/lib/projects";
 
-const BRAND = "#F97316";
+const BRAND = PROJECTS.adoptio.brand;
 
 type SlideType = "macbook" | "flat" | "mobile";
 
-const SLIDES: { src: string; labelKey: string; alt: string; type: SlideType }[] = [
-  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",   alt: "Adoptio strona główna z algorytmem smart matching", type: "macbook" },
-  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",     alt: "Adoptio wyszukiwarka z aktywnymi filtrami",          type: "flat"    },
-  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",       alt: "Quiz dopasowania stylu życia na Adoptio",            type: "macbook" },
-  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",        alt: "Profil zwierzęcia Duszek na Adoptio",                type: "flat"    },
-  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",     alt: "Trzy widoki mobilne aplikacji Adoptio",              type: "mobile"  },
-  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",  alt: "Panel administracyjny schroniska z KPI",             type: "macbook" },
-  { src: "/adoptio-specialist.png", labelKey: "adoptme.slide.specialists", alt: "Profil specjalisty na Adoptio",                     type: "flat"    },
-  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",     alt: "Kanban zgłoszeń adopcyjnych w panelu admina",        type: "flat"    },
-  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",       alt: "Sekcja blogowa na Adoptio",                          type: "flat"    },
+const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
+  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",    altKey: "adoptme.alt.matching",    type: "macbook" },
+  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",      altKey: "adoptme.alt.search",      type: "flat"    },
+  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",        altKey: "adoptme.alt.quiz",        type: "macbook" },
+  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",         altKey: "adoptme.alt.pet",         type: "flat"    },
+  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",      altKey: "adoptme.alt.mobile",      type: "mobile"  },
+  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",   altKey: "adoptme.alt.dashboard",   type: "macbook" },
+  { src: "/adoptio-specialist.png", labelKey: "adoptme.slide.specialists", altKey: "adoptme.alt.specialists", type: "flat"    },
+  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban",      type: "flat"    },
+  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",        altKey: "adoptme.alt.blog",        type: "flat"    },
 ];
 
 export default function AdoptMeCaseStudy() {
@@ -40,6 +41,9 @@ export default function AdoptMeCaseStudy() {
   // Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
+  const lightboxTriggerRef = useRef<HTMLElement | null>(null);
 
   // Track active slide via IntersectionObserver
   useEffect(() => {
@@ -81,22 +85,36 @@ export default function AdoptMeCaseStudy() {
     [activeSlide, scrollToSlide]
   );
 
-  // Lightbox: keyboard nav + body scroll lock
+  // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
     if (!lightboxOpen) {
       document.body.style.overflow = "";
+      lightboxTriggerRef.current?.focus();
       return;
     }
     document.body.style.overflow = "hidden";
+    const focusId = setTimeout(() => lightboxCloseBtnRef.current?.focus(), 0);
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "Escape") { setLightboxOpen(false); return; }
       if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
       if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
+      if (e.key === "Tab") {
+        const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      clearTimeout(focusId);
     };
   }, [lightboxOpen]);
 
@@ -116,6 +134,7 @@ export default function AdoptMeCaseStudy() {
   return (
     <>
       <motion.main
+        id="main-content"
         className="w-full min-h-screen bg-[#F5F5F4]"
         ref={containerRef}
         initial={{ opacity: 0 }}
@@ -125,7 +144,7 @@ export default function AdoptMeCaseStudy() {
         {/* Fixed Close Button */}
         <button
           onClick={handleBack}
-          aria-label="Close and go back to projects"
+          aria-label={t("case.aria.closeandback")}
           className="fixed top-8 right-[4vw] z-50 mix-blend-difference text-white font-bold uppercase tracking-widest text-xs hover:opacity-50 transition-opacity magnetic-target min-h-[44px] min-w-[44px] inline-flex items-center justify-end focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           {t("case.close")}
@@ -144,7 +163,7 @@ export default function AdoptMeCaseStudy() {
 
           <Link
             href="/#projects"
-            aria-label="Back to projects"
+            aria-label={t("case.aria.backtoprojects")}
             className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center"
           >
             {t("case.back")}
@@ -228,6 +247,19 @@ export default function AdoptMeCaseStudy() {
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
                 <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.status")}</p>
                 <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t("adoptme.status")}</p>
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.live")}</p>
+                <a
+                  href="https://adoptio.pl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
+                  className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
+                  style={{ color: BRAND, borderColor: BRAND }}
+                >
+                  {t("case.visitwebsite")} →
+                </a>
               </motion.div>
             </div>
 
@@ -321,7 +353,10 @@ export default function AdoptMeCaseStudy() {
             {/* Scroll track */}
             <div
               ref={carouselRef}
-              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+              tabIndex={0}
+              role="region"
+              aria-label={t("case.aria.medialabel")}
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -331,6 +366,10 @@ export default function AdoptMeCaseStudy() {
               onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
               onPointerUp={() => setIsDragging(false)}
               onPointerLeave={() => setIsDragging(false)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+                if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+              }}
             >
               {SLIDES.map((slide, i) => (
                 <div
@@ -346,7 +385,10 @@ export default function AdoptMeCaseStudy() {
                     {t(slide.labelKey)}
                   </span>
                   <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${t(slide.labelKey)} — ${t("case.openimage")}`}
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -354,13 +396,21 @@ export default function AdoptMeCaseStudy() {
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                       if (window.innerWidth < 768) return;
+                      lightboxTriggerRef.current = e.currentTarget;
+                      setLightboxIndex(i);
+                      setLightboxOpen(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" && e.key !== " ") return;
+                      e.preventDefault();
+                      lightboxTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
                   >
                     <Image
                       src={slide.src}
-                      alt={slide.alt}
+                      alt={t(slide.altKey)}
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
@@ -376,7 +426,7 @@ export default function AdoptMeCaseStudy() {
             {activeSlide > 0 && (
               <button
                 onClick={goPrev}
-                aria-label="Previous slide"
+                aria-label={t("case.aria.previousslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -390,7 +440,7 @@ export default function AdoptMeCaseStudy() {
             {activeSlide < SLIDES.length - 1 && (
               <button
                 onClick={goNext}
-                aria-label="Next slide"
+                aria-label={t("case.aria.nextslide")}
                 className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
@@ -410,17 +460,18 @@ export default function AdoptMeCaseStudy() {
         </section>
 
         {/* 6. VISIT WEBSITE */}
-        <section className="py-[12vh] px-[4vw] bg-[#F5F5F4] flex items-center justify-center">
+        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
           <a
             href="https://adoptio.pl"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
             className="group inline-flex items-center gap-4"
           >
-            <span className="font-sans font-black text-[8vw] md:text-[6vw] tracking-tighter text-[#111] transition-colors duration-300 group-hover:text-[#F97316]">
+            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#F97316]">
               {t("case.visitwebsite")}
             </span>
-            <span className="text-[2vw] text-[#111] group-hover:translate-x-2 transition-transform duration-300">→</span>
+            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
           </a>
         </section>
 
@@ -457,10 +508,10 @@ export default function AdoptMeCaseStudy() {
           </div>
           <a
             href="/projects/legalray"
-            aria-label="View next project: LegalRay"
+            aria-label={`${t("case.aria.viewnextproject")} LegalRay`}
             className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[#2563EB] z-0 transition-transform duration-1000 group-hover:scale-105">
+            <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-105" style={{ backgroundColor: PROJECTS.legalray.brand }}>
               <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
             </div>
             <div className="relative z-10 text-center">
@@ -475,6 +526,10 @@ export default function AdoptMeCaseStudy() {
         {lightboxOpen && (
           <motion.div
             key="lightbox"
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("case.aria.imagelightbox")}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -485,8 +540,9 @@ export default function AdoptMeCaseStudy() {
           >
             {/* Close */}
             <button
+              ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
-              aria-label="Close lightbox"
+              aria-label={t("case.aria.closelightbox")}
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
             >
               ✕
@@ -495,7 +551,7 @@ export default function AdoptMeCaseStudy() {
             {/* Prev */}
             <button
               className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Previous image"
+              aria-label={t("case.aria.previousimage")}
               disabled={lightboxIndex === 0}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.max(0, i - 1)); }}
             >
@@ -516,7 +572,7 @@ export default function AdoptMeCaseStudy() {
             >
               <Image
                 src={SLIDES[lightboxIndex].src}
-                alt={SLIDES[lightboxIndex].alt}
+                alt={t(SLIDES[lightboxIndex].altKey)}
                 width={1400}
                 height={900}
                 className="rounded-xl object-contain"
@@ -533,7 +589,7 @@ export default function AdoptMeCaseStudy() {
             {/* Next */}
             <button
               className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center border-2 border-white/30 text-white hover:border-white hover:bg-white/10 transition-colors z-10 disabled:opacity-20 disabled:cursor-not-allowed"
-              aria-label="Next image"
+              aria-label={t("case.aria.nextimage")}
               disabled={lightboxIndex === SLIDES.length - 1}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)); }}
             >

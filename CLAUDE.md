@@ -11,9 +11,12 @@
 ## Struktura
 - `src/app/page.tsx` — główna strona (hero, projekty, beyond the code, kontakt)
 - `src/app/projects/folk-culture-center/page.tsx` — case study Centrum Kultury Ludowej (praca magisterska 2023)
+- `src/app/projects/adoptio/page.tsx` — case study Adoptio
 - `src/app/projects/legalray/page.tsx` — case study LegalRay
-- `src/app/projects/adoptme/page.tsx` — case study Adoptio
-- `src/app/projects/classified/page.tsx` — case study Confidential
+- `src/app/projects/fashionhero/page.tsx` — case study FashionHero
+- `src/app/projects/ania-kampania/page.tsx` — case study Ania Kampania
+- `src/app/projects/classified/page.tsx` — archived, no longer routed (see below)
+- `src/lib/projects.ts` — single source of truth for brand colors and project order
 - `src/components/ui/Navbar.tsx` — nawigacja + WRONA↔CROW toggle
 - `src/components/ui/Preloader.tsx` — preloader K.W
 - `src/components/ui/CustomCursor.tsx` — custom cursor
@@ -29,18 +32,22 @@
 - Case study: ciemny hero z brand color + jasny content poniżej
 
 ## Brand colors
+Defined once in `src/lib/projects.ts` (`PROJECTS[id].brand`) — update there, not per-page.
 - Folk Culture Center: no brand color (white on dark / black on light)
-- LegalRay: #2563EB (Blue-600)
 - Adoptio: #F97316 (Orange-500)
-- Confidential: #1A1A1A
+- LegalRay: #2563EB (Blue-600)
+- FashionHero: #E11D48 (Rose-600)
+- Ania Kampania: #B25818
 
 ## Projects order (homepage + Up Next chain)
 1. Folk Culture Center → /projects/folk-culture-center → Up Next: Adoptio
-2. Adoptio → /projects/adoptme → Up Next: LegalRay
-3. LegalRay → /projects/legalray → Up Next: Folk Culture Center
+2. Adoptio → /projects/adoptio → Up Next: LegalRay
+3. LegalRay → /projects/legalray → Up Next: FashionHero
+4. FashionHero → /projects/fashionhero → Up Next: Ania Kampania
+5. Ania Kampania → /projects/ania-kampania → Up Next: Folk Culture Center
 
 ## Ważne
-- NIGDY nie zmieniaj logiki ptaka (CrowShaderMesh) bez pytania
+- NIGDY nie zmieniaj logiki ptaka (CrowShaderMesh, teraz w `src/components/CrowScene.tsx`) bez pytania
 - Ghost text w hero: scroll-reveal, hidden na mobile, wariant C (mały tekst) na mobile
 - prefers-reduced-motion: wyłącz animacje
 - Strona musi startować od góry (scrollTo 0,0)
