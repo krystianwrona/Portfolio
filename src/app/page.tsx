@@ -470,7 +470,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       </div>
       {submitError && (
         <p role="alert" className="text-red-400 text-xs font-bold uppercase tracking-widest text-center">
-          Something went wrong. Please try again.
+          {t('contact.form.error')}
         </p>
       )}
       <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4">
@@ -485,7 +485,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           whileTap={submitting ? undefined : { scale: 0.98 }}
           className="w-full sm:w-auto px-10 py-4 min-h-[48px] bg-white text-[#111] font-black uppercase tracking-widest text-sm rounded-full magnetic-target focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {submitting ? "Sending…" : t('contact.form.send')}
+          {submitting ? t('contact.form.sending') : t('contact.form.send')}
         </motion.button>
       </div>
     </motion.form>
@@ -588,7 +588,7 @@ export default function Home() {
           style={{ opacity: ghostOpacity }}
         >
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#111]/40 leading-relaxed">
-            Where architecture meets code
+            {t('hero.headline.where')} {t('hero.headline.architecture')} {t('hero.headline.meets')}
           </p>
         </motion.div>
 
