@@ -37,6 +37,9 @@ export default function AniaKampaniaCaseStudy() {
   // Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
+  const lightboxTriggerRef = useRef<HTMLElement | null>(null);
 
   // Media availability — checked at runtime so the carousel activates
   // automatically once real files land in /public/, no code change needed.
@@ -100,22 +103,36 @@ export default function AniaKampaniaCaseStudy() {
     [activeSlide, scrollToSlide]
   );
 
-  // Lightbox: keyboard nav + body scroll lock
+  // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
     if (!lightboxOpen) {
       document.body.style.overflow = "";
+      lightboxTriggerRef.current?.focus();
       return;
     }
     document.body.style.overflow = "hidden";
+    const focusId = setTimeout(() => lightboxCloseBtnRef.current?.focus(), 0);
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "Escape") { setLightboxOpen(false); return; }
       if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
       if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
+      if (e.key === "Tab") {
+        const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      clearTimeout(focusId);
     };
   }, [lightboxOpen]);
 
@@ -401,12 +418,14 @@ export default function AniaKampaniaCaseStudy() {
                         onClick={(e) => {
                           if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                           if (window.innerWidth < 768) return;
+                          lightboxTriggerRef.current = e.currentTarget;
                           setLightboxIndex(i);
                           setLightboxOpen(true);
                         }}
                         onKeyDown={(e) => {
                           if (e.key !== "Enter" && e.key !== " ") return;
                           e.preventDefault();
+                          lightboxTriggerRef.current = e.currentTarget;
                           setLightboxIndex(i);
                           setLightboxOpen(true);
                         }}
@@ -529,6 +548,10 @@ export default function AniaKampaniaCaseStudy() {
         {lightboxOpen && (
           <motion.div
             key="lightbox"
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Image lightbox"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -539,6 +562,7 @@ export default function AniaKampaniaCaseStudy() {
           >
             {/* Close */}
             <button
+              ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
               aria-label="Close lightbox"
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}

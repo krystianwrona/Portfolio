@@ -37,9 +37,17 @@ export default function FashionHeroCaseStudy() {
   // Lightbox — carousel
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
 
   // Lightbox — certificate
   const [certOpen, setCertOpen] = useState(false);
+  const certRef = useRef<HTMLDivElement>(null);
+  const certCloseBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Shared: element that opened whichever dialog is currently active,
+  // so focus returns there on close.
+  const activeTriggerRef = useRef<HTMLElement | null>(null);
 
   // Track active slide via IntersectionObserver
   useEffect(() => {
@@ -81,24 +89,40 @@ export default function FashionHeroCaseStudy() {
     [activeSlide, scrollToSlide]
   );
 
-  // Lightbox: keyboard nav + body scroll lock
+  // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
     if (!lightboxOpen && !certOpen) {
       document.body.style.overflow = "";
+      activeTriggerRef.current?.focus();
       return;
     }
     document.body.style.overflow = "hidden";
+    const activeDialogRef = lightboxOpen ? lightboxRef : certRef;
+    const activeCloseBtnRef = lightboxOpen ? lightboxCloseBtnRef : certCloseBtnRef;
+    const focusId = setTimeout(() => activeCloseBtnRef.current?.focus(), 0);
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setLightboxOpen(false); setCertOpen(false); }
+      if (e.key === "Escape") { setLightboxOpen(false); setCertOpen(false); return; }
       if (lightboxOpen) {
         if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
         if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
+      }
+      if (e.key === "Tab") {
+        const focusables = activeDialogRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
+        if (!focusables || focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
       }
     };
     window.addEventListener("keydown", handler);
     return () => {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      clearTimeout(focusId);
     };
   }, [lightboxOpen, certOpen]);
 
@@ -263,7 +287,7 @@ export default function FashionHeroCaseStudy() {
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
                 <button
-                  onClick={() => setCertOpen(true)}
+                  onClick={(e) => { activeTriggerRef.current = e.currentTarget; setCertOpen(true); }}
                   aria-label="View AI Product Heroes 2 certificate"
                   className="group text-left w-full max-w-xs rounded-2xl border border-[#111]/10 bg-white p-5 hover:border-[#E11D48]/40 transition-colors duration-300"
                 >
@@ -450,12 +474,14 @@ export default function FashionHeroCaseStudy() {
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                       if (window.innerWidth < 768) return;
+                      activeTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
                     onKeyDown={(e) => {
                       if (e.key !== "Enter" && e.key !== " ") return;
                       e.preventDefault();
+                      activeTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}
@@ -578,6 +604,10 @@ export default function FashionHeroCaseStudy() {
         {lightboxOpen && (
           <motion.div
             key="lightbox"
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Image lightbox"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -588,6 +618,7 @@ export default function FashionHeroCaseStudy() {
           >
             {/* Close */}
             <button
+              ref={lightboxCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
               aria-label="Close lightbox"
               onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
@@ -653,6 +684,10 @@ export default function FashionHeroCaseStudy() {
         {certOpen && (
           <motion.div
             key="cert-lightbox"
+            ref={certRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Certificate lightbox"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -662,6 +697,7 @@ export default function FashionHeroCaseStudy() {
             onClick={() => setCertOpen(false)}
           >
             <button
+              ref={certCloseBtnRef}
               className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors text-xl leading-none"
               aria-label="Close certificate"
               onClick={(e) => { e.stopPropagation(); setCertOpen(false); }}
