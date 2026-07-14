@@ -15,7 +15,6 @@ const vertexShader = /* glsl */ `
   uniform float uAssembly;
   uniform float uReduced;
   uniform float uPixelRatio;
-  uniform vec2 uParallax;
   uniform vec2 uMouseWorld;
   uniform sampler2D uTexture;
   uniform float uHeadRotationY;
@@ -51,23 +50,11 @@ const vertexShader = /* glsl */ `
     float rndC = hash(uv * 3.77);
     float live = 1.0 - uReduced;
 
-    // Fake depth — each dot sits on its own z-layer; drives size, opacity,
-    // parallax, and real perspective shift under head rotation
-    float depth = rndB - 0.5;
-    pos.z += depth * 0.14;
-
     // Idle micro-motion (frozen when uTime stops under reduced motion)
     float speed = 2.0 + rnd * 2.0;
     pos.x += sin(uTime * speed + rnd * 100.0) * 0.003;
     pos.y += cos(uTime * speed * 0.8 + rnd * 100.0) * 0.003;
     pos.z += sin(uTime * speed * 1.2 + rnd * 100.0) * 0.005;
-
-    // Breathing — slow global scale pulse around the body center
-    pos.xy *= 1.0 + sin(uTime * 0.55) * 0.005;
-
-    // Depth parallax on mouse move — near dots shift with the cursor,
-    // far dots against it
-    pos.xy += uParallax * depth;
 
     // Cursor proximity repel
     vec2 toMouse = pos.xy - uMouseWorld;
@@ -99,13 +86,10 @@ const vertexShader = /* glsl */ `
     pos += explodeDir * scrollEase * 45.0 * live;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    float sizeDepth = 0.75 + (depth + 0.5) * 0.85;
-    gl_PointSize = 2.0 * sizeDepth * uPixelRatio * (5.0 / -mvPosition.z);
+    gl_PointSize = 2.3 * uPixelRatio * (5.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
 
-    float alphaDepth = 0.62 + (depth + 0.5) * 0.38;
-    float alphaAssemble = smoothstep(0.0, 0.35, t);
-    vAlpha = alphaDepth * alphaAssemble;
+    vAlpha = smoothstep(0.0, 0.35, t);
   }
 `;
 
@@ -136,8 +120,6 @@ const ASSEMBLY_DURATION = 2.2;
 // Preloader covers the screen for 1800ms + 500ms fade — on a hard load, hold
 // the assembly until it starts lifting so the flight is actually seen
 const PRELOADER_MS = 1750;
-// Max parallax offset in local mesh units at full mouse deflection
-const PARALLAX_STRENGTH = 0.022;
 
 function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   scrollRef: { current: number };
@@ -171,7 +153,6 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     uAssembly:      { value: 0 },
     uReduced:       { value: 0 },
     uPixelRatio:    { value: 1 },
-    uParallax:      { value: new THREE.Vector2(0, 0) },
     uMouseWorld:    { value: new THREE.Vector2(0, 0) },
     uHeadRotationY: { value: 0 },
     uNeckPivot:     { value: new THREE.Vector3(0.0, NECK_PIVOT_Y, 0.0) },
@@ -215,7 +196,6 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   const zPlane      = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), []);
   const hitVec      = useMemo(() => new THREE.Vector3(), []);
   const ndcVec      = useMemo(() => new THREE.Vector2(), []);
-  const parallaxTgt = useMemo(() => new THREE.Vector2(), []);
 
   // Reset head rotation on tab return to avoid delta spike
   useEffect(() => {
@@ -261,14 +241,6 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
       mouseWorld.current.lerp(new THREE.Vector2((hitVec.x + 0.3) / meshW, hitVec.y / meshH), 0.15);
     }
     uniforms.uMouseWorld.value.copy(mouseWorld.current);
-
-    // Depth parallax — eases toward the cursor while hovering, back to rest after
-    if (isHoveringRef.current) {
-      parallaxTgt.set(mouseRef.current.x * PARALLAX_STRENGTH, mouseRef.current.y * PARALLAX_STRENGTH);
-    } else {
-      parallaxTgt.set(0, 0);
-    }
-    uniforms.uParallax.value.lerp(parallaxTgt, 0.06);
 
     // Head rotation — idle sway + cursor follow (hover only)
     const time = state.clock.getElapsedTime();
