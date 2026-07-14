@@ -557,9 +557,9 @@ export default function FashionHeroCaseStudy() {
         {/* 8. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
-            { keys: ["fashionhero.marquee.row1.1", "fashionhero.marquee.row1.2"] as const, dir: "left",  color: "#111", opacity: 0.08 },
-            { keys: ["fashionhero.marquee.row2.1", "fashionhero.marquee.row2.2"] as const, dir: "right", color: BRAND,  opacity: 0.25 },
-            { keys: ["fashionhero.marquee.row3.1", "fashionhero.marquee.row3.2"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["fashionhero.marquee.row1.1", "fashionhero.marquee.row1.2", "fashionhero.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
+            { keys: ["fashionhero.marquee.row2.1", "fashionhero.marquee.row2.2", "fashionhero.marquee.row2.3"] as const, dir: "right", color: BRAND,  opacity: 0.25 },
+            { keys: ["fashionhero.marquee.row3.1", "fashionhero.marquee.row3.2", "fashionhero.marquee.row3.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
           ]).map(({ keys, dir, color, opacity }, i) => {
             const words = keys.map((k) => t(k));
             const repeated = [...words, ...words, ...words, ...words].join(" • ") + " • ";
