@@ -226,19 +226,6 @@ export default function LegalRayCaseStudy() {
                 <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.timeline")}</p>
                 <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t("legalray.timeline")}</p>
               </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
-                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.live")}</p>
-                <a
-                  href="https://legal-saas-rosy.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit LegalRay website (opens in new tab)"
-                  className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
-                  style={{ color: BRAND, borderColor: BRAND }}
-                >
-                  {t("case.visitwebsite")} →
-                </a>
-              </motion.div>
             </div>
 
             <div className="hidden lg:block lg:col-span-1">
@@ -413,23 +400,7 @@ export default function LegalRayCaseStudy() {
           </div>
         </section>
 
-        {/* 6. VISIT WEBSITE */}
-        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
-          <a
-            href="https://legal-saas-rosy.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit LegalRay live website (opens in new tab)"
-            className="group inline-flex items-center gap-4"
-          >
-            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#2563EB]">
-              {t("case.visitwebsite")}
-            </span>
-            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
-          </a>
-        </section>
-
-        {/* 7. MARQUEE */}
+        {/* 6. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
             { keys: ["legalray.marquee.row1.1", "legalray.marquee.row1.2", "legalray.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
@@ -455,7 +426,7 @@ export default function LegalRayCaseStudy() {
           })}
         </section>
 
-        {/* 8. NEXT PROJECT */}
+        {/* 7. NEXT PROJECT */}
         <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
           <div className="text-center mb-10">
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
