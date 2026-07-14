@@ -142,7 +142,7 @@ export function Navbar() {
           onClick={(e) => handleNavClick(e, "#")}
           className="font-display font-black text-2xl tracking-tighter text-[#111111] flex items-baseline gap-0 focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm focus-visible:outline-none"
           style={{ letterSpacing: "-0.05em" }}
-          aria-label="Go to top"
+          aria-label="Krystian Wrona — go to top"
         >
           <span>KRYSTIAN.</span>
           <AnimatePresence mode="wait" initial={false}>

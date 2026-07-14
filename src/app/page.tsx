@@ -504,14 +504,14 @@ export default function Home() {
                   variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] } } }}
                   className="flex-1 p-8 rounded-[32px] bg-[#111] text-[#F8F8F8] flex flex-col justify-between min-h-[160px]"
                 >
-                  <p
+                  <div
                     className="font-display font-black text-5xl tracking-tighter mb-2"
                     aria-label={stat.infinity ? t(stat.labelKey) : `${stat.to}${stat.suffix} ${t(stat.labelKey)}`}
                   >
                     <span aria-hidden="true">
                       {stat.infinity ? <InfinitySymbol /> : <CountUp to={stat.to} suffix={stat.suffix} />}
                     </span>
-                  </p>
+                  </div>
                   <p className="font-bold uppercase tracking-widest text-xs opacity-50">{t(stat.labelKey)}</p>
                 </motion.div>
               ))}
@@ -525,7 +525,7 @@ export default function Home() {
         <div className="flex-1 flex items-center justify-center py-[8vh]">
           <MagneticHeading
             onClick={() => setContactOpen((v) => !v)}
-            ariaLabel={contactOpen ? "Close contact form" : "Open contact form"}
+            ariaLabel={`${t('contact.headline.1')} ${t('contact.headline.2')} ${t('contact.headline.3')} — ${contactOpen ? "close" : "open"} contact form`}
             className="cursor-pointer select-none group focus-visible:outline-none"
           >
             <h2 id="contact-heading" className="font-display font-black text-[8vw] md:text-[7vw] leading-[0.85] tracking-tighter text-center transition-colors duration-500">
