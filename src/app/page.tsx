@@ -294,35 +294,13 @@ function ProjectRow({ project, onClick, index }: {
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
         <h3
           className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
+          style={{
+            color: isHovered ? project.color : 'transparent',
+            WebkitTextStroke: isHovered ? '1.5px rgba(255,255,255,0)' : '1.5px rgba(255,255,255,0.35)',
+            transition: 'color 500ms cubic-bezier(0,0,0.2,1), -webkit-text-stroke-color 500ms cubic-bezier(0,0,0.2,1)',
+          }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            focusable="false"
-            style={{ display: 'block', width: '100%', height: '1.2em', overflow: 'visible' }}
-          >
-            <defs>
-              <clipPath id={`clip0-${project.id}`}>
-                <rect x="-50" y="-100" width="10000" height="1000" />
-              </clipPath>
-            </defs>
-            <text
-              x="0"
-              y="1em"
-              clipPath={`url(#clip0-${project.id})`}
-              fill={project.color}
-              fillOpacity={isHovered ? 1 : 0}
-              stroke="white"
-              strokeOpacity={isHovered ? 0 : 0.35}
-              strokeWidth="1.5"
-              style={{
-                transition: 'fill-opacity 500ms cubic-bezier(0,0,0.2,1), stroke-opacity 500ms cubic-bezier(0,0,0.2,1)',
-              }}
-            >
-              {project.title}
-            </text>
-          </svg>
-          <span className="sr-only">{project.title}</span>
+          {project.title}
         </h3>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
           {t(project.categoryKey)}

@@ -191,7 +191,7 @@ export function Navbar() {
           <button
             ref={hamburgerRef}
             onClick={() => setMenuOpen((v) => !v)}
-            className="md:hidden text-[0.75rem] font-black uppercase tracking-widest text-[#111111] hover:opacity-60 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm"
+            className="md:hidden text-[0.75rem] font-black uppercase tracking-widest text-[#111111] hover:opacity-60 focus-visible:opacity-60 focus-visible:underline underline-offset-4 transition-opacity focus-visible:outline-none"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
