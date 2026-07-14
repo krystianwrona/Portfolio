@@ -112,6 +112,7 @@ export default function FolkCultureCenterCaseStudy() {
   return (
     <>
       <motion.main
+        id="main-content"
         className="w-full min-h-screen bg-[#F5F5F4]"
         ref={containerRef}
         initial={{ opacity: 0 }}
@@ -316,7 +317,10 @@ export default function FolkCultureCenterCaseStudy() {
           <div className="relative">
             <div
               ref={carouselRef}
-              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+              tabIndex={0}
+              role="region"
+              aria-label="Project media carousel"
+              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
                 scrollbarWidth: "none",
@@ -326,6 +330,10 @@ export default function FolkCultureCenterCaseStudy() {
               onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
               onPointerUp={() => setIsDragging(false)}
               onPointerLeave={() => setIsDragging(false)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+                if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+              }}
             >
               {SLIDES.map((slide, i) => (
                 <div
@@ -341,7 +349,10 @@ export default function FolkCultureCenterCaseStudy() {
                     {t(slide.labelKey)}
                   </span>
                   <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${t(slide.labelKey)} — ${t("case.openimage")}`}
+                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-white flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
                     style={{
                       boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
                       cursor: isDragging ? "grabbing" : "pointer",
@@ -349,6 +360,12 @@ export default function FolkCultureCenterCaseStudy() {
                     onClick={(e) => {
                       if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
                       if (window.innerWidth < 768) return;
+                      setLightboxIndex(i);
+                      setLightboxOpen(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== "Enter" && e.key !== " ") return;
+                      e.preventDefault();
                       setLightboxIndex(i);
                       setLightboxOpen(true);
                     }}

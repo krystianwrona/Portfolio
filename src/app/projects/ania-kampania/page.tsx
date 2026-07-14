@@ -135,6 +135,7 @@ export default function AniaKampaniaCaseStudy() {
   return (
     <>
       <motion.main
+        id="main-content"
         className="w-full min-h-screen bg-[#F5F5F4]"
         ref={containerRef}
         initial={{ opacity: 0 }}
@@ -357,7 +358,10 @@ export default function AniaKampaniaCaseStudy() {
                 {/* Scroll track */}
                 <div
                   ref={carouselRef}
-                  className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Project media carousel"
+                  className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
                   style={{
                     scrollSnapType: "x mandatory",
                     scrollbarWidth: "none",
@@ -367,6 +371,10 @@ export default function AniaKampaniaCaseStudy() {
                   onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
                   onPointerUp={() => setIsDragging(false)}
                   onPointerLeave={() => setIsDragging(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+                    if (e.key === "ArrowRight") { e.preventDefault(); goNext(); }
+                  }}
                 >
                   {SLIDES.map((slide, i) => (
                     <div
