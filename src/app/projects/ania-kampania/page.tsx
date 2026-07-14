@@ -482,23 +482,25 @@ export default function AniaKampaniaCaseStudy() {
               </div>
             </>
           )}
-
-          {/* Visit website CTA */}
-          <div className="flex justify-center mt-8">
-            <a
-              href="https://aniakampania.pl"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${t("case.aria.visitwebsite")} Ania Kampania ${t("case.aria.website")}`}
-              className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
-              style={{ color: BRAND, borderColor: BRAND }}
-            >
-              {t("case.visitwebsite")} →
-            </a>
-          </div>
         </section>
 
-        {/* 6. MARQUEE */}
+        {/* 6. VISIT WEBSITE */}
+        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
+          <a
+            href="https://aniakampania.pl"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${t("case.aria.visitwebsite")} Ania Kampania ${t("case.aria.website")}`}
+            className="group inline-flex items-center gap-4"
+          >
+            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#B25818]">
+              {t("case.visitwebsite")}
+            </span>
+            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </a>
+        </section>
+
+        {/* 7. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
             { keys: ["aniak.marquee.row1.1", "aniak.marquee.row1.2", "aniak.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
@@ -524,7 +526,7 @@ export default function AniaKampaniaCaseStudy() {
           })}
         </section>
 
-        {/* 7. NEXT PROJECT */}
+        {/* 8. NEXT PROJECT */}
         <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
           <div className="text-center mb-10">
             <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>

@@ -248,6 +248,19 @@ export default function AdoptMeCaseStudy() {
                 <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.status")}</p>
                 <p className="text-base font-bold text-[#111]/80 leading-relaxed whitespace-pre-line">{t("adoptme.status")}</p>
               </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
+                <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.live")}</p>
+                <a
+                  href="https://adoptio.pl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
+                  className="text-base font-bold pb-1 border-b-2 inline-block transition-colors duration-300"
+                  style={{ color: BRAND, borderColor: BRAND }}
+                >
+                  {t("case.visitwebsite")} →
+                </a>
+              </motion.div>
             </div>
 
             <div className="hidden lg:block lg:col-span-1">
@@ -447,17 +460,18 @@ export default function AdoptMeCaseStudy() {
         </section>
 
         {/* 6. VISIT WEBSITE */}
-        <section className="py-[12vh] px-[4vw] bg-[#F5F5F4] flex items-center justify-center">
+        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
           <a
             href="https://adoptio.pl"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
             className="group inline-flex items-center gap-4"
           >
-            <span className="font-sans font-black text-[8vw] md:text-[6vw] tracking-tighter text-[#111] transition-colors duration-300 group-hover:text-[#F97316]">
+            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#F97316]">
               {t("case.visitwebsite")}
             </span>
-            <span className="text-[2vw] text-[#111] group-hover:translate-x-2 transition-transform duration-300">→</span>
+            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
           </a>
         </section>
 
