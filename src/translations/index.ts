@@ -67,6 +67,8 @@ export const translations: Record<string, Record<string, string>> = {
     'case.status': 'Status & Timeline',
     'case.context': 'Context & Timeline',
     'case.skills': 'Skills & Methods',
+    'case.mediacomingsoon': 'Visuals coming soon.',
+    'case.openimage': 'open full image',
 
     // ── Case Study — LegalRay ──
     'legalray.subtitle': 'Case Study — 2026',
@@ -361,6 +363,8 @@ export const translations: Record<string, Record<string, string>> = {
     'case.status': 'Status i termin',
     'case.context': 'Kontekst i harmonogram',
     'case.skills': 'Umiejętności i metody',
+    'case.mediacomingsoon': 'Wizualizacje wkrótce.',
+    'case.openimage': 'otwórz pełny obraz',
 
     // ── Case Study — LegalRay ──
     'legalray.subtitle': 'Case Study — 2026',

@@ -38,6 +38,28 @@ export default function AniaKampaniaCaseStudy() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
+  // Media availability — checked at runtime so the carousel activates
+  // automatically once real files land in /public/, no code change needed.
+  const [mediaStatus, setMediaStatus] = useState<"checking" | "ok" | "missing">("checking");
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(
+      SLIDES.map(
+        (slide) =>
+          new Promise<boolean>((resolve) => {
+            const img = new window.Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = slide.src;
+          })
+      )
+    ).then((results) => {
+      if (!cancelled) setMediaStatus(results.every(Boolean) ? "ok" : "missing");
+    });
+    return () => { cancelled = true; };
+  }, []);
+
   // Track active slide via IntersectionObserver
   useEffect(() => {
     const carousel = carouselRef.current;
@@ -321,96 +343,117 @@ export default function AniaKampaniaCaseStudy() {
 
         {/* 5. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
-          <div className="relative">
-            {/* Scroll track */}
-            <div
-              ref={carouselRef}
-              className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
-              style={{
-                scrollSnapType: "x mandatory",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                cursor: isDragging ? "grabbing" : "grab",
-              } as React.CSSProperties}
-              onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
-              onPointerUp={() => setIsDragging(false)}
-              onPointerLeave={() => setIsDragging(false)}
-            >
-              {SLIDES.map((slide, i) => (
-                <div
-                  key={slide.src}
-                  ref={(el) => { slideRefs.current[i] = el; }}
-                  className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px] h-full items-center justify-center"
-                  style={{ scrollSnapAlign: "center" }}
-                >
-                  <span
-                    className="flex-shrink-0 block text-[10px] font-semibold uppercase"
-                    style={{ color: BRAND, letterSpacing: "0.15em" }}
-                  >
-                    {t(slide.labelKey)}
-                  </span>
-                  <div
-                    className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center"
-                    style={{
-                      boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
-                      cursor: isDragging ? "grabbing" : "pointer",
-                    }}
-                    onClick={(e) => {
-                      if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
-                      if (window.innerWidth < 768) return;
-                      setLightboxIndex(i);
-                      setLightboxOpen(true);
-                    }}
-                  >
-                    <Image
-                      src={slide.src}
-                      alt={slide.alt}
-                      width={1600}
-                      height={1000}
-                      sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
-                      draggable={false}
-                    />
-                  </div>
-                </div>
-              ))}
+          {mediaStatus === "missing" ? (
+            <div className="mx-[6vw] md:mx-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] rounded-[12px] bg-[#E4E4E7] flex items-center justify-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#111]/40">
+                {t("case.mediacomingsoon")}
+              </p>
             </div>
+          ) : mediaStatus === "checking" ? (
+            <div className="mx-[6vw] md:mx-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] rounded-[12px] bg-[#E4E4E7] animate-pulse" />
+          ) : (
+            <>
+              <div className="relative">
+                {/* Scroll track */}
+                <div
+                  ref={carouselRef}
+                  className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)]"
+                  style={{
+                    scrollSnapType: "x mandatory",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    cursor: isDragging ? "grabbing" : "grab",
+                  } as React.CSSProperties}
+                  onPointerDown={(e) => { pointerDownX.current = e.clientX; setIsDragging(true); }}
+                  onPointerUp={() => setIsDragging(false)}
+                  onPointerLeave={() => setIsDragging(false)}
+                >
+                  {SLIDES.map((slide, i) => (
+                    <div
+                      key={slide.src}
+                      ref={(el) => { slideRefs.current[i] = el; }}
+                      className="flex-shrink-0 flex flex-col gap-3 select-none w-[88vw] md:w-[75vw] max-w-[1000px] h-full items-center justify-center"
+                      style={{ scrollSnapAlign: "center" }}
+                    >
+                      <span
+                        className="flex-shrink-0 block text-[10px] font-semibold uppercase"
+                        style={{ color: BRAND, letterSpacing: "0.15em" }}
+                      >
+                        {t(slide.labelKey)}
+                      </span>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${t(slide.labelKey)} — ${t("case.openimage")}`}
+                        className="flex-1 w-full overflow-hidden rounded-[12px] bg-[#E4E4E7] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
+                        style={{
+                          boxShadow: "0 4px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
+                          cursor: isDragging ? "grabbing" : "pointer",
+                        }}
+                        onClick={(e) => {
+                          if (Math.abs(e.clientX - pointerDownX.current) > 8) return;
+                          if (window.innerWidth < 768) return;
+                          setLightboxIndex(i);
+                          setLightboxOpen(true);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key !== "Enter" && e.key !== " ") return;
+                          e.preventDefault();
+                          setLightboxIndex(i);
+                          setLightboxOpen(true);
+                        }}
+                      >
+                        <Image
+                          src={slide.src}
+                          alt={slide.alt}
+                          width={1600}
+                          height={1000}
+                          sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
+                          style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
+                          draggable={false}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-            {/* Prev arrow — desktop only, hidden on first slide */}
-            {activeSlide > 0 && (
-              <button
-                onClick={goPrev}
-                aria-label="Previous slide"
-                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
-                style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            )}
+                {/* Prev arrow — desktop only, hidden on first slide */}
+                {activeSlide > 0 && (
+                  <button
+                    onClick={goPrev}
+                    aria-label="Previous slide"
+                    className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                    style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                )}
 
-            {/* Next arrow — desktop only, hidden on last slide */}
-            {activeSlide < SLIDES.length - 1 && (
-              <button
-                onClick={goNext}
-                aria-label="Next slide"
-                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
-                style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            )}
-          </div>
+                {/* Next arrow — desktop only, hidden on last slide */}
+                {activeSlide < SLIDES.length - 1 && (
+                  <button
+                    onClick={goNext}
+                    aria-label="Next slide"
+                    className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                    style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                )}
+              </div>
 
-          {/* Slide counter */}
-          <div className="flex justify-end px-[4vw] mt-5">
-            <span className="font-mono text-sm font-medium text-[#111111]">
-              {String(activeSlide + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SLIDES.length).padStart(2, "0")}
-            </span>
-          </div>
+              {/* Slide counter */}
+              <div className="flex justify-end px-[4vw] mt-5">
+                <span className="font-mono text-sm font-medium text-[#111111]">
+                  {String(activeSlide + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SLIDES.length).padStart(2, "0")}
+                </span>
+              </div>
+            </>
+          )}
 
           {/* Visit website CTA */}
           <div className="flex justify-center mt-8">
