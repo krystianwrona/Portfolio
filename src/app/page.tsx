@@ -91,6 +91,24 @@ function InfinitySymbol() {
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
+// -webkit-text-stroke renders as thick, merged/doubled letterforms on Android
+// Chrome at these font-black + tracking-tighter sizes — it strokes each glyph
+// outline independently and Android's rasterizer bridges the gap between
+// tightly-tracked letters. A multi-directional text-shadow fakes the outline
+// via offset solid-fill copies instead, which uses the normal text fill/
+// compositing path and renders identically across engines.
+function titleStrokeShadow(width: number, alpha: number) {
+  const steps = 8;
+  const shadows: string[] = [];
+  for (let i = 0; i < steps; i++) {
+    const angle = (i / steps) * Math.PI * 2;
+    const x = (Math.cos(angle) * width).toFixed(2);
+    const y = (Math.sin(angle) * width).toFixed(2);
+    shadows.push(`${x}px ${y}px 0 rgba(255,255,255,${alpha})`);
+  }
+  return shadows.join(', ');
+}
+
 function ProjectRow({ project, onClick, index }: {
   project: ProjectEntry;
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
@@ -126,8 +144,8 @@ function ProjectRow({ project, onClick, index }: {
           className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
           style={{
             color: isHovered ? project.color : 'transparent',
-            WebkitTextStroke: isHovered ? '1.5px rgba(255,255,255,0)' : '1.5px rgba(255,255,255,0.35)',
-            transition: 'color 500ms cubic-bezier(0,0,0.2,1), -webkit-text-stroke-color 500ms cubic-bezier(0,0,0.2,1)',
+            textShadow: titleStrokeShadow(1.25, isHovered ? 0 : 0.35),
+            transition: 'color 500ms cubic-bezier(0,0,0.2,1), text-shadow 500ms cubic-bezier(0,0,0.2,1)',
           }}
         >
           {project.title}
