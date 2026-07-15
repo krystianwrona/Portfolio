@@ -96,6 +96,7 @@ function ProjectRow({ project, onClick, index }: {
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
   index: number;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const { t } = useLanguage();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -113,33 +114,28 @@ function ProjectRow({ project, onClick, index }: {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.1 } }}
       viewport={{ once: true, margin: "-10%" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
       onKeyDown={handleKeyDown}
-      className="project-row group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
-      style={{ ['--project-color' as string]: project.color } as React.CSSProperties}
+      className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
     >
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
-        <h3 className="project-row-title font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4">
+        <h3
+          className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
+          style={{
+            color: isHovered ? project.color : 'transparent',
+            WebkitTextStroke: isHovered ? '1.5px rgba(255,255,255,0)' : '1.5px rgba(255,255,255,0.35)',
+            transition: 'color 500ms cubic-bezier(0,0,0.2,1), -webkit-text-stroke-color 500ms cubic-bezier(0,0,0.2,1)',
+          }}
+        >
           {project.title}
         </h3>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
           {t(project.categoryKey)}
         </span>
       </div>
-      <style jsx>{`
-        .project-row-title {
-          color: transparent;
-          -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
-          transition: color 0.3s ease;
-        }
-        @media (hover: hover) {
-          .project-row:hover .project-row-title {
-            color: var(--project-color);
-            -webkit-text-stroke: 0;
-          }
-        }
-      `}</style>
     </motion.div>
   );
 }
