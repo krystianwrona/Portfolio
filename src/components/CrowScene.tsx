@@ -15,6 +15,7 @@ const vertexShader = /* glsl */ `
   uniform float uAssembly;
   uniform float uReduced;
   uniform float uPixelRatio;
+  uniform float uPointBase;
   uniform vec2 uMouseWorld;
   uniform sampler2D uTexture;
   uniform float uHeadRotationY;
@@ -86,7 +87,7 @@ const vertexShader = /* glsl */ `
     pos += explodeDir * scrollEase * 45.0 * live;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = 2.3 * uPixelRatio * (5.0 / -mvPosition.z);
+    gl_PointSize = uPointBase * uPixelRatio * (5.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
 
     vAlpha = smoothstep(0.0, 0.35, t);
@@ -141,9 +142,18 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   );
 
   // Fewer grid segments on small screens — quarter the vertex count on mobile
-  const [segments] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 768 ? 160 : 288
-  );
+  const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
+  const [segments] = useState(() => (isMobileViewport ? 160 : 288));
+
+  // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
+  // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every
+  // screen). The Canvas's dpr={[1, 2]} clamps virtually every modern phone
+  // (Pixel 10 Pro included) to a pixelRatio of 2, so multiplying the new 2.3
+  // base by that factor made mobile dots up to ~2.3x larger on-screen than
+  // before. Cancel the DPR factor out on mobile so the final rendered size
+  // matches the pre-polish 2.0 base exactly, whatever the clamped ratio is —
+  // desktop keeps the approved dpr-aware crisp sizing untouched.
+  const [pointBase] = useState(() => (isMobileViewport ? 2.0 / gl.getPixelRatio() : 2.3));
 
   const uniforms = useMemo(() => ({
     uTexture:       { value: texture },
@@ -153,10 +163,11 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     uAssembly:      { value: 0 },
     uReduced:       { value: 0 },
     uPixelRatio:    { value: 1 },
+    uPointBase:     { value: pointBase },
     uMouseWorld:    { value: new THREE.Vector2(0, 0) },
     uHeadRotationY: { value: 0 },
     uNeckPivot:     { value: new THREE.Vector3(0.0, NECK_PIVOT_Y, 0.0) },
-  }), [texture]);
+  }), [texture, pointBase]);
 
   // Track reduced-motion preference live; static users skip assembly entirely
   useEffect(() => {

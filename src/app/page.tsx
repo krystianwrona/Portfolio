@@ -109,12 +109,16 @@ function titleStrokeShadow(width: number, alpha: number) {
   return shadows.join(', ');
 }
 
+// Outline (resting) vs filled (hover) shadow, precomputed once — these never
+// change at runtime, only which one applies.
+const TITLE_OUTLINE_SHADOW = titleStrokeShadow(1.25, 0.35);
+const TITLE_FILLED_SHADOW = titleStrokeShadow(1.25, 0);
+
 function ProjectRow({ project, onClick, index }: {
   project: ProjectEntry;
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
   index: number;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
   const { t } = useLanguage();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -132,28 +136,43 @@ function ProjectRow({ project, onClick, index }: {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.1 } }}
       viewport={{ once: true, margin: "-10%" }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
       onKeyDown={handleKeyDown}
-      className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
+      className="project-row group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
+      style={{ ['--project-color' as string]: project.color } as React.CSSProperties}
     >
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
-        <h3
-          className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4"
-          style={{
-            color: isHovered ? project.color : 'transparent',
-            textShadow: titleStrokeShadow(1.25, isHovered ? 0 : 0.35),
-            transition: 'color 500ms cubic-bezier(0,0,0.2,1), text-shadow 500ms cubic-bezier(0,0,0.2,1)',
-          }}
-        >
+        <h3 className="project-row-title font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4">
           {project.title}
         </h3>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
           {t(project.categoryKey)}
         </span>
       </div>
+      {/*
+        Fill-on-hover used to be driven by JS onMouseEnter/onMouseLeave
+        (isHovered state). Mobile browsers fire synthetic mouseenter on tap
+        but never a matching mouseleave, so isHovered got stuck true after
+        the first touch — titles rendered permanently filled instead of the
+        default outline. Pure CSS :hover gated by @media (hover: hover)
+        only ever matches on devices with a real hover-capable pointer, so
+        touch devices always stay on the outline (transparent + shadow)
+        state below.
+      */}
+      <style jsx>{`
+        .project-row-title {
+          color: transparent;
+          text-shadow: ${TITLE_OUTLINE_SHADOW};
+          transition: color 500ms cubic-bezier(0, 0, 0.2, 1), text-shadow 500ms cubic-bezier(0, 0, 0.2, 1);
+        }
+        @media (hover: hover) {
+          .project-row:hover .project-row-title {
+            color: var(--project-color);
+            text-shadow: ${TITLE_FILLED_SHADOW};
+          }
+        }
+      `}</style>
     </motion.div>
   );
 }
