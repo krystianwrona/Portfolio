@@ -41,8 +41,8 @@ export function UpNextCard({
           ProjectRow's text-fill swap).
         */}
         <div
-          className={`absolute inset-0 z-0 bg-[#161616] border border-white/10 group-hover:scale-105 [transition:background-color_500ms_cubic-bezier(0,0,0.2,1),border-color_500ms_cubic-bezier(0,0,0.2,1),transform_1000ms_ease]${
-            brand ? " [@media(hover:hover)]:group-hover:bg-[var(--next-color)] [@media(hover:hover)]:group-hover:border-transparent" : ""
+          className={`absolute inset-0 z-0 bg-[#161616] border border-white/10 group-hover:scale-105 [transition:background-color_500ms_cubic-bezier(0,0,0.2,1),border-color_500ms_cubic-bezier(0,0,0.2,1),transform_1000ms_ease] ${
+            brand ? "[@media(hover:hover)]:group-hover:bg-[var(--next-color)] [@media(hover:hover)]:group-hover:border-transparent" : ""
           }`}
         >
           <div
