@@ -91,29 +91,6 @@ function InfinitySymbol() {
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
-// -webkit-text-stroke renders as thick, merged/doubled letterforms on Android
-// Chrome at these font-black + tracking-tighter sizes — it strokes each glyph
-// outline independently and Android's rasterizer bridges the gap between
-// tightly-tracked letters. A multi-directional text-shadow fakes the outline
-// via offset solid-fill copies instead, which uses the normal text fill/
-// compositing path and renders identically across engines.
-function titleStrokeShadow(width: number, alpha: number) {
-  const steps = 8;
-  const shadows: string[] = [];
-  for (let i = 0; i < steps; i++) {
-    const angle = (i / steps) * Math.PI * 2;
-    const x = (Math.cos(angle) * width).toFixed(2);
-    const y = (Math.sin(angle) * width).toFixed(2);
-    shadows.push(`${x}px ${y}px 0 rgba(255,255,255,${alpha})`);
-  }
-  return shadows.join(', ');
-}
-
-// Outline (resting) vs filled (hover) shadow, precomputed once — these never
-// change at runtime, only which one applies.
-const TITLE_OUTLINE_SHADOW = titleStrokeShadow(1.25, 0.35);
-const TITLE_FILLED_SHADOW = titleStrokeShadow(1.25, 0);
-
 function ProjectRow({ project, onClick, index }: {
   project: ProjectEntry;
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
@@ -138,41 +115,29 @@ function ProjectRow({ project, onClick, index }: {
       viewport={{ once: true, margin: "-10%" }}
       onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
       onKeyDown={handleKeyDown}
-      className="project-row group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
+      className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
       style={{ ['--project-color' as string]: project.color } as React.CSSProperties}
     >
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
-        <h3 className="project-row-title font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] transition-all duration-500 ease-out group-hover:translate-x-4">
+        {/*
+          Resting state is a low-opacity white fill (ghost/outline look
+          against the dark background), not -webkit-text-stroke or a
+          stacked text-shadow fake-stroke — both render as thick,
+          merged/doubled letterforms on Android Chrome at this font-black +
+          tracking-tighter combo. Fill-on-hover uses the same group-hover
+          mechanism as the category label below, gated behind an explicit
+          @media (hover: hover) variant so it only ever applies on devices
+          with a real hover-capable pointer — touch devices structurally
+          can't match it, so they permanently stay on the resting state.
+        */}
+        <h3 className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] text-white/35 transition-colors duration-500 [@media(hover:hover)]:group-hover:text-[var(--project-color)]">
           {project.title}
         </h3>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
           {t(project.categoryKey)}
         </span>
       </div>
-      {/*
-        Fill-on-hover used to be driven by JS onMouseEnter/onMouseLeave
-        (isHovered state). Mobile browsers fire synthetic mouseenter on tap
-        but never a matching mouseleave, so isHovered got stuck true after
-        the first touch — titles rendered permanently filled instead of the
-        default outline. Pure CSS :hover gated by @media (hover: hover)
-        only ever matches on devices with a real hover-capable pointer, so
-        touch devices always stay on the outline (transparent + shadow)
-        state below.
-      */}
-      <style jsx>{`
-        .project-row-title {
-          color: transparent;
-          text-shadow: ${TITLE_OUTLINE_SHADOW};
-          transition: color 500ms cubic-bezier(0, 0, 0.2, 1), text-shadow 500ms cubic-bezier(0, 0, 0.2, 1);
-        }
-        @media (hover: hover) {
-          .project-row:hover .project-row-title {
-            color: var(--project-color);
-            text-shadow: ${TITLE_FILLED_SHADOW};
-          }
-        }
-      `}</style>
     </motion.div>
   );
 }
