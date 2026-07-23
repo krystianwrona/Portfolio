@@ -121,17 +121,18 @@ function ProjectRow({ project, onClick, index }: {
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
         {/*
-          Resting state is a low-opacity white fill (ghost/outline look
-          against the dark background), not -webkit-text-stroke or a
-          stacked text-shadow fake-stroke — both render as thick,
-          merged/doubled letterforms on Android Chrome at this font-black +
-          tracking-tighter combo. Fill-on-hover uses the same group-hover
-          mechanism as the category label below, gated behind an explicit
-          @media (hover: hover) variant so it only ever applies on devices
-          with a real hover-capable pointer — touch devices structurally
-          can't match it, so they permanently stay on the resting state.
+          Real -webkit-text-stroke + -webkit-text-fill-color: transparent —
+          broadly supported (Chrome/Edge/Safari/Firefox 49+), no SVG or
+          stacked-shadow tricks needed. Stroke-width is thin and tracking is
+          loosened slightly from the default tracking-tighter so adjacent
+          glyph strokes don't touch/merge at these large display sizes.
+          Fill-on-hover uses the same group-hover mechanism as the category
+          label below, gated behind an explicit @media (hover: hover)
+          variant so it only ever applies on devices with a real
+          hover-capable pointer — touch devices structurally can't match
+          it, so they permanently stay on the resting (stroke-only) state.
         */}
-        <h3 className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-tighter leading-[1.2] text-white/35 transition-colors duration-500 [@media(hover:hover)]:group-hover:text-[var(--project-color)]">
+        <h3 className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:1px_rgba(255,255,255,0.35)] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1),-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]">
           {project.title}
         </h3>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
