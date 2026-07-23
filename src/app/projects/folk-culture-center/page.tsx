@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS } from "@/lib/projects";
+import { UpNextCard } from "@/components/ui/UpNextCard";
 
 type SlideType = "flat";
 
@@ -471,23 +472,12 @@ export default function FolkCultureCenterCaseStudy() {
         </section>
 
         {/* 7. NEXT PROJECT */}
-        <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
-          <div className="text-center mb-10">
-            <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
-          </div>
-          <a
-            href="/projects/adoptio"
-            aria-label={`${t("case.aria.viewnextproject")} Adoptio`}
-            className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
-          >
-            <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-105" style={{ backgroundColor: PROJECTS.adoptio.brand }}>
-              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.15),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
-            </div>
-            <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-6xl md:text-9xl text-white tracking-tighter">Adoptio</h2>
-            </div>
-          </a>
-        </section>
+        <UpNextCard
+          href="/projects/adoptio"
+          projectName="Adoptio"
+          brand={PROJECTS.adoptio.brand}
+          title="Adoptio"
+        />
       </motion.main>
 
       {/* LIGHTBOX */}

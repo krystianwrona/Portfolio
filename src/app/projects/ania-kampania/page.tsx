@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS } from "@/lib/projects";
+import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS["ania-kampania"].brand;
 
@@ -527,23 +528,14 @@ export default function AniaKampaniaCaseStudy() {
         </section>
 
         {/* 8. NEXT PROJECT */}
-        <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
-          <div className="text-center mb-10">
-            <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
-          </div>
-          <a
-            href="/projects/folk-culture-center"
-            aria-label={`${t("case.aria.viewnextproject")} Folk Culture Center`}
-            className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
-          >
-            <div className="absolute inset-0 bg-[#111111] border border-white/10 z-0 transition-transform duration-1000 group-hover:scale-105">
-              <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,255,255,0.06),_transparent_60%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay" />
-            </div>
-            <div className="relative z-10 text-center">
-              <h2 className="font-sans font-black text-4xl md:text-8xl text-white tracking-tighter">Folk Culture<br />Center</h2>
-            </div>
-          </a>
-        </section>
+        {/* No brand passed — Folk Culture Center has no accent color (white on dark), so the card stays neutral on hover too, matching its existing case-study treatment. */}
+        <UpNextCard
+          href="/projects/folk-culture-center"
+          projectName="Folk Culture Center"
+          title={<>Folk Culture<br />Center</>}
+          titleClassName="text-4xl md:text-8xl"
+          glowOpacity={0.06}
+        />
       </motion.main>
 
       {/* LIGHTBOX */}
