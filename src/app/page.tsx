@@ -97,6 +97,11 @@ function ProjectRow({ project, onClick, index }: {
   index: number;
 }) {
   const { t } = useLanguage();
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+
+  useEffect(() => {
+    setIsCoarsePointer(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -105,13 +110,28 @@ function ProjectRow({ project, onClick, index }: {
     }
   };
 
+  // Touch/coarse-pointer devices skip the y-transform on this wrapper entirely
+  // (opacity-only reveal) — the stroked title inside otherwise sits inside an
+  // ancestor whose animated `transform` triggers a real Android Chrome GPU
+  // rasterization bug where -webkit-text-stroke renders as a doubled, offset
+  // outline. Desktop keeps the original slide + fade untouched.
+  const reveal = isCoarsePointer
+    ? {
+        initial: { opacity: 0 },
+        whileInView: { opacity: 1, transition: { duration: 0.6, delay: index * 0.1 } },
+      }
+    : {
+        initial: { opacity: 0, y: 30 },
+        whileInView: { opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.1 } },
+      };
+
   return (
     <motion.div
       role="button"
       tabIndex={0}
       aria-label={`View project: ${project.title} — ${t(project.categoryKey)}`}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.1 } }}
+      initial={reveal.initial}
+      whileInView={reveal.whileInView}
       viewport={{ once: true, margin: "-10%" }}
       onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
       onKeyDown={handleKeyDown}
