@@ -83,6 +83,7 @@ const HOW_I_WORK_STEPS = [
   { number: "03", titleKey: "about.work.step3.title", textKey: "about.work.step3.text" },
   { number: "04", titleKey: "about.work.step4.title", textKey: "about.work.step4.text" },
   { number: "05", titleKey: "about.work.step5.title", textKey: "about.work.step5.text" },
+  { number: "06", titleKey: "about.work.step6.title", textKey: "about.work.step6.text" },
 ];
 
 const ARCHITECTS_EYE_ITEMS = [
@@ -578,8 +579,8 @@ export default function Home() {
                 {t('about.work.intro')}
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 list-none p-0 m-0" aria-label={t('about.work.title')}>
-                {HOW_I_WORK_STEPS.map((step, i) => (
-                  <li key={step.number} className={i === HOW_I_WORK_STEPS.length - 1 ? "sm:col-span-2" : undefined}>
+                {HOW_I_WORK_STEPS.map((step) => (
+                  <li key={step.number}>
                     <span className="font-display font-black text-sm text-yellow-400 tracking-tighter block mb-2" aria-hidden="true">
                       {step.number}
                     </span>
