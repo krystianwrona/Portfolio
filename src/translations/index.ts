@@ -459,14 +459,14 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item1.from.mobile': 'Przestrzeń',
     'about.eye.item1.to': 'Hierarchia informacji',
     'about.eye.item1.to.mobile': 'Informacja',
-    'about.eye.item1.text': 'Prowadzenie kogoś przez budynek i prowadzenie go przez interfejs to ta sama dyscyplina: decydowanie, co zauważy jako pierwsze, co poczeka, aż będzie tego potrzebować, i jak sprawić, by zawsze wiedział, gdzie się znajduje. Pięć lat projektowania układów komunikacyjnych okazało się pięcioma latami projektowania ścieżek użytkownika.',
+    'about.eye.item1.text': "Przeprowadzenie kogoś przez budynek i przez interfejs to w gruncie rzeczy to samo zadanie: decydujesz, co rzuci mu się w oczy najpierw, co ma poczekać, aż stanie się potrzebne, i jak sprawić, żeby przez cały czas wiedział, gdzie jest. Pięć lat projektowania układów funkcjonalnych okazało się pięcioma latami projektowania ścieżek użytkownika.",
     'about.eye.item2.from': 'Kompozycja',
     'about.eye.item2.to': 'Layout',
-    'about.eye.item2.text': 'Plansze architektoniczne nauczyły mnie komponować — równowagę, światło, ciężar wizualny, wyczucie, kiedy layout jest przeładowany, zanim ktokolwiek zdąży to nazwać. Ten instynkt przenosi się wprost na ekran i jest tą częścią designu, której najtrudniej nauczyć się z tutoriali.',
+    'about.eye.item2.text': "Plansze projektowe nauczyły mnie kompozycji — równowagi, ciężaru wizualnego, wyczucia, że układ jest przeładowany, jeszcze zanim ktokolwiek potrafi powiedzieć dlaczego. Ten instynkt przenosi się na ekran jeden do jednego i jest tą częścią projektowania, której najtrudniej nauczyć się z tutoriali.",
     'about.eye.item3.from': 'Detal konstrukcyjny',
     'about.eye.item3.from.mobile': 'Detal',
     'about.eye.item3.to': 'Mikrointerakcje',
-    'about.eye.item3.text': 'W architekturze jakość mieszka w detalu wykonawczym — w złączu, którego nikt nie zauważa, gdy jest zrobione dobrze. Interfejsy działają tak samo: przejście, stan hover, szkielet ładowania. Użytkownicy nie nazwą ich po imieniu, ale poczują różnicę.',
+    'about.eye.item3.text': "W architekturze o jakości decyduje detal — połączenie, którego nikt nie zauważa, dopóki jest zrobione dobrze. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
 
     // ── Contact ──
     'contact.headline.1': 'zbudujmy',
