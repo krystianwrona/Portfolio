@@ -82,12 +82,25 @@ const HOW_I_WORK_STEPS = [
   { number: "02", titleKey: "about.work.step2.title", textKey: "about.work.step2.text" },
   { number: "03", titleKey: "about.work.step3.title", textKey: "about.work.step3.text" },
   { number: "04", titleKey: "about.work.step4.title", textKey: "about.work.step4.text" },
+  { number: "05", titleKey: "about.work.step5.title", textKey: "about.work.step5.text" },
 ];
 
 const ARCHITECTS_EYE_ITEMS = [
-  { fromKey: "about.eye.item1.from", toKey: "about.eye.item1.to", textKey: "about.eye.item1.text" },
-  { fromKey: "about.eye.item2.from", toKey: "about.eye.item2.to", textKey: "about.eye.item2.text" },
-  { fromKey: "about.eye.item3.from", toKey: "about.eye.item3.to", textKey: "about.eye.item3.text" },
+  {
+    fromKey: "about.eye.item1.from", fromMobileKey: "about.eye.item1.from.mobile",
+    toKey: "about.eye.item1.to", toMobileKey: "about.eye.item1.to.mobile",
+    textKey: "about.eye.item1.text",
+  },
+  {
+    fromKey: "about.eye.item2.from", fromMobileKey: undefined as string | undefined,
+    toKey: "about.eye.item2.to", toMobileKey: undefined as string | undefined,
+    textKey: "about.eye.item2.text",
+  },
+  {
+    fromKey: "about.eye.item3.from", fromMobileKey: "about.eye.item3.from.mobile",
+    toKey: "about.eye.item3.to", toMobileKey: undefined as string | undefined,
+    textKey: "about.eye.item3.text",
+  },
 ];
 
 /* ─── COUNT UP ───────────────────────────────────────────────────────────── */
@@ -565,13 +578,13 @@ export default function Home() {
                 {t('about.work.intro')}
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 list-none p-0 m-0" aria-label={t('about.work.title')}>
-                {HOW_I_WORK_STEPS.map((step) => (
-                  <li key={step.number}>
+                {HOW_I_WORK_STEPS.map((step, i) => (
+                  <li key={step.number} className={i === HOW_I_WORK_STEPS.length - 1 ? "sm:col-span-2" : undefined}>
                     <span className="font-display font-black text-sm text-yellow-400 tracking-tighter block mb-2" aria-hidden="true">
                       {step.number}
                     </span>
                     <h4 className="font-display font-black text-lg mb-1">{t(step.titleKey)}</h4>
-                    <p className="text-sm leading-[1.6] opacity-70 font-medium">{t(step.textKey)}</p>
+                    <p className="text-sm leading-[1.6] opacity-70 font-medium max-w-[640px]">{t(step.textKey)}</p>
                   </li>
                 ))}
               </ul>
@@ -580,14 +593,18 @@ export default function Home() {
             {/* Architect's Eye */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-              className="p-10 rounded-[32px] bg-[#E4E4E7]/40 text-[#111]"
+              className="p-10 rounded-[32px] bg-white border border-black/[0.06] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] text-[#111]"
             >
               <h3 className="font-display font-black text-2xl mb-6">{t('about.eye.title')}</h3>
               <ul className="flex flex-col gap-6 list-none p-0 m-0">
                 {ARCHITECTS_EYE_ITEMS.map((item) => (
                   <li key={item.fromKey}>
-                    <p className="font-display font-black text-lg mb-1">
-                      {t(item.fromKey)} <span className="text-yellow-500">→</span> {t(item.toKey)}
+                    <p className="font-display font-black text-base sm:text-lg mb-1 whitespace-nowrap sm:whitespace-normal">
+                      <span className="sm:hidden">{t(item.fromMobileKey ?? item.fromKey)}</span>
+                      <span className="hidden sm:inline">{t(item.fromKey)}</span>
+                      {" "}<span className="text-[#111]">→</span>{" "}
+                      <span className="sm:hidden">{t(item.toMobileKey ?? item.toKey)}</span>
+                      <span className="hidden sm:inline">{t(item.toKey)}</span>
                     </p>
                     <p className="text-sm leading-[1.6] opacity-70 font-medium max-w-[640px]">{t(item.textKey)}</p>
                   </li>
