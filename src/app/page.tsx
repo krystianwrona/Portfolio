@@ -42,15 +42,52 @@ const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   color: PROJECTS[id].brand,
 }));
 
-const TECH_ITEMS = [
-  { name: "React / Next.js", bg: "#0F172A", color: "#61DAFB", rotation: -2   },
-  { name: "TypeScript",      bg: "#3178C6", color: "#FFFFFF", rotation:  1.5 },
-  { name: "Firebase",        bg: "#1A1A1A", color: "#FFCA28", rotation: -1   },
-  { name: "Figma",           bg: "#F24E1E", color: "#FFFFFF", rotation:  2   },
-  { name: "Framer Motion",   bg: "#0055FF", color: "#FFFFFF", rotation: -1.5 },
-  { name: "Tailwind CSS",    bg: "#0891B2", color: "#FFFFFF", rotation:  1   },
-  { name: "Claude",          bg: "#CC785C", color: "#FFFFFF", rotation: -1   },
-  { name: "Gemini",          bg: "#1A73E8", color: "#FFFFFF", rotation:  1.5 },
+const TECH_GROUPS = [
+  {
+    labelKey: "about.stack.group.frontend",
+    items: [
+      { name: "React / Next.js", bg: "#0F172A", color: "#61DAFB", rotation: -2   },
+      { name: "TypeScript",      bg: "#3178C6", color: "#FFFFFF", rotation:  1.5 },
+      { name: "Tailwind CSS",    bg: "#0891B2", color: "#FFFFFF", rotation:  1   },
+      { name: "Framer Motion",   bg: "#0055FF", color: "#FFFFFF", rotation: -1.5 },
+    ],
+  },
+  {
+    labelKey: "about.stack.group.backend",
+    items: [
+      { name: "Firebase",     bg: "#1A1A1A", color: "#FFCA28", rotation: -1   },
+      { name: "Vercel",       bg: "#000000", color: "#FFFFFF", rotation:  1.5 },
+      { name: "Git / GitHub", bg: "#24292F", color: "#FFFFFF", rotation: -1.5 },
+    ],
+  },
+  {
+    labelKey: "about.stack.group.ai",
+    items: [
+      { name: "Claude Code",   bg: "#CC785C", color: "#FFFFFF", rotation:  2   },
+      { name: "Claude Design", bg: "#D97757", color: "#FFFFFF", rotation: -1   },
+      { name: "Cowork",        bg: "#7C3AED", color: "#FFFFFF", rotation:  1.5 },
+      { name: "Gemini",        bg: "#1A73E8", color: "#FFFFFF", rotation: -2   },
+    ],
+  },
+  {
+    labelKey: "about.stack.group.design",
+    items: [
+      { name: "Figma", bg: "#F24E1E", color: "#FFFFFF", rotation: 2 },
+    ],
+  },
+];
+
+const HOW_I_WORK_STEPS = [
+  { number: "01", titleKey: "about.work.step1.title", textKey: "about.work.step1.text" },
+  { number: "02", titleKey: "about.work.step2.title", textKey: "about.work.step2.text" },
+  { number: "03", titleKey: "about.work.step3.title", textKey: "about.work.step3.text" },
+  { number: "04", titleKey: "about.work.step4.title", textKey: "about.work.step4.text" },
+];
+
+const ARCHITECTS_EYE_ITEMS = [
+  { fromKey: "about.eye.item1.from", toKey: "about.eye.item1.to", textKey: "about.eye.item1.text" },
+  { fromKey: "about.eye.item2.from", toKey: "about.eye.item2.to", textKey: "about.eye.item2.text" },
+  { fromKey: "about.eye.item3.from", toKey: "about.eye.item3.to", textKey: "about.eye.item3.text" },
 ];
 
 /* ─── COUNT UP ───────────────────────────────────────────────────────────── */
@@ -518,33 +555,80 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* Tech Stack — brutalist stickers */}
+            {/* How I Work */}
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+              className="p-10 rounded-[32px] bg-[#111111] text-white"
+            >
+              <h3 className="font-display font-black text-2xl mb-4">{t('about.work.title')}</h3>
+              <p className="text-[1rem] leading-[1.6] opacity-80 font-medium max-w-[720px] mb-8">
+                {t('about.work.intro')}
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 list-none p-0 m-0" aria-label={t('about.work.title')}>
+                {HOW_I_WORK_STEPS.map((step) => (
+                  <li key={step.number}>
+                    <span className="font-display font-black text-sm text-yellow-400 tracking-tighter block mb-2" aria-hidden="true">
+                      {step.number}
+                    </span>
+                    <h4 className="font-display font-black text-lg mb-1">{t(step.titleKey)}</h4>
+                    <p className="text-sm leading-[1.6] opacity-70 font-medium">{t(step.textKey)}</p>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Architect's Eye */}
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+              className="p-10 rounded-[32px] bg-[#E4E4E7]/40 text-[#111]"
+            >
+              <h3 className="font-display font-black text-2xl mb-6">{t('about.eye.title')}</h3>
+              <ul className="flex flex-col gap-6 list-none p-0 m-0">
+                {ARCHITECTS_EYE_ITEMS.map((item) => (
+                  <li key={item.fromKey}>
+                    <p className="font-display font-black text-lg mb-1">
+                      {t(item.fromKey)} <span className="text-yellow-500">→</span> {t(item.toKey)}
+                    </p>
+                    <p className="text-sm leading-[1.6] opacity-70 font-medium max-w-[640px]">{t(item.textKey)}</p>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Tech Stack — brutalist stickers, grouped */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
               className="p-10 rounded-[32px] bg-[#111111] text-white"
             >
               <p className="text-xs font-bold uppercase tracking-widest opacity-50 block mb-6">{t('about.stack')}</p>
-              <ul className="flex flex-wrap gap-3 list-none p-0 m-0" aria-label={t('about.aria.stack')}>
-                {TECH_ITEMS.map((tech) => (
-                  <li key={tech.name}>
-                    <motion.span
-                      title={tech.name}
-                      whileHover={{ rotate: 0, scale: 1.06 }}
-                      style={{ rotate: tech.rotation, backgroundColor: tech.bg, color: tech.color }}
-                      className="px-4 py-2 rounded-lg font-bold text-sm tracking-tight cursor-default border border-white/10 select-none inline-block"
-                    >
-                      {tech.name}
-                    </motion.span>
-                  </li>
+              <div className="flex flex-col gap-6" aria-label={t('about.aria.stack')}>
+                {TECH_GROUPS.map((group) => (
+                  <div key={group.labelKey}>
+                    <p className="text-[0.7rem] font-bold uppercase tracking-widest opacity-40 mb-3">{t(group.labelKey)}</p>
+                    <ul className="flex flex-wrap gap-3 list-none p-0 m-0">
+                      {group.items.map((tech) => (
+                        <li key={tech.name}>
+                          <motion.span
+                            title={tech.name}
+                            whileHover={{ rotate: 0, scale: 1.06 }}
+                            style={{ rotate: tech.rotation, backgroundColor: tech.bg, color: tech.color }}
+                            className="px-4 py-2 rounded-lg font-bold text-sm tracking-tight cursor-default border border-white/10 select-none inline-block"
+                          >
+                            {tech.name}
+                          </motion.span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </motion.div>
 
             {/* Stats — count up */}
             <div className="flex flex-col sm:flex-row gap-4">
               {[
                 { to: 5,  suffix: "+", labelKey: "about.stats.projects", infinity: false },
-                { to: 8,  suffix: "+", labelKey: "about.stats.tools",    infinity: false },
+                { to: 12, suffix: "+", labelKey: "about.stats.tools",    infinity: false },
                 { to: 0,  suffix: "",  labelKey: "about.stats.curiosity", infinity: true  },
               ].map((stat, i) => (
                 <motion.div
