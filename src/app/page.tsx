@@ -564,9 +564,11 @@ export default function Home() {
               className="p-10 rounded-[32px] bg-[#E4E4E7]/40 text-[#111]"
             >
               <h3 className="font-display font-black text-2xl mb-4">{t('about.philosophy.title')}</h3>
-              <p className="text-[1rem] leading-[1.6] opacity-80 font-medium max-w-[720px]">
-                {t('about.philosophy.text')}
-              </p>
+              <div className="flex flex-col gap-4 max-w-[720px]">
+                <p className="text-[1rem] leading-[1.6] opacity-80 font-medium">{t('about.philosophy.text1')}</p>
+                <p className="text-[1rem] leading-[1.6] opacity-80 font-medium">{t('about.philosophy.text2')}</p>
+                <p className="text-[1rem] leading-[1.6] opacity-80 font-medium">{t('about.philosophy.text3')}</p>
+              </div>
             </motion.div>
 
             {/* How I Work */}
