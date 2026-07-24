@@ -148,11 +148,14 @@ function ProjectRow({ project, onClick, index }: {
           would solve it (stroke painted first, opaque fill painted on top
           hides the overlap seams) but that property only affects SVG
           <text>/<tspan> in shipping browsers, not plain HTML text — so we
-          reproduce the same paint order with two stacked copies instead:
-          the absolutely-positioned back layer paints the (seamy) doubled
-          stroke, and the real h3 on top paints an opaque fill matching the
-          section's solid background, covering exactly the seam-prone
-          overlap regions and leaving only a clean single-width outline.
+          reproduce the same paint order with two stacked copies instead.
+          The stroke layer stays in normal flow (it sizes the wrapper); the
+          opaque-fill layer is `position: absolute` — CSS always composites
+          positioned elements above static in-flow content regardless of
+          DOM order, so the fill paints on top of the stroke and covers
+          exactly the seam-prone overlap regions, leaving a clean
+          single-width outline. (Do not flip which layer is absolute —
+          the static one paints below no matter what DOM order says.)
           Fill-on-hover uses the same group-hover mechanism as the category
           label below, gated behind an explicit @media (hover: hover)
           variant so it only ever applies on devices with a real
@@ -163,11 +166,11 @@ function ProjectRow({ project, onClick, index }: {
         <div className="relative">
           <h3
             aria-hidden="true"
-            className="absolute inset-0 pointer-events-none font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:2px_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
+            className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:2px_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
           >
             {project.title}
           </h3>
-          <h3 className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
+          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
             {project.title}
           </h3>
         </div>
