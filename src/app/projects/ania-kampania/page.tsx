@@ -14,12 +14,12 @@ const BRAND = PROJECTS["ania-kampania"].brand;
 type SlideType = "macbook" | "flat" | "mobile";
 
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/ania-kampania-hero.png",        labelKey: "aniak.slide.hero",       altKey: "aniak.alt.hero",       type: "macbook" },
-  { src: "/ania-kampania-brand-story.png", labelKey: "aniak.slide.brandstory", altKey: "aniak.alt.brandstory", type: "macbook" },
-  { src: "/ania-kampania-gallery.png",     labelKey: "aniak.slide.gallery",    altKey: "aniak.alt.gallery",    type: "macbook" },
-  { src: "/ania-kampania-mobile.png",      labelKey: "aniak.slide.mobile",     altKey: "aniak.alt.mobile",     type: "mobile"  },
-  { src: "/ania-kampania-packages.png",    labelKey: "aniak.slide.packages",   altKey: "aniak.alt.packages",   type: "macbook" },
-  { src: "/ania-kampania-booking.png",     labelKey: "aniak.slide.booking",    altKey: "aniak.alt.booking",    type: "mobile"  },
+  { src: "/ania-hero.png",       labelKey: "aniak.slide.hero",       altKey: "aniak.alt.hero",       type: "macbook" },
+  { src: "/ania-manifest.png",   labelKey: "aniak.slide.brandstory", altKey: "aniak.alt.brandstory", type: "macbook" },
+  { src: "/ania-gallery.png",    labelKey: "aniak.slide.gallery",    altKey: "aniak.alt.gallery",    type: "macbook" },
+  { src: "/ania-packages.png",   labelKey: "aniak.slide.packages",   altKey: "aniak.alt.packages",   type: "macbook" },
+  { src: "/ania-booking.png",    labelKey: "aniak.slide.booking",    altKey: "aniak.alt.booking",    type: "macbook" },
+  { src: "/ania-mobile.png",     labelKey: "aniak.slide.mobile",     altKey: "aniak.alt.mobile",     type: "mobile"  },
 ];
 
 export default function AniaKampaniaCaseStudy() {
