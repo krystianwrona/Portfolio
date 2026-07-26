@@ -713,10 +713,18 @@ export default function Home() {
           <p className="text-[0.85rem] opacity-60 font-medium">
             &copy; {new Date().getFullYear()} KRYSTIAN.WRONA. {t('footer.rights')}
           </p>
-          <ul className="flex gap-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
-            <li><a href="#" aria-label={t('footer.aria.linkedin')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">LinkedIn</a></li>
-            <li><a href="#" aria-label={t('footer.aria.behance')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Behance</a></li>
-            <li><a href="#" aria-label={t('footer.aria.instagram')} className="opacity-50 cursor-default min-h-[44px] inline-flex items-center focus-visible:outline-none">Instagram</a></li>
+          <ul className="flex text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/krystian-wrona/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('footer.aria.linkedin')}
+                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                LinkedIn
+              </a>
+            </li>
           </ul>
         </div>
       </section>

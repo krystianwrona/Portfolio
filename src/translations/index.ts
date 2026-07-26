@@ -97,9 +97,7 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.rights': 'All rights reserved.',
     'footer.back': '← Back to projects',
     'footer.aria.sociallinks': 'Social media links',
-    'footer.aria.linkedin': 'LinkedIn (coming soon)',
-    'footer.aria.behance': 'Behance (coming soon)',
-    'footer.aria.instagram': 'Instagram (coming soon)',
+    'footer.aria.linkedin': 'LinkedIn (opens in new tab)',
 
     // ── Case Study — shared ──
     'case.close': '[ CLOSE CASE ]',
@@ -498,9 +496,7 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.rights': 'Wszelkie prawa zastrzeżone.',
     'footer.back': '← Wróć do projektów',
     'footer.aria.sociallinks': 'Linki do mediów społecznościowych',
-    'footer.aria.linkedin': 'LinkedIn (wkrótce)',
-    'footer.aria.behance': 'Behance (wkrótce)',
-    'footer.aria.instagram': 'Instagram (wkrótce)',
+    'footer.aria.linkedin': 'LinkedIn (otwiera się w nowej karcie)',
 
     // ── Case Study — shared ──
     'case.close': '[ ZAMKNIJ ]',
