@@ -4,18 +4,20 @@ export async function POST(request: Request) {
   const { name, email, subject, message } = await request.json();
 
   const apiKey      = process.env.RESEND_API_KEY;
-  const toEmail     = process.env.CONTACT_EMAIL ?? "your-email@domain.com"; // TODO: set CONTACT_EMAIL in .env
+  const toEmail     = process.env.CONTACT_EMAIL ?? "krystian.wrona@protonmail.com";
   const fromAddress = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
-  // Dev fallback — no API key configured
   if (!apiKey) {
-    console.log("[contact] Dev mode — RESEND_API_KEY not set. Form data:", {
+    console.error("[contact] RESEND_API_KEY not configured — message not sent:", {
       name,
       email,
       subject,
       message,
     });
-    return NextResponse.json({ ok: true });
+    return NextResponse.json(
+      { error: "Email service is not configured. Please email me directly." },
+      { status: 500 }
+    );
   }
 
   try {

@@ -86,18 +86,20 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.message': 'Your message... *',
     'contact.form.send': 'Send →',
     'contact.form.sending': 'Sending…',
-    'contact.form.error': 'Something went wrong. Please try again.',
+    'contact.form.error': 'Something went wrong. Please email me directly at',
     'contact.form.cancel': 'Cancel',
     'contact.form.success.title': 'Message sent.',
     'contact.form.success.text': "I'll get back to you soon.",
     'contact.form.success.close': 'Close',
     'contact.aria.send': 'Send message',
+    'contact.email.subject': 'Portfolio inquiry',
 
     // ── Footer ──
     'footer.rights': 'All rights reserved.',
     'footer.back': '← Back to projects',
     'footer.aria.sociallinks': 'Social media links',
     'footer.aria.linkedin': 'LinkedIn (opens in new tab)',
+    'footer.aria.email': 'Email (opens mail client)',
 
     // ── Case Study — shared ──
     'case.close': '[ CLOSE CASE ]',
@@ -485,18 +487,20 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.message': 'Twoja wiadomość... *',
     'contact.form.send': 'Wyślij →',
     'contact.form.sending': 'Wysyłanie…',
-    'contact.form.error': 'Coś poszło nie tak. Spróbuj ponownie.',
+    'contact.form.error': 'Coś poszło nie tak. Napisz do mnie bezpośrednio na adres',
     'contact.form.cancel': 'Anuluj',
     'contact.form.success.title': 'Wiadomość wysłana.',
     'contact.form.success.text': 'Odezwę się wkrótce.',
     'contact.form.success.close': 'Zamknij',
     'contact.aria.send': 'Wyślij wiadomość',
+    'contact.email.subject': 'Kontakt z portfolio',
 
     // ── Footer ──
     'footer.rights': 'Wszelkie prawa zastrzeżone.',
     'footer.back': '← Wróć do projektów',
     'footer.aria.sociallinks': 'Linki do mediów społecznościowych',
     'footer.aria.linkedin': 'LinkedIn (otwiera się w nowej karcie)',
+    'footer.aria.email': 'E-mail (otwiera klienta poczty)',
 
     // ── Case Study — shared ──
     'case.close': '[ ZAMKNIJ ]',

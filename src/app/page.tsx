@@ -18,6 +18,8 @@ const CrowScene = dynamic(() => import("@/components/CrowScene").then((m) => m.C
   loading: () => <div className="absolute inset-0 bg-[#F5F5F4]" />,
 });
 
+const CONTACT_EMAIL = "krystian.wrona@protonmail.com";
+
 /* ─── TYPES & DATA ───────────────────────────────────────────────────────── */
 
 interface ProjectEntry {
@@ -393,7 +395,13 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       </div>
       {submitError && (
         <p role="alert" className="text-red-400 text-xs font-bold uppercase tracking-widest text-center">
-          {t('contact.form.error')}
+          {t('contact.form.error')}{' '}
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`}
+            className="underline hover:text-white transition-colors"
+          >
+            {CONTACT_EMAIL}
+          </a>
         </p>
       )}
       <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4">
@@ -713,7 +721,16 @@ export default function Home() {
           <p className="text-[0.85rem] opacity-60 font-medium">
             &copy; {new Date().getFullYear()} KRYSTIAN.WRONA. {t('footer.rights')}
           </p>
-          <ul className="flex text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
+          <ul className="flex flex-wrap gap-x-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
+            <li>
+              <a
+                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`}
+                aria-label={t('footer.aria.email')}
+                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lowercase"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </li>
             <li>
               <a
                 href="https://www.linkedin.com/in/krystian-wrona/"
