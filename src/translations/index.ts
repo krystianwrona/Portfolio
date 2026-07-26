@@ -346,6 +346,7 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.alt.booking': 'Ania Kampania Cal.eu booking widget',
 
     // ── Case Study — Folk Culture Center (CKL) ──
+    'ckl.gloss': 'Folk Culture Center',
     'ckl.subtitle': "Master's Degree Project — 2023",
     'ckl.tagline': "One building, three worlds. None of them colliding.",
     'ckl.desc': "A cultural center and concert hall designed for the “Śląsk” Song and Dance Ensemble in Koszęcin. The core challenge: fit a 4,400 m² program — a 450-seat concert hall, a folk museum, and administration — onto protected heritage parkland without altering its landscape. The answer was to bury the entire building underground.",
@@ -749,6 +750,7 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.alt.booking': 'Ania Kampania widget rezerwacji Cal.eu',
 
     // ── Case Study — Folk Culture Center (CKL) ──
+    'ckl.gloss': '',
     'ckl.subtitle': "Projekt magisterski — 2023",
     'ckl.tagline': "Jeden budynek, trzy światy. Żaden nie koliduje z drugim.",
     'ckl.desc': "Centrum kultury i sala koncertowa zaprojektowane dla Zespołu Pieśni i Tańca \"Śląsk\" w Koszęcinie. Kluczowe wyzwanie: wcisnąć program o powierzchni 4 400 m² — salę koncertową na 450 osób, muzeum folkloru i administrację — na chronionym terenie parkowym bez ingerencji w krajobraz. Odpowiedzią było schowanie całego budynku pod ziemią.",

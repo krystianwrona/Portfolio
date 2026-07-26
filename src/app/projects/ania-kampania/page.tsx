@@ -528,13 +528,12 @@ export default function AniaKampaniaCaseStudy() {
         </section>
 
         {/* 8. NEXT PROJECT */}
-        {/* No brand passed — Folk Culture Center has no accent color (white on dark), so the card stays neutral on hover too, matching its existing case-study treatment. */}
         <UpNextCard
           href="/projects/folk-culture-center"
-          projectName="Folk Culture Center"
-          title={<>Folk Culture<br />Center</>}
+          projectName="Centrum Kultury Ludowej"
+          brand={PROJECTS["folk-culture-center"].brand}
+          title={<>Centrum Kultury<br />Ludowej</>}
           titleClassName="text-4xl md:text-8xl"
-          glowOpacity={0.06}
         />
       </motion.main>
 

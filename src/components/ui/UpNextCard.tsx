@@ -6,10 +6,9 @@ interface UpNextCardProps {
   href: string;
   projectName: string;
   title: React.ReactNode;
-  /** Brand color revealed on hover. Omit for destinations with no usable accent (e.g. white-branded Folk Culture Center) — card then stays neutral on hover too. */
+  /** Brand color revealed on hover. Defaults to white when the destination has no distinct accent. */
   brand?: string;
   titleClassName?: string;
-  glowOpacity?: number;
 }
 
 export function UpNextCard({
@@ -18,40 +17,41 @@ export function UpNextCard({
   title,
   brand,
   titleClassName = "text-6xl md:text-9xl",
-  glowOpacity = 0.15,
 }: UpNextCardProps) {
   const { t } = useLanguage();
 
   return (
     <section className="py-[15vh] px-[4vw] bg-[#111111] flex flex-col items-center justify-center min-h-[60vh] border-t border-white/5">
-      <div className="text-center mb-10">
-        <span className="text-[0.65rem] uppercase tracking-widest font-bold text-white/20">{t("case.upnext")}</span>
+      <div className="text-center mb-8">
+        <span className="text-xs uppercase tracking-[0.3em] font-bold text-white/50">{t("case.upnext")}</span>
       </div>
       <a
         href={href}
         aria-label={`${t("case.aria.viewnextproject")} ${projectName}`}
-        className="group relative w-full max-w-5xl h-[40vh] rounded-[var(--radius-lg)] overflow-hidden flex items-center justify-center cursor-pointer"
-        style={brand ? ({ ["--next-color" as string]: brand } as React.CSSProperties) : undefined}
+        className="group relative inline-flex items-center justify-center px-8 py-6 md:py-10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#111111] rounded-lg"
+        style={{ ["--next-color" as string]: brand ?? "#FFFFFF" } as React.CSSProperties}
       >
         {/*
-          Same hover-reveal pattern as the homepage ProjectRow: neutral by
-          default, brand color only fills in on a real hover-capable pointer
-          (gated behind @media(hover:hover) so touch devices — which can't
-          match it — stay permanently on the resting neutral state, same as
-          ProjectRow's text-fill swap).
+          Same two-layer stroke/fill technique as ProjectRow on the homepage
+          (src/app/page.tsx) — read the comment there before touching this.
+          A static stroked layer sizes the wrapper; an absolutely positioned
+          layer painted in THIS section's own background color (#111111)
+          sits on top to hide the stroke's rasterization seams. Do not swap
+          which layer is absolute. Fill-on-hover is gated behind
+          @media(hover:hover): touch devices can't match it, so they stay
+          permanently on the resting outlined state — the same mobile
+          behavior as ProjectRow.
         */}
-        <div
-          className={`absolute inset-0 z-0 bg-[#161616] border border-white/10 group-hover:scale-105 [transition:background-color_500ms_cubic-bezier(0,0,0.2,1),border-color_500ms_cubic-bezier(0,0,0.2,1),transform_1000ms_ease] ${
-            brand ? "[@media(hover:hover)]:group-hover:bg-[var(--next-color)] [@media(hover:hover)]:group-hover:border-transparent" : ""
-          }`}
-        >
-          <div
-            className="w-full h-full opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity duration-700 blur-xl mix-blend-overlay"
-            style={{ backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,${glowOpacity}), transparent 60%)` }}
-          />
-        </div>
-        <div className="relative z-10 text-center">
-          <h2 className={`font-sans font-black text-white tracking-tighter ${titleClassName}`}>
+        <div className="relative">
+          <h2
+            aria-hidden="true"
+            className={`font-sans font-black tracking-tighter ${titleClassName} [-webkit-text-fill-color:transparent] [-webkit-text-stroke:2px_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]`}
+          >
+            {title}
+          </h2>
+          <h2
+            className={`absolute inset-0 pointer-events-none font-sans font-black tracking-tighter ${titleClassName} [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--next-color)]`}
+          >
             {title}
           </h2>
         </div>

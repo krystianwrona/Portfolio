@@ -186,6 +186,17 @@ export default function FolkCultureCenterCaseStudy() {
               CENTRUM<br />KULTURY<br />LUDOWEJ
             </motion.h1>
 
+            {t("ckl.gloss") && (
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="text-base md:text-lg italic text-white/40 mb-4"
+              >
+                {t("ckl.gloss")}
+              </motion.p>
+            )}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
