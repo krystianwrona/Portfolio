@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# krystianwrona.com
 
-## Getting Started
+Source code for my portfolio — five case studies covering product design, frontend development and one architectural thesis.
 
-First, run the development server:
+**Live:** [krystianwrona.com](https://krystianwrona.com)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Tailwind CSS · Framer Motion · Three.js · Vercel
+
+Contact form runs on a Next.js route handler with Resend. Content is bilingual (PL/EN) through a lightweight context-based translation layer — no i18n library.
+
+## Structure
+
+```
+src/
+  app/
+    page.tsx              homepage — hero, project list, about, contact
+    projects/<slug>/      one directory per case study
+    api/contact/          contact form handler
+  components/             shared UI, incl. the WebGL crow scene
+  context/                PL/EN language context powering the translation layer
+  lib/                    project metadata, SEO constants
+  translations/           all PL/EN copy in a single keyed file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Implementation notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A few decisions that aren't obvious from reading the code:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Outline project titles** are two stacked `<h3>` layers rather than `-webkit-text-stroke` alone. Stroking live text exposes seams wherever a font's glyph contours overlap — clearly visible on iOS Safari and Chrome Android. An opaque fill layer in the section's own background color covers those seams from the inside, leaving a clean outline. The absolutely positioned layer must stay on top; swapping the roles reintroduces the bug.
 
-## Learn More
+**The carousel** uses `object-fit: contain` against a shared container height so screenshots of different aspect ratios — device mockups, flat dashboards, architectural drawings — sit together without per-image tuning. Scroll-snap centers each slide; the lightbox is desktop-only, since on mobile the image already fills the viewport.
 
-To learn more about Next.js, take a look at the following resources:
+**Each project is framed in the visual language of its own discipline** rather than forced into one template: device mockups for the consumer apps, browser chrome for the data-dense dashboard, unframed drawings for the architecture thesis. Consistency within a single carousel matters more than consistency across projects — nobody views two case studies side by side.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Running locally
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+The contact form needs `RESEND_API_KEY`; without it the route returns an explicit error rather than a silent false success. `RESEND_FROM_EMAIL` and `CONTACT_EMAIL` are optional — they fall back to a Resend sandbox sender and my own address, respectively.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© Krystian Wrona. All rights reserved. This code is published to be read, not reused.
