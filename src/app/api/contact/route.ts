@@ -4,11 +4,16 @@ export async function POST(request: Request) {
   const { name, email, subject, message } = await request.json();
 
   const apiKey      = process.env.RESEND_API_KEY;
-  const toEmail     = process.env.CONTACT_EMAIL ?? "krystian.wrona@protonmail.com";
-  const fromAddress = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
+  const toEmail     = process.env.CONTACT_EMAIL;
+  const fromAddress = process.env.RESEND_FROM_EMAIL;
 
-  if (!apiKey) {
-    console.error("[contact] RESEND_API_KEY not configured — message not sent:", {
+  if (!apiKey || !toEmail || !fromAddress) {
+    console.error("[contact] Email service not configured — message not sent:", {
+      missing: {
+        RESEND_API_KEY: !apiKey,
+        CONTACT_EMAIL: !toEmail,
+        RESEND_FROM_EMAIL: !fromAddress,
+      },
       name,
       email,
       subject,
