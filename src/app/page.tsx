@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
+import { SITE_URL, PERSON_ID } from "@/lib/seo";
 
 // Three.js/@react-three bundle is code-split into its own chunk and
 // only fetched on the client, after first paint, instead of blocking
@@ -78,6 +79,37 @@ const TECH_GROUPS = [
     ],
   },
 ];
+
+// Mirrors the Core Stack section (TECH_GROUPS) above, condensed to the
+// skills a search engine should actually associate with this Person.
+const PERSON_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: "Krystian Wrona",
+  url: SITE_URL,
+  email: "krystian.wrona@protonmail.com",
+  jobTitle: "AI Product Builder & UI/UX Designer",
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Silesian University of Technology",
+  },
+  knowsAbout: [
+    "React & Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Framer Motion",
+    "Firebase",
+    "AI-Assisted Development",
+    "UI/UX Design",
+    "Figma",
+  ],
+  sameAs: [
+    "https://www.linkedin.com/in/krystian-wrona/",
+    "https://www.behance.net/krystianwrona3",
+    "https://github.com/krystianwrona",
+  ],
+};
 
 const HOW_I_WORK_STEPS = [
   { number: "01", titleKey: "about.work.step1.title", textKey: "about.work.step1.text" },
@@ -486,6 +518,10 @@ export default function Home() {
       className={`w-full min-h-screen bg-[#F5F5F4] transition-opacity duration-[250ms] ease-in-out ${isExiting ? "opacity-0" : "opacity-100"}`}
       ref={containerRef}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_JSON_LD) }}
+      />
 
       {/* 1. HERO */}
       <section
