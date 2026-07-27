@@ -15,7 +15,6 @@
 - `src/app/projects/legalray/page.tsx` — case study LegalRay
 - `src/app/projects/fashionhero/page.tsx` — case study FashionHero
 - `src/app/projects/ania-kampania/page.tsx` — case study Ania Kampania
-- `src/app/projects/classified/page.tsx` — archived, no longer routed (see below)
 - `src/lib/projects.ts` — single source of truth for brand colors and project order
 - `src/components/ui/Navbar.tsx` — nawigacja + WRONA↔CROW toggle
 - `src/components/ui/Preloader.tsx` — preloader K.W
