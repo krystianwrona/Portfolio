@@ -41,7 +41,7 @@ npm install
 npm run dev
 ```
 
-The contact form needs `RESEND_API_KEY`; without it the route returns an explicit error rather than a silent false success. `RESEND_FROM_EMAIL` and `CONTACT_EMAIL` are optional — they fall back to a Resend sandbox sender and my own address, respectively.
+The contact form needs `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and `CONTACT_EMAIL`; without any one of them the route returns an explicit error rather than a silent false success.
 
 ---
 
