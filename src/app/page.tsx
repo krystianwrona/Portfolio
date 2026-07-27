@@ -768,7 +768,28 @@ export default function Home() {
                 LinkedIn
               </a>
             </li>
-            {/* BEHANCE link goes here once the profile is live */}
+            <li>
+              <a
+                href="https://www.behance.net/krystianwrona3"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('footer.aria.behance')}
+                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                Behance
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/krystianwrona"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('footer.aria.github')}
+                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                GitHub
+              </a>
+            </li>
           </ul>
         </div>
       </section>
