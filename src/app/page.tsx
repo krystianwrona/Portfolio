@@ -28,6 +28,8 @@ interface ProjectEntry {
   title: string;
   categoryKey: string;
   color: string;
+  titleScale?: number;
+  titleScaleLg?: number;
 }
 
 const CATEGORY_KEYS: Record<string, string> = {
@@ -43,6 +45,8 @@ const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   title: PROJECTS[id].title,
   categoryKey: CATEGORY_KEYS[id],
   color: PROJECTS[id].brand,
+  titleScale: PROJECTS[id].titleScale,
+  titleScaleLg: PROJECTS[id].titleScaleLg,
 }));
 
 const TECH_GROUPS = [
@@ -220,7 +224,11 @@ function ProjectRow({ project, onClick, index }: {
       onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
       onKeyDown={handleKeyDown}
       className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
-      style={{ ['--project-color' as string]: project.color } as React.CSSProperties}
+      style={{
+        ['--project-color' as string]: project.color,
+        ['--title-scale' as string]: project.titleScale ?? 1,
+        ['--title-scale-lg' as string]: project.titleScaleLg ?? 1,
+      } as React.CSSProperties}
     >
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
@@ -250,11 +258,11 @@ function ProjectRow({ project, onClick, index }: {
         <div className="relative">
           <h3
             aria-hidden="true"
-            className="font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:2px_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
+            className="font-display font-black text-[calc(13vw*var(--title-scale,1))] md:text-[calc(6rem*var(--title-scale,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:calc(2px*var(--title-scale,1))_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
           >
             {project.title}
           </h3>
-          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[13vw] md:text-8xl lg:text-[8vw] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
+          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1))] md:text-[calc(6rem*var(--title-scale,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
             {project.title}
           </h3>
         </div>
