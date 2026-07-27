@@ -58,7 +58,6 @@ const TECH_GROUPS = [
   {
     labelKey: "about.stack.group.backend",
     items: [
-      { name: "Firebase",     bg: "#1A1A1A", color: "#FFCA28", rotation: -1   },
       { name: "Vercel",       bg: "#000000", color: "#FFFFFF", rotation:  1.5 },
       { name: "Git / GitHub", bg: "#24292F", color: "#FFFFFF", rotation: -1.5 },
     ],
@@ -626,7 +625,7 @@ export default function Home() {
             {/* Philosophy */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-              className="p-10 rounded-[32px] bg-[#E4E4E7]/40 text-[#111]"
+              className="p-10 rounded-[32px] bg-white border border-black/[0.06] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] text-[#111]"
             >
               <h3 className="font-display font-black text-2xl mb-4">{t('about.philosophy.title')}</h3>
               <div className="flex flex-col gap-4 max-w-[720px]">
@@ -713,7 +712,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4">
               {[
                 { to: 5,  suffix: "+", labelKey: "about.stats.projects", infinity: false },
-                { to: 12, suffix: "+", labelKey: "about.stats.tools",    infinity: false },
+                { to: 11, suffix: "+", labelKey: "about.stats.tools",    infinity: false },
                 { to: 0,  suffix: "",  labelKey: "about.stats.curiosity", infinity: true  },
               ].map((stat, i) => (
                 <motion.div

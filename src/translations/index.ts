@@ -73,7 +73,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item3.from': 'Construction detail',
     'about.eye.item3.from.mobile': 'Detail',
     'about.eye.item3.to': 'Microinteractions',
-    'about.eye.item3.text': "In architecture, quality lives in the detail drawing — the joint nobody notices when it's right. Interfaces work the same way: the transition, the hover state, the loading skeleton. Users won't name them, but they feel the difference.",
+    'about.eye.item3.text': "In architecture, quality lives in the detail — the joint nobody notices when it's right. Interfaces work the same way: the transition, the hover state, the loading skeleton. Users won't name them, but they feel the difference.",
 
     // ── Contact ──
     'contact.headline.1': "let's build",
@@ -479,7 +479,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item3.from': 'Detal konstrukcyjny',
     'about.eye.item3.from.mobile': 'Detal',
     'about.eye.item3.to': 'Mikrointerakcje',
-    'about.eye.item3.text': "W architekturze o jakości decyduje detal wykonawczy — złącze, którego nikt nie zauważa, dopóki jest zrobione dobrze. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
+    'about.eye.item3.text': "W architekturze o jakości decyduje detal — złącze, którego nikt nie zauważa, dopóki jest zrobione dobrze. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
 
     // ── Contact ──
     'contact.headline.1': 'zbudujmy',
