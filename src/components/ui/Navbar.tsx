@@ -140,7 +140,7 @@ export function Navbar() {
           onMouseEnter={() => setLogoHovered(true)}
           onMouseLeave={() => setLogoHovered(false)}
           onClick={(e) => handleNavClick(e, "#")}
-          className="font-display font-black text-2xl tracking-tighter text-[#111111] flex items-baseline gap-0 focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm focus-visible:outline-none"
+          className="font-display font-bold text-2xl tracking-tighter text-[#111111] flex items-baseline gap-0 focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm focus-visible:outline-none"
           style={{ letterSpacing: "-0.05em" }}
           aria-label={t('nav.aria.gototop')}
         >
