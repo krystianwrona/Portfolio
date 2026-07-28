@@ -50,8 +50,8 @@ export function UpNextCard({
         <SvgOutlineTitle
           lines={titleLines ?? [projectName]}
           fillColor="#111111"
-          className={`font-sans font-black tracking-tighter ${titleClassName}`}
-          strokeWidthClassName="[stroke-width:4px]"
+          className={`font-sans font-black tracking-[0.01em] ${titleClassName}`}
+          strokeWidthClassName="[stroke-width:3px]"
         />
       </a>
     </section>

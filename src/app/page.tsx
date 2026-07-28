@@ -251,8 +251,8 @@ function ProjectRow({ project, onClick, index }: {
             lines={project.titleLines}
             fillColor="#111"
             fitContainerRef={fitRef}
-            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em]"
-            strokeWidthClassName="[stroke-width:calc(4px*var(--title-scale,1)*var(--auto-fit,1))]"
+            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
+            strokeWidthClassName="[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
           />
         </div>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
