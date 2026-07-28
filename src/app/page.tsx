@@ -130,9 +130,11 @@ const ARCHITECTS_EYE_ITEMS = [
     textKey: "about.eye.item1.text",
   },
   {
-    fromKey: "about.eye.item2.from", fromMobileKey: "about.eye.item2.from.mobile",
+    // Full wording ("Composition"/"Kompozycja") doesn't fit text-base at 320px —
+    // shrunk instead of shortened, since this pair's precision is the point.
+    fromKey: "about.eye.item2.from", fromMobileKey: undefined as string | undefined,
     toKey: "about.eye.item2.to", toMobileKey: undefined as string | undefined,
-    textKey: "about.eye.item2.text",
+    textKey: "about.eye.item2.text", mobileTextClass: "text-[15px]",
   },
   {
     fromKey: "about.eye.item3.from", fromMobileKey: "about.eye.item3.from.mobile",
@@ -674,7 +676,7 @@ export default function Home() {
               <ul className="flex flex-col gap-6 list-none p-0 m-0">
                 {ARCHITECTS_EYE_ITEMS.map((item) => (
                   <li key={item.fromKey}>
-                    <p className="font-display font-black text-base sm:text-lg mb-1 whitespace-nowrap sm:whitespace-normal">
+                    <p className={`font-display font-black ${item.mobileTextClass ?? "text-base"} sm:text-lg mb-1 whitespace-nowrap sm:whitespace-normal`}>
                       <span className="sm:hidden">{t(item.fromMobileKey ?? item.fromKey)}</span>
                       <span className="hidden sm:inline">{t(item.fromKey)}</span>
                       {" "}<span className="text-[#111]">→</span>{" "}
