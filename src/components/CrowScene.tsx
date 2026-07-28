@@ -268,7 +268,17 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   });
 
   const isMobile = viewport.width < 4.0;
-  const xOffset  = isMobile ? -0.05 : -0.3;
+  // The crow texture's sparse trailing particles extend further left than
+  // the dense body extends right, so the dense mass sits inherently right
+  // of the mesh's own geometric center — by a fraction of meshW that stays
+  // constant (measured via alpha-weighted pixel centroid across viewport
+  // widths), not a fixed world-unit amount. On mobile meshW scales directly
+  // with screen width (uncapped, unlike desktop's 6.0-capped mesh), so the
+  // correction has to scale with it too, or the crow drifts back off-center
+  // as screen width changes. Desktop's meshW is ~constant across screen
+  // sizes (capped), so its flat offset still holds.
+  const MOBILE_MASS_BIAS = 0.1336;
+  const xOffset  = isMobile ? -MOBILE_MASS_BIAS * meshW : -0.3;
   return (
     <points ref={pointsRef} scale={[meshW, meshH, 1]} position={[xOffset, 0, 0]}>
       <planeGeometry ref={geometryRef} args={[1, 1, segments, segments]} />
