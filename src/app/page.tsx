@@ -28,10 +28,12 @@ interface ProjectEntry {
   id: string;
   title: string;
   titleLines: string[];
+  titleLinesMobile: string[];
   categoryKey: string;
   color: string;
   titleScale?: number;
   titleScaleLg?: number;
+  titleScaleMobile?: number;
 }
 
 const CATEGORY_KEYS: Record<string, string> = {
@@ -46,10 +48,12 @@ const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   id,
   title: PROJECTS[id].title,
   titleLines: PROJECTS[id].titleLines ?? [PROJECTS[id].title],
+  titleLinesMobile: PROJECTS[id].titleLinesMobile ?? PROJECTS[id].titleLines ?? [PROJECTS[id].title],
   categoryKey: CATEGORY_KEYS[id],
   color: PROJECTS[id].brand,
   titleScale: PROJECTS[id].titleScale,
   titleScaleLg: PROJECTS[id].titleScaleLg,
+  titleScaleMobile: PROJECTS[id].titleScaleMobile,
 }));
 
 const TECH_GROUPS = [
@@ -198,9 +202,20 @@ function ProjectRow({ project, onClick, index }: {
   // content instead of being stretched, so there's nothing to overflow.
   const fitRef = useRef<HTMLDivElement>(null);
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  // Drives which pre-authored line break (and matching scale) renders — kept
+  // in JS rather than pure CSS so SvgOutlineTitle's own lines prop actually
+  // changes at the md breakpoint, which re-triggers its getBBox() remeasure.
+  // Two parallel CSS-only <SvgOutlineTitle>s (one hidden per breakpoint)
+  // would measure a hidden instance against a zero-size box.
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
 
   useEffect(() => {
     setIsCoarsePointer(window.matchMedia("(pointer: coarse)").matches);
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobileViewport(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsMobileViewport(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -239,6 +254,11 @@ function ProjectRow({ project, onClick, index }: {
       style={{
         ['--project-color' as string]: project.color,
         ['--title-hover-color' as string]: project.color,
+        // --title-scale-mobile drives the <md tier only; --title-scale drives
+        // the md-lg tablet tier. Split so a mobile-only line-break change
+        // (below md) can carry its own scale without shifting the tablet
+        // tier, which keeps rendering the non-mobile titleLines untouched.
+        ['--title-scale-mobile' as string]: project.titleScaleMobile ?? project.titleScale ?? 1,
         ['--title-scale' as string]: project.titleScale ?? 1,
         ['--title-scale-lg' as string]: project.titleScaleLg ?? 1,
       } as React.CSSProperties}
@@ -248,11 +268,11 @@ function ProjectRow({ project, onClick, index }: {
         <span className="sr-only">{project.title}</span>
         <div ref={fitRef} className="relative">
           <SvgOutlineTitle
-            lines={project.titleLines}
+            lines={isMobileViewport ? project.titleLinesMobile : project.titleLines}
             fillColor="#111"
             fitContainerRef={fitRef}
-            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
-            strokeWidthClassName="[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
+            className="font-display font-black text-[calc(13vw*var(--title-scale-mobile,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
+            strokeWidthClassName="[stroke-width:calc(3px*var(--title-scale-mobile,1)*var(--auto-fit,1))] md:[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
           />
         </div>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
