@@ -50,10 +50,19 @@ body {
 }
 
 /* ── Global focus-visible ───────────────────────── */
-:focus-visible {
-  outline: 2px solid #111111;
-  outline-offset: 3px;
-  border-radius: 2px;
+/* Wrapped in @layer base so it competes on specificity like everything
+   else — left unlayered, this unconditionally beat every Tailwind
+   focus-visible:* utility (including focus-visible:outline-none),
+   because unlayered CSS always wins over layered CSS regardless of
+   specificity or source order. That's what was drawing a black
+   outline "frame" around elements (e.g. the MENU button) that opted
+   out of it. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
 /* ── prefers-reduced-motion ─────────────────────── */

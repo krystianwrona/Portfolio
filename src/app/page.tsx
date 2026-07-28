@@ -739,7 +739,7 @@ export default function Home() {
           <MagneticHeading
             onClick={() => setContactOpen((v) => !v)}
             ariaLabel={`${t('contact.headline.1')} ${t('contact.headline.2')} ${t('contact.headline.3')} — ${contactOpen ? "close" : "open"} contact form`}
-            className="cursor-pointer select-none group focus-visible:outline-none"
+            className="cursor-pointer select-none group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-[#111111]"
           >
             <h2 id="contact-heading" className="font-display font-black text-[8vw] md:text-[7vw] leading-[0.85] tracking-tighter text-center transition-colors duration-500">
               {t('contact.headline.1')}<br />{t('contact.headline.2')} <span className="group-hover:text-[#FACC15] transition-colors duration-300">{t('contact.headline.3')}</span>
