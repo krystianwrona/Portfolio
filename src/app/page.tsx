@@ -273,19 +273,33 @@ function ProjectRow({ project, onClick, index }: {
         {/*
           A transparent-fill -webkit-text-stroke exposes rasterization seams
           wherever a glyph's contours overlap (e.g. the inner/outer contour
-          of counters in "e", "8", "R") — a font/rasterizer bug, not
-          something clipPath or stroke-width alone can fix. `paint-order`
-          would solve it (stroke painted first, opaque fill painted on top
-          hides the overlap seams) but that property only affects SVG
-          <text>/<tspan> in shipping browsers, not plain HTML text — so we
-          reproduce the same paint order with two stacked copies instead.
-          The stroke layer stays in normal flow (it sizes the wrapper); the
-          opaque-fill layer is `position: absolute` — CSS always composites
-          positioned elements above static in-flow content regardless of
-          DOM order, so the fill paints on top of the stroke and covers
-          exactly the seam-prone overlap regions, leaving a clean
-          single-width outline. (Do not flip which layer is absolute —
-          the static one paints below no matter what DOM order says.)
+          of counters in "e", "8", "R", or adjacent glyphs' stroke rings
+          touching under the negative tracking below) — a font/rasterizer
+          bug, not something clipPath or stroke-width alone can fix.
+          `paint-order` would solve it (stroke painted first, opaque fill
+          painted on top hides the overlap seams) but that property only
+          affects SVG <text>/<tspan> in shipping browsers, not plain HTML
+          text — so we reproduce the same paint order with two stacked
+          copies instead. The stroke layer stays in normal flow (it sizes
+          the wrapper); the opaque layer is `position: absolute` — CSS
+          always composites positioned elements above static in-flow
+          content regardless of DOM order, so it paints on top. (Do not
+          flip which layer is absolute — the static one paints below no
+          matter what DOM order says.)
+          A plain solid fill on the top layer only covers seams that land
+          inside the glyph's own filled silhouette — it can't reach seams
+          inside a counter's negative space, or in the gap between two
+          adjacent glyphs' stroke rings, since neither is ever part of the
+          glyph's fill. Both blind spots are exactly where Montserrat
+          Black's thick strokes and tight counters produce seams that a
+          lighter fallback font didn't. So the top layer also carries its
+          own stroke, same color as its fill and ~1px wider than the
+          bottom layer's, extending its solid coverage into both blind
+          spots — its outward edge still lines up with the bottom layer's
+          visible outline, so the perceived shape is unchanged; the extra
+          margin only guards against subpixel misalignment between the two
+          independently-laid-out elements at fractional --title-scale
+          values.
           Fill-on-hover uses the same group-hover mechanism as the category
           label below, gated behind an explicit @media (hover: hover)
           variant so it only ever applies on devices with a real
@@ -300,7 +314,7 @@ function ProjectRow({ project, onClick, index }: {
           >
             {project.title}
           </h3>
-          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
+          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:calc((2px*var(--title-scale,1)*var(--auto-fit,1))+1px)_#111] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1),-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:var(--project-color)]">
             {project.title}
           </h3>
         </div>
