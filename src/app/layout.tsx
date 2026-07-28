@@ -37,9 +37,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
       <body
-        className={`${inter.variable} ${montserrat.variable} font-sans bg-background text-text-primary antialiased selection:bg-accent selection:text-text-primary overflow-x-hidden`}
+        className="font-sans bg-background text-text-primary antialiased selection:bg-accent selection:text-text-primary overflow-x-hidden"
       >
         <a href="#main-content" className="skip-link no-print">Skip to main content</a>
         <LanguageProvider>
