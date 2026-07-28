@@ -68,11 +68,13 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item1.to.mobile': 'Information',
     'about.eye.item1.text': 'Moving someone through a building and moving them through an interface is the same discipline: deciding what they notice first, what waits until they need it, and how they always know where they are. Five years of designing space turned out to be five years of designing user flows.',
     'about.eye.item2.from': 'Composition',
+    'about.eye.item2.from.mobile': 'Design',
     'about.eye.item2.to': 'Layout',
     'about.eye.item2.text': "Architectural boards taught me to compose — balance, light and proportion, knowing when a layout is crowded before anyone can explain why. That instinct transfers directly to a screen, and it's the part of design that's hardest to learn from tutorials.",
     'about.eye.item3.from': 'Construction detail',
     'about.eye.item3.from.mobile': 'Detail',
     'about.eye.item3.to': 'Microinteractions',
+    'about.eye.item3.to.mobile': 'Interactions',
     'about.eye.item3.text': "In architecture, quality lives in the detail — the joint nobody notices when it's right. Interfaces work the same way: the transition, the hover state, the loading skeleton. Users won't name them, but they feel the difference.",
 
     // ── Contact ──
@@ -471,14 +473,16 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item1.from': 'Hierarchia przestrzenna',
     'about.eye.item1.from.mobile': 'Przestrzeń',
     'about.eye.item1.to': 'Hierarchia informacji',
-    'about.eye.item1.to.mobile': 'Informacja',
+    'about.eye.item1.to.mobile': 'Info',
     'about.eye.item1.text': "Przeprowadzenie kogoś przez budynek i przez interfejs to w gruncie rzeczy to samo zadanie: decydujesz, co rzuci mu się w oczy najpierw, co ma poczekać, aż stanie się potrzebne, i jak sprawić, żeby przez cały czas wiedział, gdzie jest. Pięć lat projektowania przestrzeni okazało się pięcioma latami projektowania ścieżek użytkownika.",
     'about.eye.item2.from': 'Kompozycja',
+    'about.eye.item2.from.mobile': 'Projekt',
     'about.eye.item2.to': 'Layout',
     'about.eye.item2.text': "Plansze architektoniczne nauczyły mnie kompozycji — balansu, światła, proporcji, wyczucia, że układ jest przeładowany, jeszcze zanim ktokolwiek potrafi powiedzieć dlaczego. Ten instynkt przenosi się na ekran jeden do jednego i jest tą częścią projektowania, której najtrudniej nauczyć się z tutoriali.",
     'about.eye.item3.from': 'Detal konstrukcyjny',
     'about.eye.item3.from.mobile': 'Detal',
     'about.eye.item3.to': 'Mikrointerakcje',
+    'about.eye.item3.to.mobile': 'Interakcje',
     'about.eye.item3.text': "W architekturze o jakości decyduje detal — złącze, którego nikt nie zauważa, dopóki jest zrobione dobrze. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
 
     // ── Contact ──

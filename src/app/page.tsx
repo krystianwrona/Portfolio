@@ -130,13 +130,13 @@ const ARCHITECTS_EYE_ITEMS = [
     textKey: "about.eye.item1.text",
   },
   {
-    fromKey: "about.eye.item2.from", fromMobileKey: undefined as string | undefined,
+    fromKey: "about.eye.item2.from", fromMobileKey: "about.eye.item2.from.mobile",
     toKey: "about.eye.item2.to", toMobileKey: undefined as string | undefined,
     textKey: "about.eye.item2.text",
   },
   {
     fromKey: "about.eye.item3.from", fromMobileKey: "about.eye.item3.from.mobile",
-    toKey: "about.eye.item3.to", toMobileKey: undefined as string | undefined,
+    toKey: "about.eye.item3.to", toMobileKey: "about.eye.item3.to.mobile",
     textKey: "about.eye.item3.text",
   },
 ];
