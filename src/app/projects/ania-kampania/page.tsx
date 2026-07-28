@@ -532,7 +532,7 @@ export default function AniaKampaniaCaseStudy() {
           href="/projects/folk-culture-center"
           projectName="Centrum Kultury Ludowej"
           brand={PROJECTS["folk-culture-center"].brand}
-          title={<>Centrum Kultury<br />Ludowej</>}
+          titleLines={["Centrum Kultury", "Ludowej"]}
           titleClassName="text-4xl md:text-8xl"
         />
       </motion.main>

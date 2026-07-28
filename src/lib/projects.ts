@@ -11,14 +11,19 @@ export interface ProjectMeta {
   // collapses to 1) once a title needs shrinking at all.
   titleScale?: number;    // mobile + tablet (below the lg breakpoint)
   titleScaleLg?: number;  // lg breakpoint and up
+  // Explicit line breaks for the SVG title (SVG <text> doesn't wrap on its
+  // own, unlike the HTML it replaced). Omit for single-word titles — they
+  // default to one line. Order matches how the title should read top to
+  // bottom.
+  titleLines?: string[];
 }
 
 export const PROJECTS: Record<string, ProjectMeta> = {
-  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleScale: 0.5, titleScaleLg: 0.75 },
+  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleScale: 0.5, titleScaleLg: 0.75, titleLines: ["Centrum Kultury", "Ludowej"] },
   "adoptio":             { id: "adoptio",             title: "Adoptio",             brand: "#F97316" },
   "legalray":            { id: "legalray",            title: "LegalRay",            brand: "#2563EB" },
   "fashionhero":         { id: "fashionhero",          title: "FashionHero",         brand: "#E11D48" },
-  "ania-kampania":       { id: "ania-kampania",        title: "Ania Kampania",       brand: "#B25818" },
+  "ania-kampania":       { id: "ania-kampania",        title: "Ania Kampania",       brand: "#B25818", titleLines: ["Ania", "Kampania"] },
 };
 
 export const PROJECT_ORDER = [

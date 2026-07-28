@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   motion, useScroll, AnimatePresence,
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
+import { SvgOutlineTitle } from "@/components/ui/SvgOutlineTitle";
 
 // Three.js/@react-three bundle is code-split into its own chunk and
 // only fetched on the client, after first paint, instead of blocking
@@ -26,6 +27,7 @@ const CONTACT_EMAIL = "krystian.wrona@protonmail.com";
 interface ProjectEntry {
   id: string;
   title: string;
+  titleLines: string[];
   categoryKey: string;
   color: string;
   titleScale?: number;
@@ -43,6 +45,7 @@ const CATEGORY_KEYS: Record<string, string> = {
 const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   id,
   title: PROJECTS[id].title,
+  titleLines: PROJECTS[id].titleLines ?? [PROJECTS[id].title],
   categoryKey: CATEGORY_KEYS[id],
   color: PROJECTS[id].brand,
   titleScale: PROJECTS[id].titleScale,
@@ -181,48 +184,19 @@ function InfinitySymbol() {
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
-// Below the md breakpoint the title wrapper is a stretched flex-column item
-// (fixed width, driven by the viewport), so any unbreakable word wider than
-// that box overflows it. This measures the title's actual rendered width
-// against its container and writes a corrective --auto-fit multiplier
-// directly on the element (bypassing React state, so it can't fight a
-// re-render) whenever a word doesn't fit — sized from real glyph metrics
-// rather than a hand-tuned per-project constant, so it keeps working no
-// matter what the title text or typeface is. It self-neutralizes at md+,
-// where the row switches to flex-row and the wrapper shrinks to its content
-// instead of being stretched, so there's nothing to overflow.
-function useTitleFitScale() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const measure = () => {
-      el.style.setProperty("--auto-fit", "1");
-      const { scrollWidth, clientWidth } = el;
-      const scale = scrollWidth > clientWidth
-        ? Math.max(0.4, (clientWidth / scrollWidth) * 0.98)
-        : 1;
-      el.style.setProperty("--auto-fit", String(scale));
-    };
-
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return ref;
-}
-
 function ProjectRow({ project, onClick, index }: {
   project: ProjectEntry;
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
   index: number;
 }) {
   const { t } = useLanguage();
-  const fitRef = useTitleFitScale();
+  // Below the md breakpoint the wrapper is a stretched flex-column item
+  // (fixed width, driven by the viewport) — this is the available-width
+  // reference SvgOutlineTitle shrinks the title against so an unbreakable
+  // word (e.g. FashionHero) can never overflow it. Self-neutralizes at md+,
+  // where the row switches to flex-row and the wrapper shrinks to its own
+  // content instead of being stretched, so there's nothing to overflow.
+  const fitRef = useRef<HTMLDivElement>(null);
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
   useEffect(() => {
@@ -264,45 +238,22 @@ function ProjectRow({ project, onClick, index }: {
       className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
       style={{
         ['--project-color' as string]: project.color,
+        ['--title-hover-color' as string]: project.color,
         ['--title-scale' as string]: project.titleScale ?? 1,
         ['--title-scale-lg' as string]: project.titleScaleLg ?? 1,
       } as React.CSSProperties}
     >
       {/* Row content */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
-        {/*
-          A transparent-fill -webkit-text-stroke exposes rasterization seams
-          wherever a glyph's contours overlap (e.g. the inner/outer contour
-          of counters in "e", "8", "R") — a font/rasterizer bug, not
-          something clipPath or stroke-width alone can fix. `paint-order`
-          would solve it (stroke painted first, opaque fill painted on top
-          hides the overlap seams) but that property only affects SVG
-          <text>/<tspan> in shipping browsers, not plain HTML text — so we
-          reproduce the same paint order with two stacked copies instead.
-          The stroke layer stays in normal flow (it sizes the wrapper); the
-          opaque-fill layer is `position: absolute` — CSS always composites
-          positioned elements above static in-flow content regardless of
-          DOM order, so the fill paints on top of the stroke and covers
-          exactly the seam-prone overlap regions, leaving a clean
-          single-width outline. (Do not flip which layer is absolute —
-          the static one paints below no matter what DOM order says.)
-          Fill-on-hover uses the same group-hover mechanism as the category
-          label below, gated behind an explicit @media (hover: hover)
-          variant so it only ever applies on devices with a real
-          hover-capable pointer — touch devices structurally can't match
-          it, so they permanently stay on the resting (outline) state,
-          which is exactly why this seam had to be fixed for mobile.
-        */}
+        <span className="sr-only">{project.title}</span>
         <div ref={fitRef} className="relative">
-          <h3
-            aria-hidden="true"
-            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:calc(2px*var(--title-scale,1)*var(--auto-fit,1))_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
-          >
-            {project.title}
-          </h3>
-          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
-            {project.title}
-          </h3>
+          <SvgOutlineTitle
+            lines={project.titleLines}
+            fillColor="#111"
+            fitContainerRef={fitRef}
+            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em]"
+            strokeWidthClassName="[stroke-width:calc(4px*var(--title-scale,1)*var(--auto-fit,1))]"
+          />
         </div>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
           {t(project.categoryKey)}

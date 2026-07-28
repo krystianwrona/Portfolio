@@ -487,7 +487,6 @@ export default function FolkCultureCenterCaseStudy() {
           href="/projects/adoptio"
           projectName="Adoptio"
           brand={PROJECTS.adoptio.brand}
-          title="Adoptio"
         />
       </motion.main>
 

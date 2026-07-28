@@ -498,7 +498,6 @@ export default function LegalRayCaseStudy() {
           href="/projects/fashionhero"
           projectName="FashionHero"
           brand={PROJECTS.fashionhero.brand}
-          title="FashionHero"
         />
       </motion.main>
 

@@ -507,7 +507,6 @@ export default function AdoptMeCaseStudy() {
           href="/projects/legalray"
           projectName="LegalRay"
           brand={PROJECTS.legalray.brand}
-          title="LegalRay"
         />
       </motion.main>
 
