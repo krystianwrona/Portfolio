@@ -127,7 +127,7 @@ export function Navbar() {
         initial={shouldReduceMotion ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full h-[7vh] flex items-center fixed top-0 left-0 z-[200] px-[4vw] bg-[#F8F8F8]/80 backdrop-blur-[16px] border-b border-[#111111]/[0.05]"
+        className="w-full h-[7vh] flex items-center fixed top-0 left-0 z-[200] px-[4vw] bg-[#F8F8F8]/80 backdrop-blur-[16px] border-b border-[#111111]/[0.05] contain-paint"
       >
         {/* SCROLL PROGRESS */}
         <motion.div
