@@ -130,8 +130,6 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   const { viewport, camera, gl } = useThree();
   const texture = useTexture("/crow-particles.webp");
   texture.colorSpace = THREE.SRGBColorSpace;
-  const meshW = Math.min(viewport.width * 0.85, 6.0);
-  const meshH = meshW / 2;
 
   const pointsRef = useRef<THREE.Points>(null);
   const geometryRef = useRef<THREE.BufferGeometry>(null);
@@ -143,6 +141,9 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
 
   // Fewer grid segments on small screens — quarter the vertex count on mobile
   const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
+  // Mobile fills more of the viewport width — desktop keeps the approved 0.85 framing
+  const meshW = Math.min(viewport.width * (isMobileViewport ? 1.0 : 0.85), 6.0);
+  const meshH = meshW / 2;
   const [segments] = useState(() => (isMobileViewport ? 160 : 288));
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
