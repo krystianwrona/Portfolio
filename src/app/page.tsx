@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   motion, useScroll, AnimatePresence,
@@ -181,12 +181,48 @@ function InfinitySymbol() {
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
+// Below the md breakpoint the title wrapper is a stretched flex-column item
+// (fixed width, driven by the viewport), so any unbreakable word wider than
+// that box overflows it. This measures the title's actual rendered width
+// against its container and writes a corrective --auto-fit multiplier
+// directly on the element (bypassing React state, so it can't fight a
+// re-render) whenever a word doesn't fit — sized from real glyph metrics
+// rather than a hand-tuned per-project constant, so it keeps working no
+// matter what the title text or typeface is. It self-neutralizes at md+,
+// where the row switches to flex-row and the wrapper shrinks to its content
+// instead of being stretched, so there's nothing to overflow.
+function useTitleFitScale() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const measure = () => {
+      el.style.setProperty("--auto-fit", "1");
+      const { scrollWidth, clientWidth } = el;
+      const scale = scrollWidth > clientWidth
+        ? Math.max(0.4, (clientWidth / scrollWidth) * 0.98)
+        : 1;
+      el.style.setProperty("--auto-fit", String(scale));
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return ref;
+}
+
 function ProjectRow({ project, onClick, index }: {
   project: ProjectEntry;
   onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
   index: number;
 }) {
   const { t } = useLanguage();
+  const fitRef = useTitleFitScale();
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
   useEffect(() => {
@@ -257,14 +293,14 @@ function ProjectRow({ project, onClick, index }: {
           it, so they permanently stay on the resting (outline) state,
           which is exactly why this seam had to be fixed for mobile.
         */}
-        <div className="relative">
+        <div ref={fitRef} className="relative">
           <h3
             aria-hidden="true"
-            className="font-display font-black text-[calc(13vw*var(--title-scale,1))] md:text-[calc(6rem*var(--title-scale,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:calc(2px*var(--title-scale,1))_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
+            className="font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:calc(2px*var(--title-scale,1)*var(--auto-fit,1))_rgba(255,255,255,0.35)] [transition:-webkit-text-stroke-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-stroke-color:transparent]"
           >
             {project.title}
           </h3>
-          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1))] md:text-[calc(6rem*var(--title-scale,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
+          <h3 className="absolute inset-0 pointer-events-none font-display font-black text-[calc(13vw*var(--title-scale,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[-0.03em] leading-[1.2] [-webkit-text-stroke:0px_transparent] [-webkit-text-fill-color:#111] [transition:-webkit-text-fill-color_500ms_cubic-bezier(0,0,0.2,1)] [@media(hover:hover)]:group-hover:[-webkit-text-fill-color:var(--project-color)]">
             {project.title}
           </h3>
         </div>
