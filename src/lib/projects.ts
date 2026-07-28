@@ -16,17 +16,17 @@ export interface ProjectMeta {
   // default to one line. Order matches how the title should read top to
   // bottom.
   titleLines?: string[];
-  // Mobile-only (below md) override for titleLines/titleScale. Some titles
-  // need a different line break below md than at md+ — e.g. a title that
-  // wraps to 2 lines at tablet/desktop width needs 3 shorter lines on a
-  // phone to avoid shrinking so far it reads smaller than every other
-  // title. Both fields fall back to the non-mobile ones when omitted.
+  // Mobile-only (below md) override for titleLines. Some titles need a
+  // different line break below md than at md+ — e.g. a title that wraps to
+  // 2 lines at tablet/desktop width needs 3 shorter lines on a phone.
+  // Mobile font-size itself is a single shared scale applied to every
+  // title alike (the 0.7476 literal in ProjectRow's className, page.tsx),
+  // not a per-project override — see the comment next to it for why.
   titleLinesMobile?: string[];
-  titleScaleMobile?: number;
 }
 
 export const PROJECTS: Record<string, ProjectMeta> = {
-  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleScale: 0.55, titleScaleLg: 0.75, titleLines: ["Centrum Kultury", "Ludowej"], titleLinesMobile: ["Centrum", "Kultury", "Ludowej"], titleScaleMobile: 1 },
+  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleScale: 0.55, titleScaleLg: 0.75, titleLines: ["Centrum Kultury", "Ludowej"], titleLinesMobile: ["Centrum", "Kultury", "Ludowej"] },
   "adoptio":             { id: "adoptio",             title: "Adoptio",             brand: "#F97316" },
   "legalray":            { id: "legalray",            title: "LegalRay",            brand: "#2563EB" },
   "fashionhero":         { id: "fashionhero",          title: "FashionHero",         brand: "#E11D48" },

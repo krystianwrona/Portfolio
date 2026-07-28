@@ -33,7 +33,6 @@ interface ProjectEntry {
   color: string;
   titleScale?: number;
   titleScaleLg?: number;
-  titleScaleMobile?: number;
 }
 
 const CATEGORY_KEYS: Record<string, string> = {
@@ -53,7 +52,6 @@ const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   color: PROJECTS[id].brand,
   titleScale: PROJECTS[id].titleScale,
   titleScaleLg: PROJECTS[id].titleScaleLg,
-  titleScaleMobile: PROJECTS[id].titleScaleMobile,
 }));
 
 const TECH_GROUPS = [
@@ -254,11 +252,10 @@ function ProjectRow({ project, onClick, index }: {
       style={{
         ['--project-color' as string]: project.color,
         ['--title-hover-color' as string]: project.color,
-        // --title-scale-mobile drives the <md tier only; --title-scale drives
-        // the md-lg tablet tier. Split so a mobile-only line-break change
-        // (below md) can carry its own scale without shifting the tablet
-        // tier, which keeps rendering the non-mobile titleLines untouched.
-        ['--title-scale-mobile' as string]: project.titleScaleMobile ?? project.titleScale ?? 1,
+        // --title-scale drives the md-lg tablet tier only — the <md tier
+        // uses the 0.7476 literal hardcoded into the className below
+        // instead, same for every title. See the comment next to it for
+        // why.
         ['--title-scale' as string]: project.titleScale ?? 1,
         ['--title-scale-lg' as string]: project.titleScaleLg ?? 1,
       } as React.CSSProperties}
@@ -267,12 +264,30 @@ function ProjectRow({ project, onClick, index }: {
       <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
         <span className="sr-only">{project.title}</span>
         <div ref={fitRef} className="relative">
+          {/*
+            0.7476 (<md tier, both classes below) is a single shared scale
+            applied to every title alike instead of letting each one
+            auto-fit-shrink to its own width — FashionHero (the widest
+            single-line title) used to auto-fit-shrink itself via
+            SvgOutlineTitle's fitContainerRef while short titles like
+            Adoptio stayed at the standard 13vw, so titles read at
+            inconsistent sizes next to each other. Value is FashionHero's
+            own current auto-fit-derived scale at 320px width — its
+            tightest fit among 320/360/390/430, since auto-fit's ratio
+            grows with width (the row's fitContainerRef padding is a fixed
+            64px, not a vw fraction, so the narrowest screen is the
+            binding constraint). Applying that scale to every title keeps
+            auto-fit from ever engaging below md. Must stay a literal
+            number, not a JS constant interpolated into the string —
+            Tailwind's JIT scanner needs the complete arbitrary-value
+            class text present in source to generate it.
+          */}
           <SvgOutlineTitle
             lines={isMobileViewport ? project.titleLinesMobile : project.titleLines}
             fillColor="#111"
             fitContainerRef={fitRef}
-            className="font-display font-black text-[calc(13vw*var(--title-scale-mobile,1)*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
-            strokeWidthClassName="[stroke-width:calc(3px*var(--title-scale-mobile,1)*var(--auto-fit,1))] md:[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
+            className="font-display font-black text-[calc(13vw*0.7476*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
+            strokeWidthClassName="[stroke-width:calc(3px*0.7476*var(--auto-fit,1))] md:[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
           />
         </div>
         <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
