@@ -261,7 +261,7 @@ function ProjectRow({ project, onClick, index }: {
       } as React.CSSProperties}
     >
       {/* Row content */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-baseline justify-between">
+      <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between">
         <span className="sr-only">{project.title}</span>
         <div ref={fitRef} className="relative">
           {/*
