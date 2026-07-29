@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   motion, useScroll, AnimatePresence,
@@ -10,7 +10,8 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
-import { SvgOutlineTitle } from "@/components/ui/SvgOutlineTitle";
+import { SvgOutlineTitle, type SvgOutlineTitleHandle } from "@/components/ui/SvgOutlineTitle";
+import { ProjectTitleFitProvider, useTitleFit } from "@/components/ui/ProjectTitleFit";
 
 // Three.js/@react-three bundle is code-split into its own chunk and
 // only fetched on the client, after first paint, instead of blocking
@@ -31,8 +32,6 @@ interface ProjectEntry {
   titleLinesMobile: string[];
   categoryKey: string;
   color: string;
-  titleScale?: number;
-  titleScaleLg?: number;
 }
 
 const CATEGORY_KEYS: Record<string, string> = {
@@ -50,8 +49,6 @@ const PROJECT_DATA: ProjectEntry[] = PROJECT_ORDER.map((id) => ({
   titleLinesMobile: PROJECTS[id].titleLinesMobile ?? PROJECTS[id].titleLines ?? [PROJECTS[id].title],
   categoryKey: CATEGORY_KEYS[id],
   color: PROJECTS[id].brand,
-  titleScale: PROJECTS[id].titleScale,
-  titleScaleLg: PROJECTS[id].titleScaleLg,
 }));
 
 const TECH_GROUPS = [
@@ -192,13 +189,13 @@ function ProjectRow({ project, onClick, index }: {
   index: number;
 }) {
   const { t } = useLanguage();
-  // Below the md breakpoint the wrapper is a stretched flex-column item
-  // (fixed width, driven by the viewport) — this is the available-width
-  // reference SvgOutlineTitle shrinks the title against so an unbreakable
-  // word (e.g. FashionHero) can never overflow it. Self-neutralizes at md+,
-  // where the row switches to flex-row and the wrapper shrinks to its own
-  // content instead of being stretched, so there's nothing to overflow.
-  const fitRef = useRef<HTMLDivElement>(null);
+  // The title's column — full row width below md (stretched flex-column item),
+  // the grid remainder left over by the reserved label column at md+. Either
+  // way it is the real, measured width the title has to fit into; the shared
+  // font-size is solved from it. See ProjectTitleFit.tsx.
+  const titleBoxRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<SvgOutlineTitleHandle>(null);
+  const titleFit = useTitleFit();
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
   // Drives which pre-authored line break (and matching scale) renders — kept
   // in JS rather than pure CSS so SvgOutlineTitle's own lines prop actually
@@ -207,7 +204,11 @@ function ProjectRow({ project, onClick, index }: {
   // would measure a hidden instance against a zero-size box.
   const [isMobileViewport, setIsMobileViewport] = useState(false);
 
-  useEffect(() => {
+  // Layout, not plain, effect: which line break renders decides which line is
+  // the widest, which decides the shared font-size. Settling it before the
+  // browser paints is what stops the mobile line break from arriving as a
+  // visible resize one frame after the desktop one.
+  useLayoutEffect(() => {
     setIsCoarsePointer(window.matchMedia("(pointer: coarse)").matches);
     const mq = window.matchMedia("(max-width: 767px)");
     setIsMobileViewport(mq.matches);
@@ -215,6 +216,27 @@ function ProjectRow({ project, onClick, index }: {
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, []);
+
+  const lines = isMobileViewport ? project.titleLinesMobile : project.titleLines;
+
+  useLayoutEffect(() => {
+    if (!titleFit) return;
+    return titleFit.register({
+      ratio: () => titleRef.current?.ratio() ?? 0,
+      box: () => titleBoxRef.current,
+      sync: () => titleRef.current?.sync(),
+    });
+  }, [titleFit]);
+
+  // A line-break flip changes which line is the widest, so the shared size is
+  // no longer the right one. Recomputing here — in a layout effect, before
+  // paint — is what keeps the flip from being visible as a resize. (On mount
+  // this is a no-op: React attaches refs and runs layout effects bottom-up, so
+  // the provider's host div isn't mounted yet at this point. The provider's own
+  // layout effect, which runs after it is, does the first fit.)
+  useLayoutEffect(() => {
+    titleFit?.fit();
+  }, [titleFit, lines]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -252,45 +274,46 @@ function ProjectRow({ project, onClick, index }: {
       style={{
         ['--project-color' as string]: project.color,
         ['--title-hover-color' as string]: project.color,
-        // --title-scale drives the md-lg tablet tier only — the <md tier
-        // uses the 0.7476 literal hardcoded into the className below
-        // instead, same for every title. See the comment next to it for
-        // why.
-        ['--title-scale' as string]: project.titleScale ?? 1,
-        ['--title-scale-lg' as string]: project.titleScaleLg ?? 1,
       } as React.CSSProperties}
     >
-      {/* Row content */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between">
+      {/*
+        At md+ this is a two-column grid, not a flex row, and that is what makes
+        an overlap structurally impossible rather than merely unlikely: the
+        category label owns a reserved 30% column, the title gets `minmax(0,1fr)`
+        — the remainder, minus the gutter — and neither can be sized into the
+        other's track. `minmax(0,...)` rather than `1fr` deliberately: the title
+        track must NOT be content-sized, so the width the title is measured
+        against can't move when the title's own font-size changes (that loop is
+        what a measure-then-size pass has to avoid).
+        Below md the label sits under the title, so the title gets the full row.
+      */}
+      <div className="relative z-10 flex flex-col md:grid md:grid-cols-[minmax(0,1fr)_30%] md:items-end md:gap-x-8">
         <span className="sr-only">{project.title}</span>
-        <div ref={fitRef} className="relative">
+        <div ref={titleBoxRef} className="relative min-w-0 overflow-hidden">
           {/*
-            0.7476 (<md tier, both classes below) is a single shared scale
-            applied to every title alike instead of letting each one
-            auto-fit-shrink to its own width — FashionHero (the widest
-            single-line title) used to auto-fit-shrink itself via
-            SvgOutlineTitle's fitContainerRef while short titles like
-            Adoptio stayed at the standard 13vw, so titles read at
-            inconsistent sizes next to each other. Value is FashionHero's
-            own current auto-fit-derived scale at 320px width — its
-            tightest fit among 320/360/390/430, since auto-fit's ratio
-            grows with width (the row's fitContainerRef padding is a fixed
-            64px, not a vw fraction, so the narrowest screen is the
-            binding constraint). Applying that scale to every title keeps
-            auto-fit from ever engaging below md. Must stay a literal
-            number, not a JS constant interpolated into the string —
-            Tailwind's JIT scanner needs the complete arbitrary-value
-            class text present in source to generate it.
+            Font-size comes from --project-title-size: one measured value shared
+            by all five titles, written on the list container by
+            ProjectTitleFitProvider before the first paint.
+
+            The 6vw fallback is a floor for the pre-hydration frame, not an
+            approximation of the fit — deliberately small enough to never clip
+            at any viewport, since it has no way to know what the layout leaves
+            over. It isn't visible in practice either way: the row's reveal
+            state (opacity:0) is server-rendered, so nothing shows until the
+            measured size is already in place.
+
+            Stroke width stays a fixed px — the visible outline is meant to
+            read the same weight at every title size.
           */}
           <SvgOutlineTitle
-            lines={isMobileViewport ? project.titleLinesMobile : project.titleLines}
+            ref={titleRef}
+            lines={lines}
             fillColor="#111"
-            fitContainerRef={fitRef}
-            className="font-display font-black text-[calc(13vw*0.7476*var(--auto-fit,1))] md:text-[calc(6rem*var(--title-scale,1)*var(--auto-fit,1))] lg:text-[calc(8vw*var(--title-scale-lg,1))] uppercase tracking-[0.01em]"
-            strokeWidthClassName="[stroke-width:calc(3px*0.7476*var(--auto-fit,1))] md:[stroke-width:calc(3px*var(--title-scale,1)*var(--auto-fit,1))]"
+            className="font-display font-black [font-size:var(--project-title-size,6vw)] uppercase tracking-[0.01em]"
+            strokeWidthClassName="[stroke-width:2.25px] md:[stroke-width:3px]"
           />
         </div>
-        <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0">
+        <span className="text-xs md:text-sm tracking-[0.2em] uppercase text-gray-600 group-hover:text-white transition-colors duration-500 mt-6 md:mt-0 md:justify-self-end">
           {t(project.categoryKey)}
         </span>
       </div>
@@ -624,11 +647,11 @@ export default function Home() {
         >
           {t('works.title')}
         </motion.p>
-        <div className="flex flex-col">
+        <ProjectTitleFitProvider className="flex flex-col">
           {PROJECT_DATA.map((project, index) => (
             <ProjectRow key={project.id} project={project} index={index} onClick={handleProjectClick} />
           ))}
-        </div>
+        </ProjectTitleFitProvider>
       </section>
 
       {/* 3. BEYOND THE CODE */}
