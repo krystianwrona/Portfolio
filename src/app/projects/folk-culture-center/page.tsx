@@ -206,7 +206,16 @@ export default function FolkCultureCenterCaseStudy() {
               <p className="font-display font-black text-2xl md:text-3xl text-white/80 tracking-tight max-w-xl leading-tight">
                 {t("ckl.tagline")}
               </p>
-              <p className="text-base leading-[1.65] text-white/60 font-medium max-w-lg">
+              {/*
+                37rem (592px), not a stock scale step: at text-base/Inter this
+                is the width where every line of the lead lands at 70–75
+                characters — the comfortable measure — instead of the 53–63 that
+                max-w-lg gave it. Wider (max-w-2xl, 672px) runs to 76–85, which
+                is past comfortable; the tagline's own box above is 36rem, so
+                this sits just clear of it rather than reading as a broken
+                alignment.
+              */}
+              <p className="text-base leading-[1.65] text-white/60 font-medium max-w-[37rem]">
                 {t("ckl.desc")}
               </p>
             </motion.div>
