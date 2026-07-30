@@ -165,7 +165,7 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Case Study — 2026',
-    'adoptme.headline': 'Adopt by lifestyle,\nnot by photo.',
+    'adoptme.headline': 'Connect hearts,\nnot just profiles.',
     'adoptme.desc': 'A platform where shelters publish their animals and adopters find them through a lifestyle quiz rather than by scrolling hundreds of listings. Gemini reads the quiz answers against the tags describing each animal and matches on energy level — so a quiet evening person is not pointed at a dog that needs two hours of running a day.',
     'adoptme.problem.label': '01 — Problem',
     'adoptme.problem': 'Shelters get plenty of interest and much of it does not fit. People pick an animal from a photo and two lines of description, then find out the dog needs far more exercise than their day allows. The mismatch costs both sides the time they have least of — and sometimes the animal comes back.',
@@ -574,7 +574,7 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Studium przypadku — 2026',
-    'adoptme.headline': 'Adoptuj według stylu życia,\nnie według zdjęcia.',
+    'adoptme.headline': 'Łącz serca,\nnie tylko profile.',
     'adoptme.desc': 'Platforma, na której schroniska publikują swoje zwierzęta, a osoby adoptujące trafiają do nich przez quiz stylu życia, zamiast przewijać setki ogłoszeń. Gemini zestawia odpowiedzi z quizu z tagami opisującymi każde zwierzę i dopasowuje je pod względem poziomu energii — spokojna osoba nie dostanie psa, który potrzebuje dwóch godzin biegania dziennie.',
     'adoptme.problem.label': '01 — Problem',
     'adoptme.problem': 'Schroniska dostają sporo zgłoszeń i wiele z nich nie pasuje. Ludzie wybierają zwierzę po zdjęciu i dwóch zdaniach opisu, a potem okazuje się, że pies potrzebuje dużo więcej ruchu, niż pozwala na to ich dzień. Niedopasowanie kosztuje obie strony czas, którego mają najmniej — a zwierzę czasem wraca.',
