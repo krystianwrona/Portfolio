@@ -19,7 +19,7 @@ export interface ProjectMeta {
 }
 
 export const PROJECTS: Record<string, ProjectMeta> = {
-  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleLines: ["Centrum", "Kultury", "Ludowej"] },
+  "folk-culture-center": { id: "folk-culture-center", title: "Centrum Kultury Ludowej", brand: "#FFFFFF", titleLines: ["Centrum Kultury", "Ludowej"], titleLinesMobile: ["Centrum", "Kultury", "Ludowej"] },
   "adoptio":             { id: "adoptio",             title: "Adoptio",             brand: "#F97316" },
   "legalray":            { id: "legalray",            title: "LegalRay",            brand: "#2563EB" },
   "fashionhero":         { id: "fashionhero",          title: "FashionHero",         brand: "#E11D48" },
