@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
 
-const title = "Adoptio — AI-Powered Pet Adoption Platform";
-const description = "A social platform matching animal shelters with adopters through a smart lifestyle quiz, geolocation search, and a full shelter management dashboard.";
+const title = "Adoptio — Pet Adoption Matched by Lifestyle";
+const description = "Shelters publish their animals; a lifestyle quiz read by Gemini matches adopters on energy level. Local search, a shelter map, and a shelter panel with an adoption Kanban.";
 
 export const metadata: Metadata = {
   title,
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const JSON_LD = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: title,
+  name: "Adoptio",
   description,
   url: `${SITE_URL}/projects/adoptio`,
   author: { "@id": PERSON_ID },

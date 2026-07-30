@@ -7,7 +7,7 @@ export const contentType = ogImageContentType;
 export default async function Image() {
   return renderOgImage({
     title: "Adoptio",
-    subtitle: "AI-Powered Pet Adoption Platform",
+    subtitle: "Pet Adoption Matched by Lifestyle",
     bg: PROJECTS.adoptio.brand,
     fg: "#FFFFFF",
   });

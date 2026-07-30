@@ -130,6 +130,7 @@ export default function AdoptMeCaseStudy() {
     { title: t("adoptme.feature2.title"), desc: t("adoptme.feature2.desc") },
     { title: t("adoptme.feature3.title"), desc: t("adoptme.feature3.desc") },
     { title: t("adoptme.feature4.title"), desc: t("adoptme.feature4.desc") },
+    { title: t("adoptme.feature5.title"), desc: t("adoptme.feature5.desc") },
   ];
 
   return (
@@ -334,7 +335,9 @@ export default function AdoptMeCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#F97316]/30"
+                className={`group p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#F97316]/30${
+                  i === features.length - 1 && features.length % 2 === 1 ? " md:col-span-2" : ""
+                }`}
               >
                 <span className="font-sans font-black text-5xl leading-none" style={{ color: BRAND }}>
                   0{i + 1}
