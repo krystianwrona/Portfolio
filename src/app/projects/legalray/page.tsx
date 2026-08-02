@@ -129,6 +129,12 @@ export default function LegalRayCaseStudy() {
     { title: t("legalray.feature4.title"), desc: t("legalray.feature4.desc") },
   ];
 
+  const jurisdictions = ["pl", "de", "uk", "es", "it"].map((code) => ({
+    code,
+    name: t(`legalray.jur.${code}.name`),
+    basis: t(`legalray.jur.${code}.basis`),
+  }));
+
   return (
     <>
       <motion.main
@@ -258,6 +264,9 @@ export default function LegalRayCaseStudy() {
                 >
                   {t("case.visitwebsite")} →
                 </a>
+                <p className="mt-4 text-sm leading-[1.65] text-[#111]/50 font-medium max-w-sm">
+                  {t("legalray.demo.note")}
+                </p>
               </motion.div>
             </div>
 
@@ -271,7 +280,7 @@ export default function LegalRayCaseStudy() {
             >
               <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.techstack")}</p>
               <ul className="flex flex-col gap-3">
-                {["Google Gemini 3.0 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
+                {["Google Gemini 3.1 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
                     <span className="font-bold text-base text-[#111]/80">{tech}</span>
@@ -339,7 +348,49 @@ export default function LegalRayCaseStudy() {
           </div>
         </section>
 
-        {/* 5. MEDIA CAROUSEL */}
+        {/* 5. JURISDICTIONS */}
+        <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/30">
+              {t("legalray.jurisdictions.label")}
+            </span>
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="text-base md:text-lg leading-[1.65] text-[#111]/60 font-medium max-w-2xl mb-12"
+          >
+            {t("legalray.jurisdictions.intro")}
+          </motion.p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {jurisdictions.map(({ code, name, basis }, i) => (
+              <motion.div
+                key={code}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                className="p-6 md:p-7 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-3 transition-colors duration-500 hover:border-[#2563EB]/30"
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: BRAND }} />
+                <h2 className="font-display font-black text-lg text-[#111] tracking-tight leading-tight">
+                  {name}
+                </h2>
+                <p className="text-sm leading-[1.5] text-[#111]/50 font-medium">{basis}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* 6. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
           <div className="relative">
             {/* Scroll track */}
@@ -451,7 +502,25 @@ export default function LegalRayCaseStudy() {
           </div>
         </section>
 
-        {/* 6. VISIT WEBSITE */}
+        {/* 7. DISCLAIMER */}
+        <section className="py-[8vh] px-[4vw] bg-[#F5F5F4]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6 }}
+            className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-[#E4E4E7] flex flex-col gap-4 max-w-3xl"
+          >
+            <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/50">
+              {t("legalray.disclaimer.label")}
+            </span>
+            <p className="text-[0.95rem] leading-[1.65] font-medium text-[#111]/80">
+              {t("legalray.disclaimer.text")}
+            </p>
+          </motion.div>
+        </section>
+
+        {/* 8. VISIT WEBSITE */}
         <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
           <a
             href="https://legalray-app.vercel.app/"
@@ -467,7 +536,7 @@ export default function LegalRayCaseStudy() {
           </a>
         </section>
 
-        {/* 7. MARQUEE */}
+        {/* 9. MARQUEE */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
             { keys: ["legalray.marquee.row1.1", "legalray.marquee.row1.2", "legalray.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },
@@ -493,7 +562,7 @@ export default function LegalRayCaseStudy() {
           })}
         </section>
 
-        {/* 8. NEXT PROJECT */}
+        {/* 10. NEXT PROJECT */}
         <UpNextCard
           href="/projects/fashionhero"
           projectName="FashionHero"
