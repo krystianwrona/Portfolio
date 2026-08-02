@@ -20,6 +20,14 @@ type SlideType = "macbook" | "flat" | "mobile";
 // model (fixed / fixed / from / per-person-per-day) — that difference IS the
 // point being made, so the rungs carry their pricing shape, not just a number.
 //
+// The ebook rung is a RANGE because it covers two separately priced routes —
+// "Pełny dzień w sercu Neapolu" (49 zł) and "Wieczór w sercu Neapolu" (39 zł) —
+// both at a premiere price that ends 2026-08-31, after which each rises by 20 zł
+// (→ 69 / 59, hence the 59–69 zł in the note). That dated step-up is the whole
+// reason this rung carries a note: it is a pricing decision, not a discount.
+//   ⚠ AFTER 2026-08-31 this rung and its note both go stale — the amount becomes
+//   59–69 zł and the note has to change or go.
+//
 // ⚠ These are the CLIENT's prices, and they live in a different repo. They have
 // been revised downward once since launch already. Re-check them against
 // aniakampania.pl (offer section) and aniakampania.pl/sklep periodically — a
@@ -36,7 +44,7 @@ const FUNNEL: {
   unitKey?: string;
   noteKey?: string;
 }[] = [
-  { key: "ebook",    amount: "39 zł",  noteKey: "aniak.funnel.ebook.note" },
+  { key: "ebook",    amount: "39–49 zł", noteKey: "aniak.funnel.ebook.note" },
   { key: "espresso", amount: "149 zł" },
   { key: "projekt",  amount: "499 zł", from: true },
   { key: "opieka",   amount: "100 €",  from: true, unitKey: "aniak.funnel.perday" },
