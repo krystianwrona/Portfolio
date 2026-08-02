@@ -13,6 +13,35 @@ const BRAND = PROJECTS["ania-kampania"].brand;
 
 type SlideType = "macbook" | "flat" | "mobile";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// THE FUNNEL — the only place in this case study where a price appears.
+//
+// Four rungs of ascending commitment, each priced on a deliberately different
+// model (fixed / fixed / from / per-person-per-day) — that difference IS the
+// point being made, so the rungs carry their pricing shape, not just a number.
+//
+// ⚠ These are the CLIENT's prices, and they live in a different repo. They have
+// been revised downward once since launch already. Re-check them against
+// aniakampania.pl (offer section) and aniakampania.pl/sklep periodically — a
+// stale price here is a factual error in a portfolio piece, not a typo.
+//   Last verified against the live site: 2026-08-02.
+//
+// `from` and `unit` are translation keys, not literals: "from"/"od" and
+// "/person/day"/"/os./dzień" differ per language, while the amounts do not.
+// ─────────────────────────────────────────────────────────────────────────────
+const FUNNEL: {
+  key: string;
+  amount: string;
+  from?: boolean;
+  unitKey?: string;
+  noteKey?: string;
+}[] = [
+  { key: "ebook",    amount: "39 zł",  noteKey: "aniak.funnel.ebook.note" },
+  { key: "espresso", amount: "149 zł" },
+  { key: "projekt",  amount: "499 zł", from: true },
+  { key: "opieka",   amount: "100 €",  from: true, unitKey: "aniak.funnel.perday" },
+];
+
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
   { src: "/ania-hero.png",       labelKey: "aniak.slide.hero",       altKey: "aniak.alt.hero",       type: "macbook" },
   { src: "/ania-manifest.png",   labelKey: "aniak.slide.brandstory", altKey: "aniak.alt.brandstory", type: "macbook" },
@@ -293,7 +322,7 @@ export default function AniaKampaniaCaseStudy() {
             >
               <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.techstack")}</p>
               <ul className="flex flex-col gap-3">
-                {["Next.js 15 (App Router, Turbopack)", "TypeScript", "Tailwind CSS", "Cal.eu", "Vercel"].map((tech) => (
+                {["Next.js 16 (App Router)", "TypeScript", "Tailwind CSS", "Cal.eu", "Stripe", "Sanity", "Resend", "Leaflet", "Vercel"].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
                     <span className="font-bold text-base text-[#111]/80">{tech}</span>
@@ -328,7 +357,86 @@ export default function AniaKampaniaCaseStudy() {
           </div>
         </section>
 
-        {/* 4. CORE FEATURES */}
+        {/* 4. THE FUNNEL */}
+        <section className="py-[12vh] px-[4vw] bg-[#111]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
+            <span className="text-[0.6rem] uppercase tracking-widest font-bold text-white/30">
+              {t("aniak.funnel.label")}
+            </span>
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="text-base md:text-lg leading-[1.65] text-white/60 font-medium max-w-2xl mb-14"
+          >
+            {t("aniak.funnel.intro")}
+          </motion.p>
+
+          <ol className="flex flex-col">
+            {FUNNEL.map(({ key, amount, from, unitKey, noteKey }, i) => (
+              <motion.li
+                key={key}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                // Each rung steps further right than the last, so the ascending
+                // commitment is visible before a single word is read. Desktop
+                // only — on a phone the indent would just eat the text column.
+                className="border-t border-white/10 last:border-b py-7 md:py-8 flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8"
+                style={{ paddingLeft: `calc(${i} * 2.5vw)` }}
+              >
+                <span
+                  className="font-sans font-black text-sm leading-none w-8 flex-shrink-0"
+                  style={{ color: BRAND }}
+                >
+                  0{i + 1}
+                </span>
+
+                <div className="flex-1 flex flex-col gap-2">
+                  <h3 className="font-display font-black text-lg md:text-xl text-white tracking-tight leading-tight">
+                    {t(`aniak.funnel.${key}.name`)}
+                  </h3>
+                  <p className="text-sm leading-[1.65] text-white/50 font-medium max-w-lg">
+                    {t(`aniak.funnel.${key}.desc`)}
+                  </p>
+                  {noteKey && (
+                    <p className="text-[0.7rem] uppercase tracking-widest font-bold text-white/30 mt-1">
+                      {t(noteKey)}
+                    </p>
+                  )}
+                </div>
+
+                {/* ml-auto rather than a fixed width: the rows differ in length
+                    between PL and EN ("/os./dzień" vs "/person/day"), and a fixed
+                    column narrow enough to look tight in one language overflows
+                    the right edge in the other. Right-aligning to the container
+                    keeps the price edge true in both. */}
+                <p className="font-sans font-black text-xl md:text-2xl tracking-tight text-white whitespace-nowrap md:text-right md:ml-auto flex-shrink-0">
+                  {from && (
+                    <span className="font-medium text-sm text-white/40 mr-1.5">
+                      {t("aniak.funnel.from")}
+                    </span>
+                  )}
+                  {amount}
+                  {unitKey && (
+                    <span className="font-medium text-sm text-white/40">{t(unitKey)}</span>
+                  )}
+                </p>
+              </motion.li>
+            ))}
+          </ol>
+        </section>
+
+        {/* 5. CORE FEATURES */}
         <section className="py-[10vh] px-[4vw] bg-[#F5F5F4]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -361,7 +469,7 @@ export default function AniaKampaniaCaseStudy() {
           </div>
         </section>
 
-        {/* 5. MEDIA CAROUSEL */}
+        {/* 6. MEDIA CAROUSEL */}
         <section className="py-[10vh] bg-[#F5F5F4]">
           {mediaStatus === "missing" ? (
             <div className="mx-[6vw] md:mx-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] rounded-[12px] bg-[#E4E4E7] flex items-center justify-center">
@@ -485,23 +593,10 @@ export default function AniaKampaniaCaseStudy() {
           )}
         </section>
 
-        {/* 6. VISIT WEBSITE */}
-        <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
-          <a
-            href="https://aniakampania.pl"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${t("case.aria.visitwebsite")} Ania Kampania ${t("case.aria.website")}`}
-            className="group inline-flex items-center gap-4"
-          >
-            <span className="font-sans font-black text-[4vw] md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#B25818]">
-              {t("case.visitwebsite")}
-            </span>
-            <span className="text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
-          </a>
-        </section>
-
         {/* 7. MARQUEE */}
+        {/* No standalone "Visit Website" band here on purpose — it pointed at the
+            same URL as the "Live" link in the meta bar above, and that screen now
+            carries the funnel instead. */}
         <section className="py-[6vh] bg-[#F5F5F4] overflow-hidden select-none" aria-hidden="true">
           {([
             { keys: ["aniak.marquee.row1.1", "aniak.marquee.row1.2", "aniak.marquee.row1.3"] as const, dir: "left",  color: "#111", opacity: 0.08 },

@@ -7,7 +7,7 @@ export const contentType = ogImageContentType;
 export default async function Image() {
   return renderOgImage({
     title: "Ania Kampania",
-    subtitle: "Boutique Travel Brand & Booking Site",
+    subtitle: "Brand, Offer Architecture & Booking Site",
     bg: PROJECTS["ania-kampania"].brand,
     fg: "#FFFFFF",
   });
