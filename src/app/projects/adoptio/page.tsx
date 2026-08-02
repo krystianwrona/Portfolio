@@ -280,7 +280,7 @@ export default function AdoptMeCaseStudy() {
                   "Supabase (PostgreSQL, Auth, Storage)",
                   "Tailwind CSS & Framer Motion",
                   "TypeScript",
-                  "Google Gemini 2.5 Flash Integration",
+                  "Google Gemini 3.5 Flash Lite Integration",
                 ].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
