@@ -472,10 +472,10 @@ export default function AdoptMeCaseStudy() {
             aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
             className="group inline-flex items-center gap-4"
           >
-            <span className="font-sans font-black text-3xl md:text-[3vw] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#F97316]">
+            <span className="font-sans font-black text-[max(1.875rem,3vw)] tracking-tighter text-white transition-colors duration-300 group-hover:text-[#F97316]">
               {t("case.visitwebsite")}
             </span>
-            <span className="text-xl md:text-[2vw] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
+            <span className="text-[max(1.25rem,2vw)] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
           </a>
         </section>
 
