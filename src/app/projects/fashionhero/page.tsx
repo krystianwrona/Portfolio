@@ -586,7 +586,6 @@ export default function FashionHeroCaseStudy() {
           href="/projects/ania-kampania"
           projectName="Ania Kampania"
           brand={PROJECTS["ania-kampania"].brand}
-          titleClassName="text-5xl md:text-9xl"
         />
       </motion.main>
 

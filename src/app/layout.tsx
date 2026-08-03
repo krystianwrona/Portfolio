@@ -36,8 +36,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // overflow-x-hidden has to be on <html>, not only on <body>. Set on body
+  // alone it propagates up to the viewport and leaves body itself visible, so
+  // it never actually clips — mobile browsers still pan to any overflowing
+  // content. This is a backstop only; overflow is fixed at the element that
+  // causes it (see UpNextCard).
   return (
-    <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${inter.variable} ${montserrat.variable} overflow-x-hidden`}>
       <body
         className="font-sans bg-background text-text-primary antialiased selection:bg-accent selection:text-text-primary overflow-x-hidden"
       >

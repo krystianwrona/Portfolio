@@ -636,7 +636,7 @@ export default function AniaKampaniaCaseStudy() {
           projectName="Centrum Kultury Ludowej"
           brand={PROJECTS["folk-culture-center"].brand}
           titleLines={["Centrum Kultury", "Ludowej"]}
-          titleClassName="text-4xl md:text-8xl"
+          maxFontPx={96}
         />
       </motion.main>
 
