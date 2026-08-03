@@ -156,7 +156,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.feature3.title': 'Multi-format Support',
     'legalray.feature3.desc': 'Handles PDFs, scanned documents and digital contracts. Covers B2B contracts, notarial deeds, court documents and terms of service.',
     'legalray.feature4.title': 'Server-side Paywall',
-    'legalray.feature4.desc': 'Nothing is blurred. A free user receives exactly two risks; the missing-clauses section never leaves the server and arrives in the browser as empty placeholder rows. A blur can be removed in devtools — data that was never sent cannot.',
+    'legalray.feature4.desc': 'Nothing is blurred. A free user receives exactly two risks — the missing-clauses data never leaves the server; the browser only ever gets empty placeholder rows in its place. A blur can be removed in devtools; data that was never sent cannot.',
     'legalray.timeline': 'Completed:\nMarch 14, 2026',
     'legalray.roles.1': 'SaaS Architecture',
     'legalray.roles.2': 'AI Integration',
@@ -265,7 +265,7 @@ export const translations: Record<string, Record<string, string>> = {
     // ── Case Study — FashionHero ──
     'fashionhero.subtitle': 'Case Study — 2026',
     'fashionhero.tagline': "Turning a competitor's 0% commission attack into a data-backed retention experiment.",
-    'fashionhero.desc': 'FashionHero is a fast-growing fashion marketplace (+28% YoY revenue, 2.4M active buyers, 4,200 sellers) with one structural risk: 100% of revenue comes from transaction commission. When a competitor ("Forte") launched a 0% commission campaign aimed directly at FashionHero\'s most valuable sellers, I led the product strategy response — from quantitative segmentation and seller interviews to a validated retention experiment and a working prototype.',
+    'fashionhero.desc': 'Built during AI Product Heroes 2, a six-week cohort-based program for product builders. FashionHero does not exist: the company and its numbers are fictional, written for the course. The method and the conclusions are not. FashionHero is a fast-growing fashion marketplace (+28% YoY revenue, 2.4M active buyers, 4,200 sellers) with one structural risk: 100% of revenue comes from transaction commission. When a competitor ("Forte") launched a 0% commission campaign aimed directly at FashionHero\'s most valuable sellers, I led the product strategy response — from quantitative segmentation and seller interviews to a validated retention experiment and a working prototype.',
     'fashionhero.problem.label': '01 — Problem',
     'fashionhero.problem': 'FashionHero\'s revenue is 100% commission-based with zero diversification. A competitor launched a 0% commission offer aimed at "backbone" sellers (10+ reviews, 3+ months active) — a segment that generates 2.6x higher margin per PLN of GMV than top sellers, but doesn\'t realize its own value. Losing this segment means losing a buyer base that won\'t come back, within a 6-9 month window before the competitor can build its own.',
     'fashionhero.solution.label': '02 — Solution',
@@ -326,8 +326,8 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── Case Study — Ania Kampania ──
     'aniak.subtitle': 'Case Study — 2026',
-    'aniak.tagline': 'A brand built from scratch, and the funnel that sells it.',
-    'aniak.desc': 'A personal brand built from the name up for a travel designer working in Campania and on the Amalfi Coast: a position taken against the category, a defined audience, a four-rung offer and a separate pricing model for every rung. The website, the Cal.eu booking, the legal groundwork and the digital products came afterwards — the machinery that carries the brand to market.',
+    'aniak.tagline': 'A whole brand: from the name to the price list.',
+    'aniak.desc': 'A personal brand for a travel designer working in Campania and on the Amalfi Coast. It started with the name, and with the decision not to be another travel agency. Then came working out who this is actually for, putting together four packages, and pricing each of them differently. The website, the Cal.eu booking, the legal paperwork and the digital products came last — as the things you actually sell the brand with.',
     'aniak.roles.1': 'Brand & Offer Design',
     'aniak.roles.2': 'Art Direction & Design System',
     'aniak.roles.3': 'Full-Stack Dev',
@@ -346,8 +346,8 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.feature3.desc': 'Sold as ebooks, but each is one self-contained HTML file that opens on a phone with no app and no account. Every copy is personalised — the buyer’s name and order number are injected server-side from an HMAC-signed token and printed in the document, so a file passed on shows a generic placeholder there instead, while the honest buyer notices nothing. No DRM. Inside: a Leaflet map with numbered stops, each carrying a Google Maps place link, walking directions, the venue’s own site, and a ticket link only where booking ahead genuinely matters. Two routes, built and ready to launch.',
     'aniak.feature4.title': 'Site, Booking & Legal',
     'aniak.feature4.desc': 'Next.js 16 on Vercel: the brand story, the Campania gallery, the offer with a detail view per rung, Cal.eu scheduling, and Stripe checkout with Resend delivering the file after purchase. The legal layer shaped the architecture instead of trailing it — the Omnibus directive bans invented reviews, so the testimonials moved into Sanity, where each one is a reply from a past client. One is live; the rest are waiting on people to write back. Terms, Privacy and Cookie Policy are published, and the technical groundwork — canonical URLs, sitemap, structured data, Search Console — is in place rather than pending.',
-    'aniak.funnel.label': 'The Funnel',
-    'aniak.funnel.intro': 'Four rungs, ascending commitment, each priced on a different model. The bottom rung is a product bought without talking to anyone; the top rung is Ania travelling with the client.',
+    'aniak.funnel.label': 'The Stages',
+    'aniak.funnel.intro': 'Four stages, each priced differently. The first is a file you buy without talking to anyone. The last is Ania travelling with the client for the whole trip.',
     'aniak.funnel.from': 'from',
     'aniak.funnel.perday': '/person/day',
     'aniak.funnel.ebook.name': 'Interactive ebook',
@@ -577,7 +577,7 @@ export const translations: Record<string, Record<string, string>> = {
     'case.aria.visitwebsite': 'Odwiedź',
     'case.aria.website': 'stronę (otwiera się w nowej karcie)',
     'case.aria.liveprototype': 'działający prototyp (otwiera się w nowej karcie)',
-    'case.aria.livewebsite': 'stronę na żywo (otwiera się w nowej karcie)',
+    'case.aria.livewebsite': 'stronę online (otwiera się w nowej karcie)',
 
     // ── Case Study — LegalRay ──
     'legalray.subtitle': 'Studium przypadku — 2026',
@@ -596,7 +596,7 @@ export const translations: Record<string, Record<string, string>> = {
     'legalray.feature3.title': 'Obsługa wielu formatów',
     'legalray.feature3.desc': 'Obsługuje PDF-y, dokumenty zeskanowane i umowy cyfrowe. Obejmuje umowy B2B, akty notarialne, dokumenty sądowe i regulaminy.',
     'legalray.feature4.title': 'Paywall po stronie serwera',
-    'legalray.feature4.desc': 'Nic nie jest zamazane. Użytkownik w planie darmowym dostaje dokładnie dwa ryzyka; sekcja brakujących klauzul nigdy nie opuszcza serwera i trafia do przeglądarki jako puste wiersze zastępcze. Zamazanie da się usunąć w devtools — danych, których nie wysłano, nie.',
+    'legalray.feature4.desc': 'Nic nie jest zamazane. Użytkownik w planie darmowym dostaje dokładnie dwa ryzyka — dane o brakujących klauzulach nigdy nie opuszczają serwera, do przeglądarki trafiają w ich miejsce puste wiersze zastępcze. Zamazanie da się usunąć w devtools; danych, które nigdy nie zostały wysłane, usunąć się nie da.',
     'legalray.timeline': 'Ukończono:\n14 marca 2026',
     'legalray.roles.1': 'Architektura SaaS',
     'legalray.roles.2': 'Integracja AI',
@@ -705,7 +705,7 @@ export const translations: Record<string, Record<string, string>> = {
     // ── Case Study — FashionHero ──
     'fashionhero.subtitle': 'Case Study — 2026',
     'fashionhero.tagline': 'Zamiana ataku konkurencji zerową prowizją w oparty na danych eksperyment retencyjny.',
-    'fashionhero.desc': 'FashionHero to szybko rosnący marketplace modowy (+28% przychodu r/r, 2,4 mln aktywnych kupujących, 4 200 sprzedawców) z jednym strukturalnym ryzykiem: 100% przychodu pochodzi z prowizji transakcyjnej. Gdy konkurent ("Forte") uruchomił kampanię zerowej prowizji wymierzoną wprost w najcenniejszych sprzedawców FashionHero, poprowadziłem odpowiedź strategiczną — od segmentacji ilościowej i wywiadów ze sprzedawcami po zwalidowany eksperyment retencyjny i działający prototyp.',
+    'fashionhero.desc': 'Projekt powstał w ramach AI Product Heroes 2 — sześciotygodniowego, kohortowego programu dla Product Builderów. FashionHero nie istnieje: to fikcyjna firma i fikcyjne dane, przygotowane na potrzeby kursu. Metoda i wnioski są prawdziwe. FashionHero to szybko rosnący marketplace modowy (+28% przychodu r/r, 2,4 mln aktywnych kupujących, 4 200 sprzedawców) z jednym strukturalnym ryzykiem: 100% przychodu pochodzi z prowizji transakcyjnej. Gdy konkurent ("Forte") uruchomił kampanię zerowej prowizji wymierzoną wprost w najcenniejszych sprzedawców FashionHero, poprowadziłem odpowiedź strategiczną — od segmentacji ilościowej i wywiadów ze sprzedawcami po zwalidowany eksperyment retencyjny i działający prototyp.',
     'fashionhero.problem.label': '01 — Problem',
     'fashionhero.problem': 'Przychód FashionHero w 100% opiera się na prowizji, bez żadnej dywersyfikacji. Konkurent uruchomił ofertę zerowej prowizji skierowaną do sprzedawców "backbone" (10+ opinii, 3+ miesiące aktywności) — segmentu generującego 2,6x wyższą marżę na PLN GMV niż najlepsi sprzedawcy, który jednak nie zdaje sobie sprawy z własnej wartości. Utrata tego segmentu oznacza utratę bazy kupujących, która nie wróci — w oknie 6-9 miesięcy, zanim konkurent zdąży zbudować własną.',
     'fashionhero.solution.label': '02 — Rozwiązanie',
@@ -766,8 +766,8 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── Case Study — Ania Kampania ──
     'aniak.subtitle': 'Studium przypadku — 2026',
-    'aniak.tagline': 'Marka zbudowana od zera i lejek, który ją sprzedaje.',
-    'aniak.desc': 'Marka osobista zbudowana od nazwy w górę — dla projektantki podróży po Kampanii i Wybrzeżu Amalfitańskim: pozycja zajęta wbrew kategorii, zdefiniowana grupa docelowa, czterostopniowa oferta i osobny model ceny dla każdego stopnia. Strona, rezerwacje przez Cal.eu, zaplecze prawne i produkty cyfrowe powstały później — jako maszyneria, która wprowadza tę markę na rynek.',
+    'aniak.tagline': 'Cała marka: od nazwy po cennik.',
+    'aniak.desc': 'Marka osobista dla projektantki podróży po Kampanii i Wybrzeżu Amalfitańskim. Zaczęło się od nazwy i od decyzji, żeby nie być kolejnym biurem podróży. Potem trzeba było ustalić, dla kogo to właściwie jest, ułożyć cztery pakiety i wycenić każdy z nich inaczej. Strona, rezerwacje przez Cal.eu, regulaminy i produkty cyfrowe przyszły na końcu — jako to, czym się tę markę sprzedaje.',
     'aniak.roles.1': 'Projekt marki i oferty',
     'aniak.roles.2': 'Art Direction i system projektowy',
     'aniak.roles.3': 'Full-Stack Dev',
@@ -786,8 +786,8 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.feature3.desc': 'Sprzedawane jako e-booki, ale każdy to jeden samowystarczalny plik HTML, który otwiera się na telefonie bez aplikacji i bez konta. Każdy egzemplarz jest spersonalizowany — imię kupującej i numer zamówienia wstrzykuje serwer z podpisanego tokenu HMAC i wyświetla je w dokumencie, więc plik przekazany dalej pokazuje w tym miejscu ogólną formułkę, a uczciwa kupująca nie zauważa niczego. Bez DRM. W środku mapa Leaflet z ponumerowanymi punktami, a przy każdym link do miejsca w Mapach Google, nawigacja pieszo, oficjalna strona obiektu i link do biletu tylko tam, gdzie kupno z wyprzedzeniem naprawdę ma znaczenie. Dwie trasy, gotowe do premiery.',
     'aniak.feature4.title': 'Strona, rezerwacje i zaplecze prawne',
     'aniak.feature4.desc': 'Next.js 16 na Vercelu: historia marki, galeria Kampanii, oferta z widokiem szczegółów przy każdym stopniu, terminy przez Cal.eu i płatności Stripe, z Resendem wysyłającym plik po zakupie. Zaplecze prawne ukształtowało architekturę, zamiast wlec się za nią — dyrektywa Omnibus zakazuje opinii zmyślonych, więc opinie przeniesiono do Sanity, gdzie każda jest odpowiedzią byłej klientki. Jedna jest już opublikowana, reszta czeka na odpowiedzi. Regulamin, Polityka Prywatności i Polityka Cookies są opublikowane, a techniczne fundamenty — adresy kanoniczne, mapa witryny, dane strukturalne, Search Console — są zrobione, a nie zaplanowane.',
-    'aniak.funnel.label': 'Lejek',
-    'aniak.funnel.intro': 'Cztery stopnie, rosnące zobowiązanie, każdy wyceniony w innym modelu. Najniższy to produkt kupowany bez rozmowy z kimkolwiek; najwyższy to Ania jadąca razem z klientkami.',
+    'aniak.funnel.label': 'Etapy',
+    'aniak.funnel.intro': 'Cztery etapy, każdy wyceniony inaczej. Pierwszy to plik, który kupujesz bez rozmowy z kimkolwiek. Ostatni to Ania jadąca razem z klientkami na cały wyjazd.',
     'aniak.funnel.from': 'od',
     'aniak.funnel.perday': '/os./dzień',
     'aniak.funnel.ebook.name': 'Interaktywny e-book',

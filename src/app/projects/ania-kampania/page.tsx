@@ -396,11 +396,7 @@ export default function AniaKampaniaCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                // Each rung steps further right than the last, so the ascending
-                // commitment is visible before a single word is read. Desktop
-                // only — on a phone the indent would just eat the text column.
                 className="border-t border-white/10 last:border-b py-7 md:py-8 flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8"
-                style={{ paddingLeft: `calc(${i} * 2.5vw)` }}
               >
                 <span
                   className="font-sans font-black text-sm leading-none w-8 flex-shrink-0"
