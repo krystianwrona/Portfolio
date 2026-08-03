@@ -161,7 +161,7 @@ export default function FolkCultureCenterCaseStudy() {
           <Link
             href="/#projects"
             aria-label={t("case.aria.backtoprojects")}
-            className="absolute top-[calc(7vh+2rem)] left-[4vw] z-20 text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#111111]"
+            className="relative z-20 self-start mt-[calc(7vh+2rem)] mb-auto text-[0.7rem] font-bold uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors min-h-[44px] inline-flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#111111]"
           >
             {t("case.back")}
           </Link>
