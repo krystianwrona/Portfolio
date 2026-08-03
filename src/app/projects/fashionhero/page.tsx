@@ -202,7 +202,7 @@ export default function FashionHeroCaseStudy() {
               className="font-display font-black leading-none tracking-tighter mb-8"
               style={{ fontSize: "clamp(3.5rem, 10vw, 11rem)", color: BRAND }}
             >
-              FASHIONHERO
+              FASHION<br className="sm:hidden" />HERO
             </motion.h1>
 
             <motion.div
