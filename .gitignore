@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-.env*.local
+# vendored motion library repo used as a local Claude skill — 1.9 GB, never commit
+/.claude/skills/motion/
