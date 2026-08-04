@@ -94,7 +94,7 @@ const PERSON_JSON_LD = {
   name: "Krystian Wrona",
   url: SITE_URL,
   email: "krystian.wrona@protonmail.com",
-  jobTitle: "AI Product Builder & UI/UX Designer",
+  jobTitle: "AI Product Builder & Design Engineer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "Silesian University of Technology",

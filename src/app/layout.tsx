@@ -23,7 +23,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL("https://krystianwrona.com"),
   title: {
-    default: "Krystian Wrona — AI Product Builder & UI/UX Designer",
+    default: "Krystian Wrona — AI Product Builder & Design Engineer",
     template: "%s | Krystian Wrona",
   },
   description: "Portfolio of Krystian Wrona — architect turned digital creator building AI-powered products and interfaces, from UI/UX design to production-ready code.",
