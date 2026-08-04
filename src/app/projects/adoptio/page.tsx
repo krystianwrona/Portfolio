@@ -119,10 +119,15 @@ export default function AdoptMeCaseStudy() {
     };
   }, [lightboxOpen]);
 
+  const backTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (backTimerRef.current) clearTimeout(backTimerRef.current);
+  }, []);
+
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsExiting(true);
-    setTimeout(() => router.push("/"), 250);
+    backTimerRef.current = setTimeout(() => router.push("/"), 250);
   };
 
   const features = [
@@ -406,6 +411,7 @@ export default function AdoptMeCaseStudy() {
                     }}
                     onKeyDown={(e) => {
                       if (e.key !== "Enter" && e.key !== " ") return;
+                      if (window.innerWidth < 768) return;
                       e.preventDefault();
                       lightboxTriggerRef.current = e.currentTarget;
                       setLightboxIndex(i);

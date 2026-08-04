@@ -86,15 +86,13 @@ export default function AniaKampaniaCaseStudy() {
 
   useEffect(() => {
     let cancelled = false;
+    // HEAD requests, not Image() preloads — the check must not download the
+    // full unoptimized originals next to the carousel's optimized versions.
     Promise.all(
-      SLIDES.map(
-        (slide) =>
-          new Promise<boolean>((resolve) => {
-            const img = new window.Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = slide.src;
-          })
+      SLIDES.map((slide) =>
+        fetch(slide.src, { method: "HEAD" })
+          .then((res) => res.ok)
+          .catch(() => false)
       )
     ).then((results) => {
       if (!cancelled) setMediaStatus(results.every(Boolean) ? "ok" : "missing");
@@ -102,8 +100,11 @@ export default function AniaKampaniaCaseStudy() {
     return () => { cancelled = true; };
   }, []);
 
-  // Track active slide via IntersectionObserver
+  // Track active slide via IntersectionObserver. Depends on mediaStatus:
+  // the carousel mounts only once the media check resolves to "ok", so an
+  // effect that ran only on mount would observe nothing, ever.
   useEffect(() => {
+    if (mediaStatus !== "ok") return;
     const carousel = carouselRef.current;
     if (!carousel) return;
     const observers: IntersectionObserver[] = [];
@@ -117,7 +118,7 @@ export default function AniaKampaniaCaseStudy() {
       observers.push(obs);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [mediaStatus]);
 
   const scrollToSlide = useCallback((index: number) => {
     const slide = slideRefs.current[index];
@@ -175,10 +176,15 @@ export default function AniaKampaniaCaseStudy() {
     };
   }, [lightboxOpen]);
 
+  const backTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (backTimerRef.current) clearTimeout(backTimerRef.current);
+  }, []);
+
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsExiting(true);
-    setTimeout(() => router.push("/"), 250);
+    backTimerRef.current = setTimeout(() => router.push("/"), 250);
   };
 
   const features = [
@@ -538,6 +544,7 @@ export default function AniaKampaniaCaseStudy() {
                         }}
                         onKeyDown={(e) => {
                           if (e.key !== "Enter" && e.key !== " ") return;
+                          if (window.innerWidth < 768) return;
                           e.preventDefault();
                           lightboxTriggerRef.current = e.currentTarget;
                           setLightboxIndex(i);

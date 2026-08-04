@@ -264,7 +264,7 @@ function ProjectRow({ project, onClick, index }: {
     <motion.div
       role="button"
       tabIndex={0}
-      aria-label={`View project: ${project.title} — ${t(project.categoryKey)}`}
+      aria-label={`${t('works.aria.viewproject')}: ${project.title} — ${t(project.categoryKey)}`}
       initial={reveal.initial}
       whileInView={reveal.whileInView}
       viewport={{ once: true, margin: "-10%" }}
@@ -375,7 +375,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
   const { t } = useLanguage();
 
   const inputCls = "w-full bg-transparent border-b border-white/40 py-4 text-white placeholder-white/50 font-medium text-sm focus:outline-none focus-visible:border-white focus:border-white/80 transition-colors duration-300 invalid:border-red-500/60";
@@ -425,7 +425,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="contact-name" className="sr-only">Your Name (required)</label>
+          <label htmlFor="contact-name" className="sr-only">{t('contact.sr.name')}</label>
           <input
             id="contact-name"
             type="text"
@@ -439,7 +439,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           />
         </div>
         <div>
-          <label htmlFor="contact-email" className="sr-only">Email Address (required)</label>
+          <label htmlFor="contact-email" className="sr-only">{t('contact.sr.email')}</label>
           <input
             id="contact-email"
             type="email"
@@ -454,7 +454,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         </div>
       </div>
       <div>
-        <label htmlFor="contact-subject" className="sr-only">Subject (required)</label>
+        <label htmlFor="contact-subject" className="sr-only">{t('contact.sr.subject')}</label>
         <input
           id="contact-subject"
           type="text"
@@ -467,7 +467,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         />
       </div>
       <div>
-        <label htmlFor="contact-message" className="sr-only">Your message (required)</label>
+        <label htmlFor="contact-message" className="sr-only">{t('contact.sr.message')}</label>
         <textarea
           id="contact-message"
           placeholder={t('contact.form.message')}
@@ -477,6 +477,18 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
           className={`${inputCls} resize-none`}
+        />
+      </div>
+      {/* Honeypot — humans never see it, bots fill it and the API drops the message */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="contact-website">Website</label>
+        <input
+          id="contact-website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.website}
+          onChange={(e) => setForm({ ...form, website: e.target.value })}
         />
       </div>
       {submitError && (
@@ -519,16 +531,19 @@ export default function Home() {
   const { t } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
 
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleProjectClick = (e: React.MouseEvent, projectId: string, route: string, color: string) => {
     e.preventDefault();
     setIsExiting(true);
-    setTimeout(() => router.push(route), 250);
+    exitTimerRef.current = setTimeout(() => router.push(route), 250);
   };
 
   const emailCopiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
       if (emailCopiedTimeoutRef.current) clearTimeout(emailCopiedTimeoutRef.current);
     };
   }, []);
@@ -796,7 +811,7 @@ export default function Home() {
         <div className="flex-1 flex items-center justify-center py-[8vh]">
           <MagneticHeading
             onClick={() => setContactOpen((v) => !v)}
-            ariaLabel={`${t('contact.headline.1')} ${t('contact.headline.2')} ${t('contact.headline.3')} — ${contactOpen ? "close" : "open"} contact form`}
+            ariaLabel={`${t('contact.headline.1')} ${t('contact.headline.2')} ${t('contact.headline.3')} — ${contactOpen ? t('contact.aria.close') : t('contact.aria.open')}`}
             className="cursor-pointer select-none group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-[#111111]"
           >
             <h2 id="contact-heading" className="font-display font-black text-[8vw] md:text-[7vw] leading-[0.85] tracking-tighter text-center transition-colors duration-500">

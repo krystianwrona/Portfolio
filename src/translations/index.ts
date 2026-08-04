@@ -10,6 +10,7 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.aria.gototop': 'Krystian Wrona — go to top',
     'nav.aria.openmenu': 'Open menu',
     'nav.aria.closemenu': 'Close menu',
+    'nav.aria.switchlang': 'Switch to Polish',
 
     // ── Hero ──
     'hero.headline.where': 'Where',
@@ -28,6 +29,7 @@ export const translations: Record<string, Record<string, string>> = {
     'works.confidential.category': 'Coming Soon',
     'works.fashionhero.category': 'Product Strategy / AI-Driven Retention',
     'works.aniak.category': 'Branding / Travel Design',
+    'works.aria.viewproject': 'View project',
 
     // ── Beyond the code ──
     'about.title.1': 'Beyond the',
@@ -94,6 +96,12 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.success.close': 'Close',
     'contact.aria.send': 'Send message',
     'contact.email.subject': 'Portfolio inquiry',
+    'contact.aria.open': 'open contact form',
+    'contact.aria.close': 'close contact form',
+    'contact.sr.name': 'Your Name (required)',
+    'contact.sr.email': 'Email Address (required)',
+    'contact.sr.subject': 'Subject (required)',
+    'contact.sr.message': 'Your message (required)',
 
     // ── Footer ──
     'footer.rights': 'All rights reserved.',
@@ -450,6 +458,7 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.aria.gototop': 'Krystian Wrona — przewiń na górę',
     'nav.aria.openmenu': 'Otwórz menu',
     'nav.aria.closemenu': 'Zamknij menu',
+    'nav.aria.switchlang': 'Przełącz na język angielski',
 
     // ── Hero ──
     'hero.headline.where': 'Gdzie',
@@ -468,6 +477,7 @@ export const translations: Record<string, Record<string, string>> = {
     'works.confidential.category': 'Wkrótce',
     'works.fashionhero.category': 'Strategia produktowa / Retencja AI',
     'works.aniak.category': 'Branding / Projektowanie podróży',
+    'works.aria.viewproject': 'Zobacz projekt',
 
     // ── Beyond the code ──
     'about.title.1': 'Poza',
@@ -534,6 +544,12 @@ export const translations: Record<string, Record<string, string>> = {
     'contact.form.success.close': 'Zamknij',
     'contact.aria.send': 'Wyślij wiadomość',
     'contact.email.subject': 'Kontakt z portfolio',
+    'contact.aria.open': 'otwórz formularz kontaktowy',
+    'contact.aria.close': 'zamknij formularz kontaktowy',
+    'contact.sr.name': 'Twoje imię (wymagane)',
+    'contact.sr.email': 'Adres e-mail (wymagany)',
+    'contact.sr.subject': 'Temat (wymagany)',
+    'contact.sr.message': 'Twoja wiadomość (wymagana)',
 
     // ── Footer ──
     'footer.rights': 'Wszelkie prawa zastrzeżone.',

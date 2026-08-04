@@ -182,7 +182,7 @@ export function Navbar() {
           <button
             onClick={() => setLang(lang === "en" ? "pl" : "en")}
             className="hidden md:block text-[0.7rem] font-bold tracking-widest uppercase text-[#111]/50 hover:text-[#111] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm"
-            aria-label={lang === "en" ? "Switch to Polish" : "Switch to English"}
+            aria-label={t('nav.aria.switchlang')}
           >
             {lang === "en" ? "PL" : "EN"}
           </button>
@@ -244,7 +244,7 @@ export function Navbar() {
               <button
                 onClick={() => setLang(lang === "en" ? "pl" : "en")}
                 className="text-[0.8rem] font-bold tracking-widest uppercase text-[#111]/40 hover:text-[#111] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm"
-                aria-label={lang === "en" ? "Switch to Polish" : "Switch to English"}
+                aria-label={t('nav.aria.switchlang')}
               >
                 {lang === "en" ? "🌐 PL" : "🌐 EN"}
               </button>
