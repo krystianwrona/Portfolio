@@ -150,6 +150,8 @@ export default function FashionHeroCaseStudy() {
     { title: t("fashionhero.process1.title"), desc: t("fashionhero.process1.desc") },
     { title: t("fashionhero.process2.title"), desc: t("fashionhero.process2.desc") },
     { title: t("fashionhero.process3.title"), desc: t("fashionhero.process3.desc") },
+    { title: t("fashionhero.process4.title"), desc: t("fashionhero.process4.desc") },
+    { title: t("fashionhero.process5.title"), desc: t("fashionhero.process5.desc") },
   ];
 
   return (
@@ -380,23 +382,25 @@ export default function FashionHeroCaseStudy() {
           >
             {t("fashionhero.process.intro")}
           </motion.p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Oś procesu: pięć bloków w jednej kolumnie. Karty obok siebie sugerowałyby
+              równoległość, a to jest sekwencja — każdy krok wynika z poprzedniego. */}
+          <ol className="flex flex-col gap-6 max-w-3xl">
             {process.map(({ title, desc }, i) => (
-              <motion.div
+              <motion.li
                 key={title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
-                transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#E11D48]/30"
               >
                 <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight">
                   {title}
                 </h2>
                 <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
-              </motion.div>
+              </motion.li>
             ))}
-          </div>
+          </ol>
         </section>
 
         {/* 5. CORE FEATURES */}
