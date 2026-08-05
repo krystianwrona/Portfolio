@@ -324,7 +324,7 @@ export default function FashionHeroCaseStudy() {
             >
               <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.techstack")}</p>
               <ul className="flex flex-col gap-3">
-                {["Claude Code", "Neon (Postgres)", "Next.js", "Vercel"].map((tech) => (
+                {["Claude Code", "Vite + React 18", "TypeScript", "Tailwind + shadcn/ui", "PostHog", "Vercel"].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
                     <span className="font-bold text-base text-[#111]/80">{tech}</span>

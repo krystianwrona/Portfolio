@@ -515,7 +515,7 @@ export default function LegalRayCaseStudy() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.6 }}
-            className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-[#E4E4E7] flex flex-col gap-4 max-w-3xl"
+            className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-[#E4E4E7] flex flex-col items-center text-center gap-4 max-w-3xl mx-auto"
           >
             <span className="text-[0.65rem] font-bold uppercase tracking-widest text-[#111]/50">
               {t("legalray.disclaimer.label")}

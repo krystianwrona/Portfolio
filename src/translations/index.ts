@@ -187,7 +187,7 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── LegalRay Disclaimer ──
     'legalray.disclaimer.label': 'Disclaimer',
-    'legalray.disclaimer.text': 'LegalRay produces informational analysis. It is not legal advice and does not replace a lawyer. The app says as much about itself: it is a copilot, and the final decision on any document belongs to the person signing it.',
+    'legalray.disclaimer.text': 'LegalRay gives informational analysis, not legal advice. The final decision belongs to the person signing.',
 
     // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Case Study — 2026',
@@ -305,7 +305,7 @@ export const translations: Record<string, Record<string, string>> = {
     'fashionhero.process1.title': '01 — Research',
     'fashionhero.process1.desc': 'Quantitative segmentation of a 500-seller dataset into trophy, backbone, and new-seller cohorts, backed by 3 qualitative seller interviews and competitive research into Shopee SEA\'s 0%-commission precedent, Etsy Plus, and Allegro Ads.',
     'fashionhero.process2.title': '02 — Prioritization',
-    'fashionhero.process2.desc': 'An Opportunity Solution Tree scored four possible directions against a PRES framework (Pain, Reach, Evidence, Strategic fit), ranging 12–18 out of 20. The highest-scoring one — a seller considering a move to the 0%-commission competitor — scored 18/20 and was chosen.',
+    'fashionhero.process2.desc': 'An Opportunity Solution Tree scored four possible directions against a PRES framework (Pain, Reach, Evidence, Strategic fit), ranging 12–18 out of 20. The highest-scoring one — a seller considering a move to the 0%-commission competitor — scored 18/20 and was chosen. Midway through the program Forte launched its 0% commission offer — something the first version of the tree had not accounted for at all. I updated the tree with the new scenario and ran the prioritisation again: does the chosen direction still hold, or does it have to go. The scores changed, but the decision stayed the same. We kept the original call and made a correction, not a pivot.',
     'fashionhero.process3.title': '03 — Validation',
     'fashionhero.process3.desc': 'A 6-week A/B test design (200 test vs. 200 control sellers): primary metric of +10pp retention lift, secondary metrics of ≥30% credit adoption and ≥3 dashboard sessions/week, with a stop-rule if adoption fell below 10% by week 4.',
     'fashionhero.marquee.row1.1': 'RETENTION CAMPAIGN',
@@ -635,7 +635,7 @@ export const translations: Record<string, Record<string, string>> = {
 
     // ── LegalRay Zastrzeżenie ──
     'legalray.disclaimer.label': 'Zastrzeżenie',
-    'legalray.disclaimer.text': 'LegalRay dostarcza analizę o charakterze informacyjnym. Nie jest to porada prawna i nie zastępuje prawnika. Aplikacja mówi to sama o sobie: jest copilotem, a ostateczna decyzja co do dokumentu należy do osoby, która go podpisuje.',
+    'legalray.disclaimer.text': 'LegalRay daje analizę informacyjną, nie poradę prawną. Ostateczna decyzja należy do osoby, która podpisuje.',
 
     // ── Case Study — Adoptio ──
     'adoptme.subtitle': 'Studium przypadku — 2026',
@@ -753,7 +753,7 @@ export const translations: Record<string, Record<string, string>> = {
     'fashionhero.process1.title': '01 — Research',
     'fashionhero.process1.desc': 'Ilościowa segmentacja zbioru 500 sprzedawców na kohorty trophy, backbone i nowych sprzedawców, poparta 3 jakościowymi wywiadami ze sprzedawcami oraz analizą konkurencji — precedens zerowej prowizji Shopee SEA, Etsy Plus i Allegro Ads.',
     'fashionhero.process2.title': '02 — Priorytetyzacja',
-    'fashionhero.process2.desc': 'Opportunity Solution Tree ocenił cztery możliwe kierunki według frameworku PRES (Pain, Reach, Evidence, Strategic fit) w zakresie 12–18 na 20. Najwyżej oceniony — sprzedawca rozważający przejście do konkurenta z zerową prowizją — uzyskał 18/20 i został wybrany.',
+    'fashionhero.process2.desc': 'Opportunity Solution Tree ocenił cztery możliwe kierunki według frameworku PRES (Pain, Reach, Evidence, Strategic fit) w zakresie 12–18 na 20. Najwyżej oceniony — sprzedawca rozważający przejście do konkurenta z zerową prowizją — uzyskał 18/20 i został wybrany. W połowie programu Forte ogłosiło zerową prowizję — zdarzenie, którego pierwsza wersja drzewa w ogóle nie brała pod uwagę. Zaktualizowałem drzewo o nowy scenariusz i przepuściłem priorytetyzację jeszcze raz: czy wybrany kierunek nadal się broni, czy trzeba go porzucić. Punktacja się zmieniła, ale decyzja pozostała ta sama. Zostaliśmy przy pierwotnym założeniu: zrobiliśmy tylko korektę, a nie zwrot.',
     'fashionhero.process3.title': '03 — Walidacja',
     'fashionhero.process3.desc': 'Projekt 6-tygodniowego testu A/B (200 sprzedawców testowych vs. 200 kontrolnych): metryka główna +10pp wzrostu retencji, metryki drugorzędne ≥30% adopcji kredytów i ≥3 sesje w dashboardzie/tydzień, z regułą stopu przy adopcji poniżej 10% w 4. tygodniu.',
     'fashionhero.marquee.row1.1': 'KAMPANIA RETENCYJNA',
@@ -791,7 +791,7 @@ export const translations: Record<string, Record<string, string>> = {
     'aniak.problem.label': '01 — Problem',
     'aniak.problem': 'Przez ponad dwadzieścia lat Ania organizowała wyjazdy dla znajomych — trasy, restauracje, miejsca, których nikt nie znajduje sam — i oddawała to wszystko za darmo. Żadnej nazwy, pod którą można zarezerwować, żadnej oferty do wyboru, żadnej ceny do podania, żadnej zdefiniowanej grupy odbiorczyń. Wiedza istniała. Firma nie.',
     'aniak.solution.label': '02 — Rozwiązanie',
-    'aniak.solution': 'Najpierw powstała marka. Nazwa to gra słów z Kampanią — regionem, w którym Ania pracuje. Pozycję zajęliśmy świadomie wbrew kategorii: Architekt Doświadczeń, a nie biuro podróży. Ofertę przebudowaliśmy w cztery etapy, każdy wyceniony w innym modelu, tak żeby zobowiązanie i koszt rosły razem. W praktyce najczęściej wychodzą z tego wyjazdy kobiece, urodzinowe i inne okazje, które muszą się udać. Z tonu komunikacji wyszedł system projektowy. Dopiero na końcu strona, która to wszystko niesie: Next.js 16, terminy przez Cal.eu, płatności Stripe za produkty cyfrowe, blog i opinie oparte na Sanity oraz dokumenty prawne wymagane na polskim rynku.',
+    'aniak.solution': 'Najpierw powstała marka. Nazwa to gra słów z Kampanią — regionem, w którym Ania działa. Pozycję zajęliśmy świadomie wbrew kategorii: Architekt Doświadczeń, a nie biuro podróży. Ofertę przebudowaliśmy w cztery etapy, każdy wyceniony w innym modelu, tak żeby zobowiązanie i koszt rosły razem. W praktyce najczęściej wychodzą z tego wyjazdy kobiece, urodzinowe i inne okazje, które muszą się udać. Z tonu komunikacji wyszedł system projektowy. Dopiero na końcu strona, która to wszystko niesie: Next.js 16, terminy przez Cal.eu, płatności Stripe za produkty cyfrowe, blog i opinie oparte na Sanity oraz dokumenty prawne wymagane na polskim rynku.',
     'aniak.result.label': '03 — Rezultat',
     'aniak.result': 'Strona działa pod adresem aniakampania.pl — pod nazwą, pozycją i drabiną cenową, których przed tym projektem nie było. Rezerwacje idą przez Cal.eu, dokumenty prawne są opublikowane, blog i opinie prowadzone są w Sanity. Oba interaktywne e-booki są gotowe, a łańcuch zakupowy za nimi spięty od początku do końca — płatność Stripe, podpisany link dostępu, wiadomość po zakupie — ale nie są jeszcze w sprzedaży: trwa weryfikacja konta Stripe. Wszystkie cztery etapy są zaprojektowane, zbudowane i wycenione; nie zostały jeszcze zmierzone na realnym ruchu.',
     'aniak.feature1.title': 'Marka przed stroną',
