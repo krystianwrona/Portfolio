@@ -116,6 +116,17 @@ const HEAD_Y_BLEND = 0.05;
 // Neck pivot in local object space — rotation center
 const NECK_PIVOT_Y = 0.12;
 
+// Texture aspect — the point plane is twice as wide as it is tall
+const MESH_ASPECT = 2;
+// Free space left on each side of the cell when the mesh is fitted into it
+const CELL_PADDING = 0.08;
+// The crow texture's sparse trailing particles extend further left than the
+// dense body extends right, so the dense mass sits inherently right of the
+// mesh's own geometric centre — by a fraction of meshW that stays constant
+// (measured via alpha-weighted pixel centroid), not a fixed world-unit amount.
+// Shifting by that fraction puts the body, not the plane, in the cell's middle.
+const MASS_BIAS = 0.1336;
+
 // Assembly runs this long once started (shader staggers particles within it)
 const ASSEMBLY_DURATION = 2.2;
 // Preloader covers the screen for 1800ms + 500ms fade — on a hard load, hold
@@ -141,10 +152,26 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
 
   // Fewer grid segments on small screens — quarter the vertex count on mobile
   const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
-  // Mobile fills more of the viewport width — desktop keeps the approved 0.85 framing
-  const meshW = Math.min(viewport.width * (isMobileViewport ? 1.0 : 0.85), 6.0);
-  const meshH = meshW / 2;
   const [segments] = useState(() => (isMobileViewport ? 160 : 288));
+
+  // ── Contain fit ────────────────────────────────────────────────────────────
+  // The canvas fills one grid cell of the hero, so `viewport` here describes
+  // that cell in world units — not the window. Fit the mesh's box into it the
+  // way object-fit: contain would: preserve the texture's 2:1 aspect, leave
+  // CELL_PADDING free on every side. One rule for every viewport — portrait
+  // phone, landscape phone, tablet, laptop, ultrawide — with no breakpoints
+  // and no hand-tuned offsets. A short cell (landscape phone) simply yields a
+  // small crow, never one that spills out of its cell.
+  //
+  // The horizontal budget also pays for MASS_BIAS: the mesh is pushed left by
+  // that fraction of its own width so the dense body — not the plane's
+  // geometric centre — lands in the middle of the cell, which costs an extra
+  // 2 x MASS_BIAS of width before the shifted box is symmetric about it.
+  const availW = viewport.width * (1 - 2 * CELL_PADDING);
+  const availH = viewport.height * (1 - 2 * CELL_PADDING);
+  const meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
+  const meshH = meshW / MESH_ASPECT;
+  const xOffset = -MASS_BIAS * meshW;
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
   // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every
@@ -250,7 +277,7 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     ndcVec.set(mouseRef.current.x, mouseRef.current.y);
     raycaster.setFromCamera(ndcVec, camera);
     if (raycaster.ray.intersectPlane(zPlane, hitVec)) {
-      mouseWorld.current.lerp(new THREE.Vector2((hitVec.x + 0.3) / meshW, hitVec.y / meshH), 0.15);
+      mouseWorld.current.lerp(new THREE.Vector2((hitVec.x - xOffset) / meshW, hitVec.y / meshH), 0.15);
     }
     uniforms.uMouseWorld.value.copy(mouseWorld.current);
 
@@ -267,18 +294,6 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     uniforms.uHeadRotationY.value = headRotation.current;
   });
 
-  const isMobile = viewport.width < 4.0;
-  // The crow texture's sparse trailing particles extend further left than
-  // the dense body extends right, so the dense mass sits inherently right
-  // of the mesh's own geometric center — by a fraction of meshW that stays
-  // constant (measured via alpha-weighted pixel centroid across viewport
-  // widths), not a fixed world-unit amount. On mobile meshW scales directly
-  // with screen width (uncapped, unlike desktop's 6.0-capped mesh), so the
-  // correction has to scale with it too, or the crow drifts back off-center
-  // as screen width changes. Desktop's meshW is ~constant across screen
-  // sizes (capped), so its flat offset still holds.
-  const MOBILE_MASS_BIAS = 0.1336;
-  const xOffset  = isMobile ? -MOBILE_MASS_BIAS * meshW : -0.3;
   return (
     <points ref={pointsRef} scale={[meshW, meshH, 1]} position={[xOffset, 0, 0]}>
       <planeGeometry ref={geometryRef} args={[1, 1, segments, segments]} />
@@ -297,7 +312,7 @@ export function CrowScene({ scrollRef, mouseRef, isHoveringRef }: {
   return (
     <Suspense fallback={<div className="absolute inset-0 bg-[#F5F5F4]" />}>
       <Canvas
-        style={{ width: "100%", height: "100%" }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         camera={{ position: [0, 0, 5], fov: 45 }}
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: false }}

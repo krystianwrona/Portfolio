@@ -15,7 +15,7 @@ export const translations: Record<string, Record<string, string>> = {
     // ── Hero ──
     'hero.kicker': 'AI Product Builder & Design Engineer',
     'hero.headline': 'Where architecture meets code.',
-    'hero.meta': 'Warsaw · remote · open to full-time roles and freelance',
+    'hero.meta': 'Łódź · remote · open to full-time roles and freelance',
     'hero.cta.contact': 'Get in touch',
     'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architect turned',
@@ -469,7 +469,7 @@ export const translations: Record<string, Record<string, string>> = {
     // ── Hero ──
     'hero.kicker': 'AI Product Builder & Design Engineer',
     'hero.headline': 'Gdzie architektura spotyka kod.',
-    'hero.meta': 'Warszawa · zdalnie · otwarty na etat i zlecenia',
+    'hero.meta': 'Łódź · zdalnie · otwarty na etat i zlecenia',
     'hero.cta.contact': 'Napisz do mnie',
     'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architekt, który został',

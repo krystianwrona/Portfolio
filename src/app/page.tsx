@@ -591,47 +591,61 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_JSON_LD) }}
       />
 
-      {/* 1. HERO */}
+      {/* 1. HERO — layout reservation, not overlay. The crow and the text
+          block are sibling grid items, so their boxes can never intersect at
+          any viewport size: on <1024px the crow takes row 1 (1fr) and the copy
+          row 2 (auto); from 1024px the copy takes a left column and the crow
+          the remaining width. Nothing here is breakpoint-tuned by hand — the
+          crow scales itself to whatever cell it is given. The 7vh top padding
+          is the fixed navbar's own height, keeping the crow out from under the
+          bar at every size instead of per-breakpoint nudging. */}
       <section
         id="home"
         aria-labelledby="hero-heading"
-        className="relative w-full h-[75vh] md:h-[100vh] overflow-hidden"
+        className="relative grid w-full min-h-[100svh] grid-rows-[minmax(0,1fr)_auto] overflow-hidden pt-[7vh] pb-[56px] md:pb-[96px] lg:grid-cols-[minmax(360px,34vw)_minmax(0,1fr)] lg:grid-rows-1"
         onMouseMove={(e) => { mouseRef.current = { x: (e.clientX / window.innerWidth) * 2 - 1, y: -(e.clientY / window.innerHeight) * 2 + 1 }; }}
         onMouseEnter={() => { isHoveringRef.current = true; }}
         onMouseLeave={() => { isHoveringRef.current = false; }}
       >
-        {/* Canvas bird — decorative illustration */}
-        <div role="img" aria-label={t('hero.aria.crow')} className="absolute inset-0 z-10">
+        {/* Canvas bird — decorative illustration. Fills its own grid cell; the
+            canvas measures this element, so the crow is sized by the cell and
+            not by the viewport. min-h-0/min-w-0 keep the 1fr track free to
+            shrink instead of being floored by the canvas's own size. */}
+        <div
+          role="img"
+          aria-label={t('hero.aria.crow')}
+          className="relative z-10 row-start-1 min-h-0 min-w-0 lg:col-start-2"
+        >
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>
 
-        {/* Hero text block — bottom-left, above the canvas and the scroll
-            indicator. Animates on mount only: it must never wait on the
-            lazy-loaded Three.js scene, so if the canvas fails the copy stands
-            on its own. pointer-events stay off the container so the crow keeps
-            tracking the cursor everywhere except the two controls. */}
+        {/* Hero text block — a normal grid item that reserves its own space.
+            Animates on mount only: it must never wait on the lazy-loaded
+            Three.js scene, so if the canvas fails the copy stands on its own.
+            pointer-events stay off the container so the crow keeps tracking the
+            cursor everywhere except the two controls. */}
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-6 md:left-[4vw] bottom-[72px] md:bottom-[96px] z-30 max-w-[520px] pointer-events-none"
+          className="pointer-events-none relative z-30 row-start-2 max-w-[520px] px-6 md:px-[4vw] lg:col-start-1 lg:row-start-1 lg:self-end"
         >
-          <p className="text-[12px] uppercase tracking-[0.18em] text-[#7A7A7A]">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-[#6B6B6B] md:text-[12px]">
             {t('hero.kicker')}
           </p>
           <h1
             id="hero-heading"
-            className="mt-3 font-display font-extrabold leading-[1.05] text-[#141414] text-[clamp(28px,8vw,36px)] md:text-[clamp(32px,3.6vw,52px)]"
+            className="mt-3 font-display font-extrabold leading-[1.08] text-[#141414] text-[clamp(26px,7vw,30px)] md:leading-[1.05] md:text-[clamp(32px,3.6vw,52px)]"
           >
             {t('hero.headline')}
           </h1>
-          <p className="mt-4 text-[14px] text-[#5A5A5A]">
+          <p className="mt-3 text-[13px] text-[#5A5A5A] md:mt-4 md:text-[14px]">
             {t('hero.meta')}
           </p>
-          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-7">
             <a
               href="#contact"
-              className="pointer-events-auto inline-block rounded-full bg-[#141414] px-6 py-[14px] text-[13px] uppercase tracking-[0.12em] text-[#F4F4F2] transition-opacity hover:opacity-80"
+              className="pointer-events-auto inline-block rounded-full bg-[#141414] px-5 py-3 text-[12px] uppercase tracking-[0.12em] text-[#F4F4F2] transition-opacity hover:opacity-80 md:px-6 md:py-[14px] md:text-[13px]"
             >
               {t('hero.cta.contact')}
             </a>
