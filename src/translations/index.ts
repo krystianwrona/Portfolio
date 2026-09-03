@@ -13,9 +13,11 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.aria.switchlang': 'Switch to Polish',
 
     // ── Hero ──
-    'hero.headline.where': 'Where',
-    'hero.headline.architecture': 'architecture',
-    'hero.headline.meets': 'meets code.',
+    'hero.kicker': 'AI Product Builder & Design Engineer',
+    'hero.headline': 'Where architecture meets code.',
+    'hero.meta': 'Warsaw · remote · open to full-time roles and freelance',
+    'hero.cta.contact': 'Get in touch',
+    'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architect turned',
     'hero.tagline.2': 'digital creator',
     'hero.scroll': 'Scroll',
@@ -465,9 +467,11 @@ export const translations: Record<string, Record<string, string>> = {
     'nav.aria.switchlang': 'Przełącz na język angielski',
 
     // ── Hero ──
-    'hero.headline.where': 'Gdzie',
-    'hero.headline.architecture': 'architektura',
-    'hero.headline.meets': 'spotyka kod.',
+    'hero.kicker': 'AI Product Builder & Design Engineer',
+    'hero.headline': 'Gdzie architektura spotyka kod.',
+    'hero.meta': 'Warszawa · zdalnie · otwarty na etat i zlecenia',
+    'hero.cta.contact': 'Napisz do mnie',
+    'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architekt, który został',
     'hero.tagline.2': 'twórcą cyfrowym',
     'hero.scroll': 'Przewiń',

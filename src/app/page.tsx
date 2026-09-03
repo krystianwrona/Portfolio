@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   motion, useScroll, AnimatePresence,
-  useInView, useMotionValue, useSpring, useTransform, animate, useReducedMotion,
+  useInView, useMotionValue, useSpring, animate, useReducedMotion,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
@@ -575,7 +575,6 @@ export default function Home() {
   const isHoveringRef = useRef(false);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
-  const ghostOpacity = useTransform(scrollYProgress, [0, 0.12], [0, 1]);
 
   useEffect(() => {
     return scrollYProgress.on("change", (v) => { scrollRef.current = v; });
@@ -601,43 +600,51 @@ export default function Home() {
         onMouseEnter={() => { isHoveringRef.current = true; }}
         onMouseLeave={() => { isHoveringRef.current = false; }}
       >
-        {/* Main headline — ghost outline watermark, scroll-revealed */}
-        <motion.div
-          className="absolute inset-0 z-[5] hidden md:flex items-end justify-center pb-[15vh] pointer-events-none select-none overflow-hidden"
-          style={{ opacity: ghostOpacity }}
-        >
-          <h1
-            id="hero-heading"
-            className="font-display font-black leading-[0.85] tracking-tighter text-center uppercase"
-            style={{ fontSize: 'clamp(60px, 9vw, 160px)' }}
-          >
-            <span style={{ color: '#F5F5F4', WebkitTextStroke: '2px rgba(17, 17, 17, 0.12)', paintOrder: 'stroke fill' }}>
-              {t('hero.headline.where')}
-            </span>
-            <br />
-            <span style={{ color: '#F5F5F4', WebkitTextStroke: '2px rgba(17, 17, 17, 0.12)', paintOrder: 'stroke fill', filter: 'brightness(0.97)' }}>
-              {t('hero.headline.architecture')}
-            </span>
-            <br />
-            <span style={{ color: '#F5F5F4', WebkitTextStroke: '2px rgba(17, 17, 17, 0.12)', paintOrder: 'stroke fill' }}>
-              {t('hero.headline.meets')}
-            </span>
-          </h1>
-        </motion.div>
-
         {/* Canvas bird — decorative illustration */}
         <div role="img" aria-label={t('hero.aria.crow')} className="absolute inset-0 z-10">
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>
 
-        {/* Mobile hero text — variant C, scroll-revealed */}
+        {/* Hero text block — bottom-left, above the canvas and the scroll
+            indicator. Animates on mount only: it must never wait on the
+            lazy-loaded Three.js scene, so if the canvas fails the copy stands
+            on its own. pointer-events stay off the container so the crow keeps
+            tracking the cursor everywhere except the two controls. */}
         <motion.div
-          className="absolute bottom-[10vh] left-0 right-0 z-20 pointer-events-none text-center md:hidden"
-          style={{ opacity: ghostOpacity }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-6 md:left-[4vw] bottom-[72px] md:bottom-[96px] z-30 max-w-[520px] pointer-events-none"
         >
-          <p className="text-[0.7rem] font-bold uppercase tracking-[0.2em] text-[#111]/40 leading-relaxed">
-            {t('hero.headline.where')} {t('hero.headline.architecture')} {t('hero.headline.meets')}
+          <p className="text-[12px] uppercase tracking-[0.18em] text-[#7A7A7A]">
+            {t('hero.kicker')}
           </p>
+          <h1
+            id="hero-heading"
+            className="mt-3 font-display font-extrabold leading-[1.05] text-[#141414] text-[clamp(28px,8vw,36px)] md:text-[clamp(32px,3.6vw,52px)]"
+          >
+            {t('hero.headline')}
+          </h1>
+          <p className="mt-4 text-[14px] text-[#5A5A5A]">
+            {t('hero.meta')}
+          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href="#contact"
+              className="pointer-events-auto inline-block rounded-full bg-[#141414] px-6 py-[14px] text-[13px] uppercase tracking-[0.12em] text-[#F4F4F2] transition-opacity hover:opacity-80"
+            >
+              {t('hero.cta.contact')}
+            </a>
+            <a
+              href="https://www.linkedin.com/in/krystian-wrona/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t('footer.aria.linkedin')}
+              className="pointer-events-auto text-[13px] uppercase tracking-[0.12em] text-[#141414] no-underline hover:underline"
+            >
+              {t('hero.cta.linkedin')}
+            </a>
+          </div>
         </motion.div>
 
         {/* Scroll indicator — decorative */}
