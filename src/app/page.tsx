@@ -593,16 +593,21 @@ export default function Home() {
 
       {/* 1. HERO — layout reservation, not overlay. The crow and the text
           block are sibling grid items, so their boxes can never intersect at
-          any viewport size: on <1024px the crow takes row 1 (1fr) and the copy
-          row 2 (auto); from 1024px the copy takes a left column and the crow
-          the remaining width. Nothing here is breakpoint-tuned by hand — the
-          crow scales itself to whatever cell it is given. The 7vh top padding
-          is the fixed navbar's own height, keeping the crow out from under the
-          bar at every size instead of per-breakpoint nudging. */}
+          any viewport size: stacked, the crow takes row 1 (1fr) and the copy
+          row 2 (auto); in the hero-row layout the copy takes a fixed-ish left
+          column and the crow the remaining width. Nothing here is
+          breakpoint-tuned by hand — the crow scales itself to whatever cell it
+          is given. The 7vh top padding is the fixed navbar's own height,
+          keeping the crow out from under the bar at every size.
+
+          The side padding lives here, on the section, and never on the text
+          block: the block's 520px cap is a cap on its *text*, and a block that
+          carried the 4vw padding itself would spend that cap on padding — at
+          3440px that left 245px of content and a four-line headline. */}
       <section
         id="home"
         aria-labelledby="hero-heading"
-        className="relative grid w-full min-h-[100svh] grid-rows-[minmax(0,1fr)_auto] overflow-hidden pt-[7vh] pb-[56px] md:pb-[96px] lg:grid-cols-[minmax(360px,34vw)_minmax(0,1fr)] lg:grid-rows-1"
+        className="relative grid w-full min-h-[100svh] grid-rows-[minmax(0,1fr)_auto] overflow-hidden pt-[7vh] pb-[clamp(40px,8vh,96px)] pl-6 pr-6 md:pl-[4vw] md:pr-[4vw] hero-row:pr-0 hero-row:grid-rows-1 hero-row:grid-cols-[clamp(560px,30vw,760px)_minmax(0,1fr)]"
         onMouseMove={(e) => { mouseRef.current = { x: (e.clientX / window.innerWidth) * 2 - 1, y: -(e.clientY / window.innerHeight) * 2 + 1 }; }}
         onMouseEnter={() => { isHoveringRef.current = true; }}
         onMouseLeave={() => { isHoveringRef.current = false; }}
@@ -614,7 +619,7 @@ export default function Home() {
         <div
           role="img"
           aria-label={t('hero.aria.crow')}
-          className="relative z-10 row-start-1 min-h-0 min-w-0 lg:col-start-2"
+          className="relative z-10 row-start-1 min-h-0 min-w-0 hero-row:col-start-2"
         >
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>
@@ -628,24 +633,24 @@ export default function Home() {
           initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-none relative z-30 row-start-2 max-w-[520px] px-6 md:px-[4vw] lg:col-start-1 lg:row-start-1 lg:self-end"
+          className="pointer-events-none relative z-30 row-start-2 max-w-[520px] hero-row:col-start-1 hero-row:row-start-1 hero-row:self-end"
         >
-          <p className="text-[11px] uppercase tracking-[0.18em] text-[#6B6B6B] md:text-[12px]">
+          <p className="text-[12px] uppercase tracking-[0.18em] text-[#6B6B6B] compact:text-[11px]">
             {t('hero.kicker')}
           </p>
           <h1
             id="hero-heading"
-            className="mt-3 font-display font-extrabold leading-[1.08] text-[#141414] text-[clamp(26px,7vw,30px)] md:leading-[1.05] md:text-[clamp(32px,3.6vw,52px)]"
+            className="mt-3 font-display font-extrabold leading-[1.05] text-[#141414] text-[clamp(32px,3.6vw,48px)] compact:leading-[1.08] compact:text-[clamp(26px,7vw,34px)]"
           >
             {t('hero.headline')}
           </h1>
-          <p className="mt-3 text-[13px] text-[#5A5A5A] md:mt-4 md:text-[14px]">
+          <p className="mt-4 text-[14px] text-[#5A5A5A] compact:mt-3 compact:text-[13px]">
             {t('hero.meta')}
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 md:mt-7">
+          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 compact:mt-5">
             <a
               href="#contact"
-              className="pointer-events-auto inline-block rounded-full bg-[#141414] px-5 py-3 text-[12px] uppercase tracking-[0.12em] text-[#F4F4F2] transition-opacity hover:opacity-80 md:px-6 md:py-[14px] md:text-[13px]"
+              className="pointer-events-auto inline-block rounded-full bg-[#141414] px-6 py-[14px] text-[13px] uppercase tracking-[0.12em] text-[#F4F4F2] transition-opacity hover:opacity-80 compact:px-5 compact:py-3 compact:text-[12px]"
             >
               {t('hero.cta.contact')}
             </a>
@@ -662,7 +667,7 @@ export default function Home() {
         </motion.div>
 
         {/* Scroll indicator — decorative */}
-        <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20">
+        <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20 hero-row:hidden">
           <motion.div
             animate={shouldReduceMotion ? {} : { y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}

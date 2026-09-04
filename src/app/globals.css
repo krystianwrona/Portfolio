@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* ── Hero layout variants ─────────────────────────────────────────────────
+   The hero puts the crow beside the copy whenever there is horizontal room
+   to spare — that is a question of orientation, not of a device-width
+   breakpoint, so a landscape phone gets the same side-by-side treatment a
+   desktop does. The compact type scale is a separate question keyed to
+   height alone: the text block competes with the crow for vertical space,
+   and only a short viewport makes that competition tight. */
+@custom-variant hero-row (@media (orientation: landscape) and (min-width: 640px));
+@custom-variant compact (@media (max-height: 480px));
+
 @theme {
   --font-sans: var(--font-inter);
   --font-display: var(--font-montserrat);
