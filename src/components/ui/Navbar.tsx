@@ -159,7 +159,7 @@ export function Navbar() {
         </button>
 
         {/* DESKTOP LINKS */}
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10 text-[0.75rem] uppercase tracking-widest font-bold text-[#111111]/60">
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-10 text-[0.75rem] uppercase tracking-widest font-bold text-[#111111]/60">
           {NAV_LINKS_CONFIG.map((link) => (
             <a
               key={link.key}
@@ -181,7 +181,7 @@ export function Navbar() {
           {/* LANGUAGE TOGGLE */}
           <button
             onClick={() => setLang(lang === "en" ? "pl" : "en")}
-            className="hidden md:block text-[0.7rem] font-bold tracking-widest uppercase text-[#111]/50 hover:text-[#111] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm"
+            className="hidden lg:block text-[0.7rem] font-bold tracking-widest uppercase text-[#111]/50 hover:text-[#111] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm"
             aria-label={t('nav.aria.switchlang')}
           >
             {lang === "en" ? "PL" : "EN"}
@@ -191,7 +191,7 @@ export function Navbar() {
           <button
             ref={hamburgerRef}
             onClick={() => setMenuOpen((v) => !v)}
-            className="md:hidden text-[0.75rem] font-black uppercase tracking-widest text-[#111111] hover:opacity-60 focus-visible:opacity-60 focus-visible:underline underline-offset-4 transition-opacity focus-visible:outline-none"
+            className="lg:hidden text-[0.75rem] font-black uppercase tracking-widest text-[#111111] hover:opacity-60 focus-visible:opacity-60 focus-visible:underline underline-offset-4 transition-opacity focus-visible:outline-none"
             aria-label={menuOpen ? t('nav.aria.closemenu') : t('nav.aria.openmenu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
