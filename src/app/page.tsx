@@ -615,11 +615,15 @@ export default function Home() {
         {/* Canvas bird — decorative illustration. Fills its own grid cell; the
             canvas measures this element, so the crow is sized by the cell and
             not by the viewport. min-h-0/min-w-0 keep the 1fr track free to
-            shrink instead of being floored by the canvas's own size. */}
+            shrink instead of being floored by the canvas's own size. Stacked,
+            the crow is fitted by its dense body and the sparse tail is left to
+            run off the left edge, so the clip lives here, on the cell, and not
+            on the section: the tail is cut at the cell's own boundary and can
+            never reach the text block or the navbar. */}
         <div
           role="img"
           aria-label={t('hero.aria.crow')}
-          className="relative z-10 row-start-1 min-h-0 min-w-0 hero-row:col-start-2"
+          className="relative z-10 row-start-1 min-h-0 min-w-0 overflow-hidden hero-row:col-start-2"
         >
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>

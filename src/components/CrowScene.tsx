@@ -127,6 +127,114 @@ const CELL_PADDING = 0.08;
 // Shifting by that fraction puts the body, not the plane, in the cell's middle.
 const MASS_BIAS = 0.1336;
 
+// ── Dense-body fit (stacked layout only) ─────────────────────────────────────
+// The contain fit above keeps the whole cloud inside the cell, sparse tail and
+// all. In a width-limited cell that is expensive: the tail alone occupies the
+// left quarter of the texture, and paying for it plus CELL_PADDING plus the
+// 2 x MASS_BIAS centring budget leaves the bird itself at ~60% of the width it
+// could have. Stacked, the tail is allowed to run off the left edge instead —
+// the cell clips it — and the fit targets the dense body.
+//
+// DENSE_THRESHOLD is a fraction of the peak column density: the dense body's
+// left edge is the first column carrying at least that much ink. The texture
+// has a plateau there (0.12 -> 0.2667 of the width, 0.15 -> 0.2678) and jumps
+// to 0.3356 at 0.18, which is the wing — 0.15 is the last value before the cut
+// stops being tail, and it drops 1.65% of the mass. The other three edges are
+// the ink extent rather than the threshold: the tail is a horizontal feature,
+// and a box that excluded low-density columns on the right would push the beak
+// out of the cell, where the crow cell's overflow would clip it.
+const DENSE_THRESHOLD = 0.15;
+// A column or row holding less than this share of the peak is a stray speck
+const INK_FLOOR = 0.02;
+// Dense body relative to the cell: width is the target, height the ceiling
+const DENSE_W_OF_CELL = 0.88;
+const DENSE_H_MAX_OF_CELL = 0.7;
+// The dense body is centred, but never closer than this to the cell's edge
+const DENSE_MIN_GAP_PX = 16;
+// The stacked/column split is the hero grid's own condition — the same query,
+// so the crow can never disagree with the layout it is sitting in
+const ROW_LAYOUT_QUERY = "(orientation: landscape) and (min-width: 640px)";
+
+type DenseBox = { x0: number; x1: number; w: number; h: number; cx: number; cy: number };
+
+// Measured once per session — the texture never changes and the result is pure
+// geometry (fractions of the mesh), so it survives remounts and resizes
+let denseBoxCache: DenseBox | null | undefined;
+
+/**
+ * Column/row ink profiles of the crow texture, using the shader's own test for
+ * what becomes a particle (luminance <= 0.45). Returns the dense body's box as
+ * fractions of the mesh — x from the left in UV, y from the bottom — matching
+ * the plane's UV space, so the caller maps it straight onto meshW/meshH.
+ */
+function measureDenseBox(image: HTMLImageElement): DenseBox | null {
+  if (denseBoxCache !== undefined) return denseBoxCache;
+  try {
+    const W = image.naturalWidth || image.width || 0;
+    const H = image.naturalHeight || image.height || 0;
+    if (!W || !H) return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return null;
+    ctx.drawImage(image, 0, 0);
+    const data = ctx.getImageData(0, 0, W, H).data;
+
+    const STEP = 2; // every other pixel — 4x cheaper, same profile shape
+    const cols = new Float32Array(W);
+    const rows = new Float32Array(H);
+    for (let y = 0; y < H; y += STEP) {
+      for (let x = 0; x < W; x += STEP) {
+        const i = (y * W + x) * 4;
+        const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+        if (lum <= 0.45) { cols[x]++; rows[y]++; }
+      }
+    }
+    let peakCol = 0, peakRow = 0;
+    for (let x = 0; x < W; x++) if (cols[x] > peakCol) peakCol = cols[x];
+    for (let y = 0; y < H; y++) if (rows[y] > peakRow) peakRow = rows[y];
+    if (!peakCol || !peakRow) return null;
+
+    const first = (a: Float32Array, t: number) => { for (let i = 0; i < a.length; i++) if (a[i] >= t) return i; return 0; };
+    const last  = (a: Float32Array, t: number) => { for (let i = a.length - 1; i >= 0; i--) if (a[i] >= t) return i; return a.length - 1; };
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
+    const denseLeft = first(cols, peakCol * DENSE_THRESHOLD);
+    const inkRight  = last(cols, peakCol * INK_FLOOR) + STEP;
+    const inkTop    = first(rows, peakRow * INK_FLOOR);
+    const inkBottom = last(rows, peakRow * INK_FLOOR) + STEP;
+
+    const x0 = clamp01(denseLeft / W);
+    const x1 = clamp01(inkRight / W);
+    // The texture is flipped on upload, so image row 0 is the top of the mesh
+    const y0 = clamp01(1 - inkBottom / H);
+    const y1 = clamp01(1 - inkTop / H);
+    if (x1 <= x0 || y1 <= y0) return null;
+
+    denseBoxCache = { x0, x1, w: x1 - x0, h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+    return denseBoxCache;
+  } catch {
+    denseBoxCache = null; // tainted canvas or no 2d context — fall back to contain
+    return null;
+  }
+}
+
+/** Tracks the hero grid's own layout query, so the fit follows the layout. */
+function useRowLayout() {
+  const [isRow, setIsRow] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(ROW_LAYOUT_QUERY).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(ROW_LAYOUT_QUERY);
+    const apply = () => setIsRow(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return isRow;
+}
+
 // Assembly runs this long once started (shader staggers particles within it)
 const ASSEMBLY_DURATION = 2.2;
 // Preloader covers the screen for 1800ms + 500ms fade — on a hard load, hold
@@ -138,7 +246,7 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   mouseRef: { current: { x: number; y: number } };
   isHoveringRef: { current: boolean };
 }) {
-  const { viewport, camera, gl } = useThree();
+  const { viewport, camera, gl, size } = useThree();
   const texture = useTexture("/crow-particles.webp");
   texture.colorSpace = THREE.SRGBColorSpace;
 
@@ -154,24 +262,62 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
   const [segments] = useState(() => (isMobileViewport ? 160 : 288));
 
-  // ── Contain fit ────────────────────────────────────────────────────────────
+  // ── Fit ────────────────────────────────────────────────────────────────────
   // The canvas fills one grid cell of the hero, so `viewport` here describes
-  // that cell in world units — not the window. Fit the mesh's box into it the
-  // way object-fit: contain would: preserve the texture's 2:1 aspect, leave
-  // CELL_PADDING free on every side. One rule for every viewport — portrait
-  // phone, landscape phone, tablet, laptop, ultrawide — with no breakpoints
-  // and no hand-tuned offsets. A short cell (landscape phone) simply yields a
-  // small crow, never one that spills out of its cell.
-  //
-  // The horizontal budget also pays for MASS_BIAS: the mesh is pushed left by
-  // that fraction of its own width so the dense body — not the plane's
-  // geometric centre — lands in the middle of the cell, which costs an extra
-  // 2 x MASS_BIAS of width before the shifted box is symmetric about it.
-  const availW = viewport.width * (1 - 2 * CELL_PADDING);
-  const availH = viewport.height * (1 - 2 * CELL_PADDING);
-  const meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
+  // that cell in world units — not the window. There are two ways to fill it,
+  // chosen by the same media query the hero grid uses, so the crow and the
+  // layout can never disagree about which one they are in.
+  const isRowLayout = useRowLayout();
+  const dense = measureDenseBox(texture.image as HTMLImageElement);
+
+  let meshW: number;
+  let xOffset: number;
+  let yOffset: number;
+
+  if (isRowLayout || !dense) {
+    // Column layout — contain fit, unchanged. The mesh's whole box goes into
+    // the cell the way object-fit: contain would: the texture's 2:1 aspect
+    // preserved, CELL_PADDING free on every side, no hand-tuned offsets. A
+    // short cell (landscape phone) simply yields a small crow, never one that
+    // spills out of its cell. The horizontal budget also pays for MASS_BIAS:
+    // the mesh is pushed left by that fraction of its own width so the dense
+    // body — not the plane's geometric centre — lands in the middle of the
+    // cell, which costs an extra 2 x MASS_BIAS of width before the shifted box
+    // is symmetric about it. Also the fallback if the texture cannot be
+    // measured, since it needs nothing but the aspect ratio.
+    const availW = viewport.width * (1 - 2 * CELL_PADDING);
+    const availH = viewport.height * (1 - 2 * CELL_PADDING);
+    meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
+    xOffset = -MASS_BIAS * meshW;
+    yOffset = 0;
+  } else {
+    // Stacked layout — fit the dense body rather than the cloud. The cell is
+    // wide and short here, so width is the binding constraint and every unit
+    // spent on the sparse tail is a unit the bird does not get. Size the dense
+    // box to DENSE_W_OF_CELL of the width, cap it at DENSE_H_MAX_OF_CELL of the
+    // height, take whichever scale is smaller, and centre that box — not the
+    // plane — in the cell. The tail then hangs off the left edge and the crow
+    // cell clips it. No CELL_PADDING and no MASS_BIAS budget here: both exist
+    // to keep the tail inside, which is no longer the goal.
+    const worldPerPx = size.width > 0 ? viewport.width / size.width : 0;
+    const minGap = DENSE_MIN_GAP_PX * worldPerPx;
+    // Centred at DENSE_W_OF_CELL the gap is already ~6% of the cell, but on a
+    // narrow enough cell 6% is under 16px — then the gap, not the target, sets
+    // the width, so the body's right edge never crowds the cell's edge.
+    const targetW = Math.min(
+      DENSE_W_OF_CELL * viewport.width,
+      Math.max(0, viewport.width - 2 * minGap)
+    );
+    const byWidth  = targetW / dense.w;
+    const byHeight = (DENSE_H_MAX_OF_CELL * viewport.height * MESH_ASPECT) / dense.h;
+    meshW = Math.min(byWidth, byHeight);
+    const meshHeight = meshW / MESH_ASPECT;
+    // Put the dense box's centre on the cell's centre, both axes
+    xOffset = -(dense.cx - 0.5) * meshW;
+    yOffset = -(dense.cy - 0.5) * meshHeight;
+  }
+
   const meshH = meshW / MESH_ASPECT;
-  const xOffset = -MASS_BIAS * meshW;
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
   // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every
@@ -277,7 +423,12 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     ndcVec.set(mouseRef.current.x, mouseRef.current.y);
     raycaster.setFromCamera(ndcVec, camera);
     if (raycaster.ray.intersectPlane(zPlane, hitVec)) {
-      mouseWorld.current.lerp(new THREE.Vector2((hitVec.x - xOffset) / meshW, hitVec.y / meshH), 0.15);
+      // World → mesh-local: undo the mesh's own transform, both axes, so the
+      // repel field stays centred on the body wherever the fit has put it
+      mouseWorld.current.lerp(
+        new THREE.Vector2((hitVec.x - xOffset) / meshW, (hitVec.y - yOffset) / meshH),
+        0.15
+      );
     }
     uniforms.uMouseWorld.value.copy(mouseWorld.current);
 
@@ -295,7 +446,7 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   });
 
   return (
-    <points ref={pointsRef} scale={[meshW, meshH, 1]} position={[xOffset, 0, 0]}>
+    <points ref={pointsRef} scale={[meshW, meshH, 1]} position={[xOffset, yOffset, 0]}>
       <planeGeometry ref={geometryRef} args={[1, 1, segments, segments]} />
       <shaderMaterial vertexShader={vertexShader} fragmentShader={fragmentShader} uniforms={uniforms} transparent depthWrite={false} />
     </points>
