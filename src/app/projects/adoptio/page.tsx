@@ -258,7 +258,7 @@ export default function AdoptMeCaseStudy() {
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }}>
                 <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-4">{t("case.live")}</p>
                 <a
-                  href="https://adoptio.pl"
+                  href="https://adoptio.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}
@@ -472,7 +472,7 @@ export default function AdoptMeCaseStudy() {
         {/* 6. VISIT WEBSITE */}
         <section className="py-[12vh] px-[4vw] bg-[#111] flex items-center justify-center">
           <a
-            href="https://adoptio.pl"
+            href="https://adoptio.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${t("case.aria.visitwebsite")} Adoptio ${t("case.aria.website")}`}

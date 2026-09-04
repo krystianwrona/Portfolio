@@ -17,7 +17,7 @@ const JSON_LD = {
   description,
   url: `${SITE_URL}/projects/adoptio`,
   author: { "@id": PERSON_ID },
-  sameAs: "https://adoptio.pl",
+  sameAs: "https://adoptio.vercel.app",
 };
 
 export default function AdoptioLayout({ children }: { children: React.ReactNode }) {
