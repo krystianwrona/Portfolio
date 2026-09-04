@@ -619,11 +619,13 @@ export default function Home() {
             the crow is fitted by its dense body and the sparse tail is left to
             run off the left edge, so the clip lives here, on the cell, and not
             on the section: the tail is cut at the cell's own boundary and can
-            never reach the text block or the navbar. */}
+            never reach the text block or the navbar. Side by side, .crow-cell
+            fades that cut edge out over the tail's last 48px (globals.css), so
+            the tail dissolves at the text column instead of ending on a rule. */}
         <div
           role="img"
           aria-label={t('hero.aria.crow')}
-          className="relative z-10 row-start-1 min-h-0 min-w-0 overflow-hidden hero-row:col-start-2"
+          className="crow-cell relative z-10 row-start-1 min-h-0 min-w-0 overflow-hidden hero-row:col-start-2"
         >
           <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
         </div>

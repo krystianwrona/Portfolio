@@ -39,6 +39,25 @@ body {
   color: #111;
 }
 
+/* ── Crow cell ──────────────────────────────────────────────────────────────
+   The crow is fitted and placed by its dense body, so the sparse tail runs off
+   the cell's left edge — which is the text column's right edge — and the cell's
+   overflow-hidden cuts it. Cutting a particle cloud leaves a ruled vertical
+   line of half-dots; fading the same edge instead lets the tail dissolve into
+   the page. Side-by-side layout only: stacked, the cut edge is the page's own
+   left margin, where there is no column edge to hide.
+
+   The ramp is BODY_MIN_GAP_PX from CrowScene.tsx. That gap is how close the
+   dense body may come to this edge, so a ramp of exactly that length is spent
+   entirely on tail and is back to full opacity by the body's leftmost possible
+   position — the fade can never touch the bird itself. */
+.crow-cell {
+  @variant hero-row {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 48px);
+            mask-image: linear-gradient(to right, transparent 0, #000 48px);
+  }
+}
+
 /* ── Skip to content link ───────────────────────── */
 .skip-link {
   position: absolute;

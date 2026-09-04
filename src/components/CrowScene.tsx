@@ -158,21 +158,25 @@ const DENSE_MIN_GAP_PX = 16;
 // ── Row-layout placement (desktop) ───────────────────────────────────────────
 // In the row layout the crow is not centred in its own cell: it is centred on
 // the *viewport*, so the bird reads as the middle of the page rather than the
-// middle of the leftover column. Two gaps keep that from pushing it out of the
-// cell — one for the dense body, a smaller one for the sparse tail, which is
-// allowed to run left past the body's margin.
+// middle of the leftover column. One gap keeps that from pushing it out of the
+// cell: the dense body stays this far inside both cell edges, and that clamp is
+// the only thing that ever moves the bird off the viewport's centre line. The
+// sparse tail runs past the gap and is cut by the cell's own overflow — see the
+// mask on .crow-cell in globals.css, whose ramp is this same 48px, so the fade
+// is spent entirely on tail and has always finished by the leftmost position
+// the body can be clamped to.
 const BODY_MIN_GAP_PX = 48;
-const TAIL_MIN_GAP_PX = 24;
+// The dense body is this share of the *viewport's* width. Sizing off the
+// viewport rather than off the cell is what keeps the bird growing evenly with
+// the page: the cell is whatever the text column leaves over, and that column's
+// clamp(560px, 30vw, 760px) makes the cell grow at three different rates as the
+// clamp goes fixed -> 30vw -> fixed, which a cell-relative size would inherit.
+const BODY_W_OF_VIEWPORT = 0.4;
 // The stacked/column split is the hero grid's own condition — the same query,
 // so the crow can never disagree with the layout it is sitting in
 const ROW_LAYOUT_QUERY = "(orientation: landscape) and (min-width: 640px)";
 
-type DenseBox = {
-  x0: number; x1: number; w: number; h: number; cx: number; cy: number;
-  // Leftmost column carrying more than a stray speck — the tail's visible
-  // start, well left of the dense body's own x0
-  xInk0: number;
-};
+type DenseBox = { x0: number; x1: number; w: number; h: number; cx: number; cy: number };
 
 // Measured once per session — the texture never changes and the result is pure
 // geometry (fractions of the mesh), so it survives remounts and resizes
@@ -218,7 +222,6 @@ function measureDenseBox(image: HTMLImageElement): DenseBox | null {
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
     const denseLeft = first(cols, peakCol * DENSE_THRESHOLD);
-    const inkLeft   = first(cols, peakCol * INK_FLOOR);
     const inkRight  = last(cols, peakCol * INK_FLOOR) + STEP;
     const inkTop    = first(rows, peakRow * INK_FLOOR);
     const inkBottom = last(rows, peakRow * INK_FLOOR) + STEP;
@@ -230,11 +233,7 @@ function measureDenseBox(image: HTMLImageElement): DenseBox | null {
     const y1 = clamp01(1 - inkTop / H);
     if (x1 <= x0 || y1 <= y0) return null;
 
-    denseBoxCache = {
-      x0, x1, w: x1 - x0, h: y1 - y0,
-      cx: (x0 + x1) / 2, cy: (y0 + y1) / 2,
-      xInk0: clamp01(inkLeft / W),
-    };
+    denseBoxCache = { x0, x1, w: x1 - x0, h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
     return denseBoxCache;
   } catch {
     denseBoxCache = null; // tainted canvas or no 2d context — fall back to contain
@@ -337,22 +336,28 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     const worldPerPx = viewport.width / size.width;
     const halfCell = viewport.width / 2;
     const bodyGap = BODY_MIN_GAP_PX * worldPerPx;
-    const tailGap = TAIL_MIN_GAP_PX * worldPerPx;
-
-    // Size: the contain fit's vertical budget, unchanged — CELL_PADDING free
-    // above and below — and a width that leaves the body its own margin at
-    // both cell edges. The old horizontal budget (availW plus 2 x MASS_BIAS)
-    // is gone with the centroid it was paying for.
-    const byHeight  = viewport.height * (1 - 2 * CELL_PADDING) * MESH_ASPECT;
-    const byBodyFit = Math.max(0, viewport.width - 2 * bodyGap) / dense.w;
-    meshW = Math.min(byHeight, byBodyFit);
-
-    // Target, in the cell's own world coordinates: the viewport's centre line.
     // documentElement.clientWidth, not innerWidth — getBoundingClientRect and
     // the layout viewport both exclude a classic scrollbar, innerWidth does not.
-    const viewportCentrePx = document.documentElement.clientWidth / 2;
+    const clientWidthPx = document.documentElement.clientWidth;
+
+    // Size: the dense body's width, as the smallest of three ceilings. Each one
+    // is non-decreasing in the viewport's width, so their minimum is too — the
+    // bird can never shrink as the page grows.
+    //   - the share of the viewport it is aiming for;
+    //   - the cell's vertical budget, CELL_PADDING free above and below (the
+    //     contain fit's, unchanged), which is flat in width;
+    //   - the width that still leaves the body its own margin at both cell
+    //     edges, so the clamp below always has somewhere to put it. This one
+    //     binds only where the cell is barely wider than the body it has to
+    //     hold — around 1024px, where 40vw is 410px and the cell is 423px.
+    const byViewport = BODY_W_OF_VIEWPORT * clientWidthPx * worldPerPx / dense.w;
+    const byHeight   = viewport.height * (1 - 2 * CELL_PADDING) * MESH_ASPECT;
+    const byBodyFit  = Math.max(0, viewport.width - 2 * bodyGap) / dense.w;
+    meshW = Math.min(byViewport, byHeight, byBodyFit);
+
+    // Target, in the cell's own world coordinates: the viewport's centre line.
     const cellCentrePx = cellRect.left + cellRect.width / 2;
-    const target = (viewportCentrePx - cellCentrePx) * worldPerPx;
+    const target = (clientWidthPx / 2 - cellCentrePx) * worldPerPx;
 
     // Placement, as a position for the dense body's centre. Narrow desktops
     // put the viewport's centre inside — or left of — the text column, where
@@ -366,22 +371,11 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
         halfCell - bodyGap - rightArm
       );
     };
-    let bodyCentre = place(meshW);
-
-    // The tail may run left past the body's margin, but not out of the cell:
-    // the cell's left edge is the text column's right edge. Where the body did
-    // reach the viewport's centre there is room to buy that by narrowing the
-    // mesh — the body only shrinks, it does not move — so buy it. Where the
-    // placement is already clamped there is not: the body's own margin sits
-    // right of where the tail would have to start, so the two rules cannot
-    // both hold, and rule one is the body's. The tail is then cut at the cell
-    // boundary by the crow cell's overflow-hidden, exactly as it is stacked —
-    // which is also why it can never reach the text column either way.
-    const tailArm = dense.cx - dense.xInk0;
-    if (bodyCentre === target && target - tailArm * meshW < -halfCell + tailGap) {
-      meshW = Math.min(meshW, (target + halfCell - tailGap) / tailArm);
-      bodyCentre = place(meshW);
-    }
+    // The sparse tail runs left past the body's margin and out of the cell,
+    // where the cell's overflow-hidden cuts it and the cell's mask dissolves
+    // the cut — exactly as it is stacked, and also why it can never reach the
+    // text column. Nothing about the tail is allowed to cost the body width.
+    const bodyCentre = place(meshW);
 
     // Body centre -> plane centre. Vertically the reference is still the cell,
     // but the axis is the dense box's centre here too, not the plane's.
