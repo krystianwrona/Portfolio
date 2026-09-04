@@ -125,15 +125,17 @@ const CELL_PADDING = 0.08;
 // mesh's own geometric centre — by a fraction of meshW that stays constant
 // (measured via alpha-weighted pixel centroid), not a fixed world-unit amount.
 // Shifting by that fraction puts the body, not the plane, in the cell's middle.
+// Used only by the contain fallback now: both real fits measure the dense box
+// itself, which gives the same answer without a constant to keep in sync.
 const MASS_BIAS = 0.1336;
 
-// ── Dense-body fit (stacked layout only) ─────────────────────────────────────
-// The contain fit above keeps the whole cloud inside the cell, sparse tail and
-// all. In a width-limited cell that is expensive: the tail alone occupies the
-// left quarter of the texture, and paying for it plus CELL_PADDING plus the
+// ── Dense-body measurement ───────────────────────────────────────────────────
+// A contain fit keeps the whole cloud inside the cell, sparse tail and all. In
+// a width-limited cell that is expensive: the tail alone occupies the left
+// quarter of the texture, and paying for it plus CELL_PADDING plus the
 // 2 x MASS_BIAS centring budget leaves the bird itself at ~60% of the width it
-// could have. Stacked, the tail is allowed to run off the left edge instead —
-// the cell clips it — and the fit targets the dense body.
+// could have. Both layouts fit and aim the dense body instead, and let the
+// tail run off the cell's left edge where it has to — the cell clips it.
 //
 // DENSE_THRESHOLD is a fraction of the peak column density: the dense body's
 // left edge is the first column carrying at least that much ink. The texture
@@ -146,16 +148,31 @@ const MASS_BIAS = 0.1336;
 const DENSE_THRESHOLD = 0.15;
 // A column or row holding less than this share of the peak is a stray speck
 const INK_FLOOR = 0.02;
+// ── Dense-body fit (stacked layout only) ─────────────────────────────────────
 // Dense body relative to the cell: width is the target, height the ceiling
 const DENSE_W_OF_CELL = 0.88;
 const DENSE_H_MAX_OF_CELL = 0.7;
 // The dense body is centred, but never closer than this to the cell's edge
 const DENSE_MIN_GAP_PX = 16;
+
+// ── Row-layout placement (desktop) ───────────────────────────────────────────
+// In the row layout the crow is not centred in its own cell: it is centred on
+// the *viewport*, so the bird reads as the middle of the page rather than the
+// middle of the leftover column. Two gaps keep that from pushing it out of the
+// cell — one for the dense body, a smaller one for the sparse tail, which is
+// allowed to run left past the body's margin.
+const BODY_MIN_GAP_PX = 48;
+const TAIL_MIN_GAP_PX = 24;
 // The stacked/column split is the hero grid's own condition — the same query,
 // so the crow can never disagree with the layout it is sitting in
 const ROW_LAYOUT_QUERY = "(orientation: landscape) and (min-width: 640px)";
 
-type DenseBox = { x0: number; x1: number; w: number; h: number; cx: number; cy: number };
+type DenseBox = {
+  x0: number; x1: number; w: number; h: number; cx: number; cy: number;
+  // Leftmost column carrying more than a stray speck — the tail's visible
+  // start, well left of the dense body's own x0
+  xInk0: number;
+};
 
 // Measured once per session — the texture never changes and the result is pure
 // geometry (fractions of the mesh), so it survives remounts and resizes
@@ -201,6 +218,7 @@ function measureDenseBox(image: HTMLImageElement): DenseBox | null {
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
     const denseLeft = first(cols, peakCol * DENSE_THRESHOLD);
+    const inkLeft   = first(cols, peakCol * INK_FLOOR);
     const inkRight  = last(cols, peakCol * INK_FLOOR) + STEP;
     const inkTop    = first(rows, peakRow * INK_FLOOR);
     const inkBottom = last(rows, peakRow * INK_FLOOR) + STEP;
@@ -212,7 +230,11 @@ function measureDenseBox(image: HTMLImageElement): DenseBox | null {
     const y1 = clamp01(1 - inkTop / H);
     if (x1 <= x0 || y1 <= y0) return null;
 
-    denseBoxCache = { x0, x1, w: x1 - x0, h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+    denseBoxCache = {
+      x0, x1, w: x1 - x0, h: y1 - y0,
+      cx: (x0 + x1) / 2, cy: (y0 + y1) / 2,
+      xInk0: clamp01(inkLeft / W),
+    };
     return denseBoxCache;
   } catch {
     denseBoxCache = null; // tainted canvas or no 2d context — fall back to contain
@@ -269,28 +291,18 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   // layout can never disagree about which one they are in.
   const isRowLayout = useRowLayout();
   const dense = measureDenseBox(texture.image as HTMLImageElement);
+  // The cell's own place in the page, in CSS px. The row fit needs it: its
+  // reference is the viewport, and the cell knows nothing about the viewport
+  // except through this rect. Read every render — `size` changes on resize, so
+  // this is re-read exactly when the geometry it describes can have moved.
+  const cellRect = gl.domElement.getBoundingClientRect();
+  const canPlaceInViewport = dense !== null && size.width > 0 && cellRect.width > 0;
 
   let meshW: number;
   let xOffset: number;
   let yOffset: number;
 
-  if (isRowLayout || !dense) {
-    // Column layout — contain fit, unchanged. The mesh's whole box goes into
-    // the cell the way object-fit: contain would: the texture's 2:1 aspect
-    // preserved, CELL_PADDING free on every side, no hand-tuned offsets. A
-    // short cell (landscape phone) simply yields a small crow, never one that
-    // spills out of its cell. The horizontal budget also pays for MASS_BIAS:
-    // the mesh is pushed left by that fraction of its own width so the dense
-    // body — not the plane's geometric centre — lands in the middle of the
-    // cell, which costs an extra 2 x MASS_BIAS of width before the shifted box
-    // is symmetric about it. Also the fallback if the texture cannot be
-    // measured, since it needs nothing but the aspect ratio.
-    const availW = viewport.width * (1 - 2 * CELL_PADDING);
-    const availH = viewport.height * (1 - 2 * CELL_PADDING);
-    meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
-    xOffset = -MASS_BIAS * meshW;
-    yOffset = 0;
-  } else {
+  if (!isRowLayout && dense) {
     // Stacked layout — fit the dense body rather than the cloud. The cell is
     // wide and short here, so width is the binding constraint and every unit
     // spent on the sparse tail is a unit the bird does not get. Size the dense
@@ -315,6 +327,81 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     // Put the dense box's centre on the cell's centre, both axes
     xOffset = -(dense.cx - 0.5) * meshW;
     yOffset = -(dense.cy - 0.5) * meshHeight;
+  } else if (isRowLayout && dense && canPlaceInViewport) {
+    // Row layout — the bird is centred on the *viewport*, not on its cell.
+    // The cell is the hero grid's right-hand column, so its middle sits well
+    // right of the page's middle; centring in it reads as a bird shoved into
+    // the corner. The axis is the dense body's own bbox centre (the same
+    // measurement the stacked fit uses) so the sparse tail, which is a long
+    // horizontal feature, cannot drag the bird off the mark it is aimed at.
+    const worldPerPx = viewport.width / size.width;
+    const halfCell = viewport.width / 2;
+    const bodyGap = BODY_MIN_GAP_PX * worldPerPx;
+    const tailGap = TAIL_MIN_GAP_PX * worldPerPx;
+
+    // Size: the contain fit's vertical budget, unchanged — CELL_PADDING free
+    // above and below — and a width that leaves the body its own margin at
+    // both cell edges. The old horizontal budget (availW plus 2 x MASS_BIAS)
+    // is gone with the centroid it was paying for.
+    const byHeight  = viewport.height * (1 - 2 * CELL_PADDING) * MESH_ASPECT;
+    const byBodyFit = Math.max(0, viewport.width - 2 * bodyGap) / dense.w;
+    meshW = Math.min(byHeight, byBodyFit);
+
+    // Target, in the cell's own world coordinates: the viewport's centre line.
+    // documentElement.clientWidth, not innerWidth — getBoundingClientRect and
+    // the layout viewport both exclude a classic scrollbar, innerWidth does not.
+    const viewportCentrePx = document.documentElement.clientWidth / 2;
+    const cellCentrePx = cellRect.left + cellRect.width / 2;
+    const target = (viewportCentrePx - cellCentrePx) * worldPerPx;
+
+    // Placement, as a position for the dense body's centre. Narrow desktops
+    // put the viewport's centre inside — or left of — the text column, where
+    // the body cannot follow it: the clamp then parks the body as far left as
+    // its margin allows, which is as close to the target as it can get.
+    const place = (w: number) => {
+      const leftArm  = (dense.cx - dense.x0) * w;
+      const rightArm = (dense.x1 - dense.cx) * w;
+      return Math.min(
+        Math.max(target, -halfCell + bodyGap + leftArm),
+        halfCell - bodyGap - rightArm
+      );
+    };
+    let bodyCentre = place(meshW);
+
+    // The tail may run left past the body's margin, but not out of the cell:
+    // the cell's left edge is the text column's right edge. Where the body did
+    // reach the viewport's centre there is room to buy that by narrowing the
+    // mesh — the body only shrinks, it does not move — so buy it. Where the
+    // placement is already clamped there is not: the body's own margin sits
+    // right of where the tail would have to start, so the two rules cannot
+    // both hold, and rule one is the body's. The tail is then cut at the cell
+    // boundary by the crow cell's overflow-hidden, exactly as it is stacked —
+    // which is also why it can never reach the text column either way.
+    const tailArm = dense.cx - dense.xInk0;
+    if (bodyCentre === target && target - tailArm * meshW < -halfCell + tailGap) {
+      meshW = Math.min(meshW, (target + halfCell - tailGap) / tailArm);
+      bodyCentre = place(meshW);
+    }
+
+    // Body centre -> plane centre. Vertically the reference is still the cell,
+    // but the axis is the dense box's centre here too, not the plane's.
+    xOffset = bodyCentre - (dense.cx - 0.5) * meshW;
+    yOffset = -(dense.cy - 0.5) * (meshW / MESH_ASPECT);
+  } else {
+    // Contain fit — the fallback when the texture cannot be measured (tainted
+    // canvas, no 2d context) or the cell has not been laid out yet, since it
+    // needs nothing but the aspect ratio. The mesh's whole box goes into the
+    // cell the way object-fit: contain would: the texture's 2:1 aspect
+    // preserved, CELL_PADDING free on every side, no hand-tuned offsets. The
+    // horizontal budget also pays for MASS_BIAS: the mesh is pushed left by
+    // that fraction of its own width so the dense mass — not the plane's
+    // geometric centre — lands in the middle of the cell, which costs an extra
+    // 2 x MASS_BIAS of width before the shifted box is symmetric about it.
+    const availW = viewport.width * (1 - 2 * CELL_PADDING);
+    const availH = viewport.height * (1 - 2 * CELL_PADDING);
+    meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
+    xOffset = -MASS_BIAS * meshW;
+    yOffset = 0;
   }
 
   const meshH = meshW / MESH_ASPECT;
