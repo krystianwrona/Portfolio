@@ -9,7 +9,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
-import { crowLayerOpacity } from "@/lib/crowScroll";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
 import { SvgOutlineTitle, type SvgOutlineTitleHandle } from "@/components/ui/SvgOutlineTitle";
 import { ProjectTitleFitProvider, useTitleFit } from "@/components/ui/ProjectTitleFit";
@@ -540,24 +539,14 @@ export default function Home() {
   // the box it must not draw into. Both are measured by CrowScene.
   const crowCellRef   = useRef<HTMLDivElement>(null);
   const heroTextRef   = useRef<HTMLDivElement>(null);
-  const crowLayerRef  = useRef<HTMLDivElement>(null);
   const scrollRef     = useRef(0);
   const mouseRef      = useRef({ x: 0, y: 0 });
   const isHoveringRef = useRef(false);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
 
-  // One scroll subscription drives both halves of the crow's exit: the shader
-  // reads scrollRef to blow the bird apart, and the layer's opacity follows the
-  // same number down so the canvas is gone by the time that cloud is uniform
-  // (see lib/crowScroll). A second listener would only be able to disagree.
   useEffect(() => {
-    const apply = (v: number) => {
-      scrollRef.current = v;
-      crowLayerRef.current?.style.setProperty("--crow-opacity", crowLayerOpacity(v).toFixed(3));
-    };
-    apply(scrollYProgress.get());
-    return scrollYProgress.on("change", apply);
+    return scrollYProgress.on("change", (v) => { scrollRef.current = v; });
   }, [scrollYProgress]);
 
   return (
@@ -603,7 +592,6 @@ export default function Home() {
             text block in z, and transparent to the pointer, so the section
             keeps receiving the mousemove the crow tracks. */}
         <div
-          ref={crowLayerRef}
           role="img"
           aria-label={t('hero.aria.crow')}
           className="crow-canvas pointer-events-none absolute inset-0 z-10"

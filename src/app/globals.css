@@ -69,10 +69,6 @@ body {
    No hole, and so no hole's edge — the vertical seam of half-lit dots the
    exclusion box left beside the headline was the edge of its own feather. */
 .crow-canvas {
-  /* Written by the hero's scroll handler (see lib/crowScroll): 1 while the bird
-     is assembled, easing to 0 as the scroll disperses it into a uniform cloud —
-     which is the only field the mask's ramp would show up against. */
-  opacity: var(--crow-opacity, 1);
   --spill-start: 0px;
   --spill-end: 0px;
   --hole-l: -9999px;
