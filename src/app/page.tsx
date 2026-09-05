@@ -116,6 +116,29 @@ const PERSON_JSON_LD = {
   ],
 };
 
+// Scroll blows the hero crow apart: CrowScene's vertex shader moves every
+// particle `uScroll^2 * 2.5 * 45` mesh widths outward, uScroll being the page's
+// own scroll progress. These two mirror those literals — the spread has to be
+// the number the particles are actually moving by, so a change in the shader is
+// a change here. (Nothing else may touch the bird's logic; this only reads it.)
+const SCROLL_EASE_K = 2.5;
+const SCROLL_EXPLODE = 45;
+
+// Spread, in mesh widths, by which the cloud is even enough that the column
+// mask's ramp would read as a band across it — and even enough that dropping
+// the mask outright shows nothing, since there is no longer a tail to keep off
+// the copy. A tenth of a mesh width is well past the last of the bird's shape.
+const MASK_OPEN_SPREAD = 0.1;
+
+/** How far open the crow's column mask is at a given scroll progress (0..1). */
+function crowMaskOpen(scrollProgress: number): number {
+  const spread = scrollProgress * scrollProgress * SCROLL_EASE_K * SCROLL_EXPLODE;
+  // Linear in the spread, which is already flat at the top — the spread grows
+  // with the square of the scroll, so the ramp holds still for the first pixels
+  // and then opens quickly, well inside the dispersion it is hiding behind.
+  return Math.min(1, Math.max(0, spread / MASK_OPEN_SPREAD));
+}
+
 const HOW_I_WORK_STEPS = [
   { number: "01", titleKey: "about.work.step1.title", textKey: "about.work.step1.text" },
   { number: "02", titleKey: "about.work.step2.title", textKey: "about.work.step2.text" },
@@ -539,15 +562,31 @@ export default function Home() {
   // the box it must not draw into. Both are measured by CrowScene.
   const crowCellRef   = useRef<HTMLDivElement>(null);
   const heroTextRef   = useRef<HTMLDivElement>(null);
+  const crowLayerRef  = useRef<HTMLDivElement>(null);
   const scrollRef     = useRef(0);
   const mouseRef      = useRef({ x: 0, y: 0 });
   const isHoveringRef = useRef(false);
 
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
 
+  // One subscription drives both the dispersion and the mask that has to get
+  // out of its way: the shader reads scrollRef to blow the bird apart, and the
+  // same number opens the column mask as it goes. A second listener could only
+  // disagree with this one about how far along the explosion is.
+  //
+  // Reduced motion is the case where they must not move together: the shader
+  // multiplies its explode by (1 - uReduced), so the bird stays assembled and
+  // its tail keeps reaching into the copy's column however far the page is
+  // scrolled. The mask is still doing real work there, so it stays put.
   useEffect(() => {
-    return scrollYProgress.on("change", (v) => { scrollRef.current = v; });
-  }, [scrollYProgress]);
+    const apply = (v: number) => {
+      scrollRef.current = v;
+      const open = shouldReduceMotion ? 0 : crowMaskOpen(v);
+      crowLayerRef.current?.style.setProperty("--mask-open", open.toFixed(3));
+    };
+    apply(scrollYProgress.get());
+    return scrollYProgress.on("change", apply);
+  }, [scrollYProgress, shouldReduceMotion]);
 
   return (
     <main
@@ -592,6 +631,7 @@ export default function Home() {
             text block in z, and transparent to the pointer, so the section
             keeps receiving the mousemove the crow tracks. */}
         <div
+          ref={crowLayerRef}
           role="img"
           aria-label={t('hero.aria.crow')}
           className="crow-canvas pointer-events-none absolute inset-0 z-10"

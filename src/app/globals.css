@@ -71,6 +71,12 @@ body {
 .crow-canvas {
   --spill-start: 0px;
   --spill-end: 0px;
+  /* 0 while the bird is assembled, 1 once the scroll has dispersed it — written
+     by the hero's scroll handler in page.tsx. The column ramp only earns its
+     place while there is a tail to keep off the copy; on the uniform cloud the
+     scroll leaves behind, the same gradient is a band with a wall at its foot.
+     So it collapses: both stops scale to zero and the mask becomes a no-op. */
+  --mask-open: 0;
   --hole-l: -9999px;
   --hole-r: -9999px;
   --hole-t: -9999px;
@@ -92,8 +98,13 @@ body {
           mask-composite: intersect, add, add, add, add;
 
   @variant hero-row {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end));
-            mask-image: linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end));
+    /* Both stops ride --mask-open to 0 together, so the ramp shrinks toward the
+       left edge rather than sweeping across the cloud, and at 1 the gradient is
+       #000 from 0 — the mask paints everything. Only this layout scales them:
+       the stacked mask is a cut at the page margin, framing that holds whether
+       the bird is a bird or a cloud. */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent calc(var(--spill-start) * (1 - var(--mask-open))), #000 calc(var(--spill-end) * (1 - var(--mask-open))));
+            mask-image: linear-gradient(to right, transparent 0, transparent calc(var(--spill-start) * (1 - var(--mask-open))), #000 calc(var(--spill-end) * (1 - var(--mask-open))));
     /* add is the initial value: with one layer there is nothing to compose
        with, and the intersect above would meet an empty backdrop and clear the
        whole mask. */
