@@ -41,30 +41,33 @@ body {
 
 /* ── Crow canvas ────────────────────────────────────────────────────────────
    The canvas spans the whole hero section, so the crow's sparse tail is free to
-   run left out of its grid cell and into the text column — which is where it
-   wants to go, and where an overflow box used to cut it off on a ruled line of
-   half-dots. What holds it back now is this mask, in two parts, both driven by
-   custom properties CrowScene measures off the live layout (see "Mask
-   geometry" there). The declared values are the ones that make each layer do
-   nothing, so an unmeasured canvas paints in full rather than vanishing.
+   run left out of its grid cell and towards the copy — which is where it wants
+   to go, and where an overflow box used to cut it off on a ruled line of
+   half-dots. What holds it back now is this mask, driven by custom properties
+   CrowScene measures off the live layout (see "Mask geometry" there). The
+   declared values are the ones that make each layer do nothing, so an
+   unmeasured canvas paints in full rather than vanishing.
 
-   1. The spill ramp fades the tail in between --spill-start and --spill-end,
-      which sits a third of the text column short of the cell. The tail arrives
-      out of the page instead of starting on an edge. Stacked there is no column
-      to arrive out of: both ends land on the cell's own left edge, the ramp
-      becomes a cut, and the page margin stays clear — the same framing the
-      overflow box used to give the portrait crow.
+   The two layouts need different shapes, because the copy sits in a different
+   place in each.
 
-   2. The exclusion cuts a hole around the hero copy — clear to --hole-*, which
-      CrowScene has already inset by TEXT_CLEARANCE_PX, then TEXT_FEATHER_PX
-      more to fade back to full ink so the hole never reads as an outline. It
-      is built as the union (add) of the four half-planes outside that box,
-      because a mask layer can only be one gradient and "outside a rectangle"
-      is four of them.
+   Stacked (the rule below), the copy is under the crow, so the mask is a ramp
+   plus a hole. The ramp's two ends land half a pixel apart on the cell's left
+   edge: it is a cut, and the page margin stays clear — the framing the overflow
+   box used to give the portrait crow. The hole is cut around the copy, clear to
+   --hole-*, which CrowScene has already inset by TEXT_CLEARANCE_PX, then
+   --hole-feather more to fade back to full ink. It takes four layers because a
+   mask layer can only be one gradient and "outside a rectangle" is four of
+   them, unioned (add); the ramp then intersects that union, so a particle is
+   painted only where both agree. Older WebKit gets the same shape through the
+   legacy composite keywords, declared first so the standard property wins
+   wherever it exists.
 
-   The spill then intersects that union: a particle is painted only where both
-   agree. Older WebKit gets the same shape through the legacy composite
-   keywords, declared first so the standard property wins wherever it exists. */
+   Column, the copy is beside the crow, and one ramp does the whole job: it
+   starts --spill-start, a hair clear of the copy's right edge, so nothing is
+   painted over the copy or above it, and climbs to full ink at --spill-end.
+   No hole, and so no hole's edge — the vertical seam of half-lit dots the
+   exclusion box left beside the headline was the edge of its own feather. */
 .crow-canvas {
   --spill-start: 0px;
   --spill-end: 0px;
@@ -87,6 +90,16 @@ body {
     linear-gradient(to bottom, transparent var(--hole-b), #000 calc(var(--hole-b) + var(--hole-feather)));
   -webkit-mask-composite: source-in, source-over, source-over, source-over, source-over;
           mask-composite: intersect, add, add, add, add;
+
+  @variant hero-row {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end));
+            mask-image: linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end));
+    /* add is the initial value: with one layer there is nothing to compose
+       with, and the intersect above would meet an empty backdrop and clear the
+       whole mask. */
+    -webkit-mask-composite: source-over;
+            mask-composite: add;
+  }
 }
 
 /* ── Skip to content link ───────────────────────── */

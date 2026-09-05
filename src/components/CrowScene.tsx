@@ -170,22 +170,28 @@ const BODY_MIN_GAP_PX = 48;
 
 // ── Spill (column layout) ────────────────────────────────────────────────────
 // The tail is no longer cut at the cell's edge: the canvas covers the whole
-// hero, and the particles run on into the text column, where the mask fades
-// them in instead. The fade ends this far short of the cell's left edge — a
-// share of the text column's width, floored and capped so the ramp is neither
-// a hard rule on a narrow page nor half the column on a wide one.
-const SPILL_OF_TEXT_COL = 0.3;
-const SPILL_MIN_PX = 160;
-const SPILL_MAX_PX = 360;
+// hero, and the particles run on into the text column, where one ramp fades
+// them in. It starts clear of the copy by this much, which is the whole of the
+// copy's protection — nothing is painted left of the ramp's start, so the box
+// the copy occupies and the space above it are both untouched without a second
+// mask layer to cut a hole and leave its edge showing.
+const COPY_CLEARANCE_PX = 24;
+// How long the fade runs. Long enough that the tail arrives as a gradient
+// rather than at an edge, which is the whole point of not clipping it.
+const SPILL_RUN_PX = 300;
+// ...and it always reaches full ink at least this far inside the cell, so a
+// narrow column cannot leave the ramp still climbing where the body starts.
+const CELL_OVERSHOOT_PX = 80;
 // Stacked, the only thing left of the cell is the page's own margin, and the
 // margin belongs to the page: the tail stops at the cell's edge exactly as the
 // old overflow box stopped it. The ramp collapses to this half-pixel there,
 // which is a cut the edge cannot alias on rather than a fade.
 const STACKED_CUT_PX = 0.5;
-// ── Text-block exclusion (both layouts) ──────────────────────────────────────
-// The copy is the one thing the tail may not reach. The mask cuts a hole around
-// the text block's own box: clear by this much on every side, then this much
-// again to fade back to full ink, so the exclusion never shows as an outline.
+// ── Text-block exclusion (stacked layout) ────────────────────────────────────
+// Stacked, the copy is below the crow rather than beside it, so the ramp — a
+// horizontal one — cannot protect it and the mask cuts a hole around the text
+// block's own box instead: clear by this much on every side, then this much
+// again to fade back to full ink, so the exclusion never reads as an outline.
 const TEXT_CLEARANCE_PX = 48;
 const TEXT_FEATHER_PX = 64;
 // The dense body is this share of the *viewport's* width. Sizing off the
@@ -465,24 +471,36 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
   // its particles are painted.
   const cellLeftLocal = cellRect.left - canvasRect.left;
   const textEl = textRef.current;
-  // The text column is the grid's first track: the copy's own left edge to
-  // where the cell begins. The spill fades in over a share of that, so the ramp
-  // grows with the column instead of being one fixed distance on every page.
-  const textColW = textEl ? cellLeftLocal - textEl.offsetLeft : 0;
-  // Where the ramp starts and where it reaches full ink. In the column layout
-  // it starts at the section's edge and runs the whole way in, so the tail
-  // arrives out of the page; stacked, both ends sit on the cell's own left edge
-  // and the ramp is a cut, leaving the page margin clear.
-  const spillStartPx = isRowLayout ? 0 : cellLeftLocal - STACKED_CUT_PX;
-  const spillEndPx = isRowLayout
-    ? cellLeftLocal - Math.min(SPILL_MAX_PX, Math.max(SPILL_MIN_PX, SPILL_OF_TEXT_COL * textColW))
-    : cellLeftLocal;
+  // offsetLeft/Width, not a rect: the text block animates in on a transform,
+  // and the mask belongs on the box it settles into, not on the one it is
+  // passing through. Measured from the section's padding box, which is exactly
+  // the box the canvas is stretched over.
+  const textRight = textEl ? textEl.offsetLeft + textEl.offsetWidth : null;
 
-  // offsetLeft/Top rather than a rect: the text block animates in on a
-  // transform, and the hole belongs on the box it settles into, not on the one
-  // it is passing through. Both are measured from the section's padding box,
-  // which is exactly the box the canvas is stretched over. With no text block
-  // to read, an empty hole off the top-left corner leaves the layer opaque.
+  // Where the ramp starts, and where it reaches full ink.
+  let spillStartPx: number;
+  let spillEndPx: number;
+  if (!isRowLayout) {
+    // Stacked: both ends on the cell's left edge. The ramp is a cut and the
+    // page margin stays clear — the framing the old overflow box gave.
+    spillStartPx = cellLeftLocal - STACKED_CUT_PX;
+    spillEndPx = cellLeftLocal;
+  } else if (textRight !== null) {
+    // Column: the ramp begins just clear of the copy and climbs from there, so
+    // the tail dissolves into the column instead of arriving on an edge — and
+    // because nothing at all is painted before it starts, the copy needs no
+    // exclusion box, whose own edge was the thing that showed.
+    spillStartPx = textRight + COPY_CLEARANCE_PX;
+    spillEndPx = Math.max(spillStartPx + SPILL_RUN_PX, cellLeftLocal + CELL_OVERSHOOT_PX);
+  } else {
+    // No copy to measure — paint in full rather than vanish
+    spillStartPx = 0;
+    spillEndPx = 0;
+  }
+
+  // The stacked layout's hole, from the same transform-free box. With no text
+  // block to read, an empty hole off the top-left corner leaves the layer
+  // opaque — the column layout ignores these four entirely.
   const holeL = textEl ? textEl.offsetLeft - TEXT_CLEARANCE_PX : -9999;
   const holeR = textEl ? textEl.offsetLeft + textEl.offsetWidth + TEXT_CLEARANCE_PX : -9999;
   const holeT = textEl ? textEl.offsetTop - TEXT_CLEARANCE_PX : -9999;
