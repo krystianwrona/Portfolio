@@ -48,11 +48,12 @@ body {
    geometry" there). The declared values are the ones that make each layer do
    nothing, so an unmeasured canvas paints in full rather than vanishing.
 
-   1. The spill ramp fades the tail in from the section's left edge to
-      --spill-end, which sits a third of the text column short of the cell. The
-      tail arrives out of the page instead of starting on an edge. Stacked,
-      --spill-end is 0: a zero-length ramp is fully opaque and the layer is
-      inert, so the portrait crow keeps the framing it has.
+   1. The spill ramp fades the tail in between --spill-start and --spill-end,
+      which sits a third of the text column short of the cell. The tail arrives
+      out of the page instead of starting on an edge. Stacked there is no column
+      to arrive out of: both ends land on the cell's own left edge, the ramp
+      becomes a cut, and the page margin stays clear — the same framing the
+      overflow box used to give the portrait crow.
 
    2. The exclusion cuts a hole around the hero copy — clear to --hole-*, which
       CrowScene has already inset by TEXT_CLEARANCE_PX, then TEXT_FEATHER_PX
@@ -65,6 +66,7 @@ body {
    agree. Older WebKit gets the same shape through the legacy composite
    keywords, declared first so the standard property wins wherever it exists. */
 .crow-canvas {
+  --spill-start: 0px;
   --spill-end: 0px;
   --hole-l: -9999px;
   --hole-r: -9999px;
@@ -72,13 +74,13 @@ body {
   --hole-b: -9999px;
   --hole-feather: 64px;
   -webkit-mask-image:
-    linear-gradient(to right, transparent 0, #000 var(--spill-end)),
+    linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end)),
     linear-gradient(to right, #000 calc(var(--hole-l) - var(--hole-feather)), transparent var(--hole-l)),
     linear-gradient(to right, transparent var(--hole-r), #000 calc(var(--hole-r) + var(--hole-feather))),
     linear-gradient(to bottom, #000 calc(var(--hole-t) - var(--hole-feather)), transparent var(--hole-t)),
     linear-gradient(to bottom, transparent var(--hole-b), #000 calc(var(--hole-b) + var(--hole-feather)));
   mask-image:
-    linear-gradient(to right, transparent 0, #000 var(--spill-end)),
+    linear-gradient(to right, transparent 0, transparent var(--spill-start), #000 var(--spill-end)),
     linear-gradient(to right, #000 calc(var(--hole-l) - var(--hole-feather)), transparent var(--hole-l)),
     linear-gradient(to right, transparent var(--hole-r), #000 calc(var(--hole-r) + var(--hole-feather))),
     linear-gradient(to bottom, #000 calc(var(--hole-t) - var(--hole-feather)), transparent var(--hole-t)),

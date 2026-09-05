@@ -177,6 +177,11 @@ const BODY_MIN_GAP_PX = 48;
 const SPILL_OF_TEXT_COL = 0.3;
 const SPILL_MIN_PX = 160;
 const SPILL_MAX_PX = 360;
+// Stacked, the only thing left of the cell is the page's own margin, and the
+// margin belongs to the page: the tail stops at the cell's edge exactly as the
+// old overflow box stopped it. The ramp collapses to this half-pixel there,
+// which is a cut the edge cannot alias on rather than a fade.
+const STACKED_CUT_PX = 0.5;
 // ── Text-block exclusion (both layouts) ──────────────────────────────────────
 // The copy is the one thing the tail may not reach. The mask cuts a hole around
 // the text block's own box: clear by this much on every side, then this much
@@ -464,11 +469,14 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
   // where the cell begins. The spill fades in over a share of that, so the ramp
   // grows with the column instead of being one fixed distance on every page.
   const textColW = textEl ? cellLeftLocal - textEl.offsetLeft : 0;
+  // Where the ramp starts and where it reaches full ink. In the column layout
+  // it starts at the section's edge and runs the whole way in, so the tail
+  // arrives out of the page; stacked, both ends sit on the cell's own left edge
+  // and the ramp is a cut, leaving the page margin clear.
+  const spillStartPx = isRowLayout ? 0 : cellLeftLocal - STACKED_CUT_PX;
   const spillEndPx = isRowLayout
     ? cellLeftLocal - Math.min(SPILL_MAX_PX, Math.max(SPILL_MIN_PX, SPILL_OF_TEXT_COL * textColW))
-    // Stacked there is no column to spill into: a zero-length ramp leaves the
-    // layer fully opaque, which is a mask that does nothing.
-    : 0;
+    : cellLeftLocal;
 
   // offsetLeft/Top rather than a rect: the text block animates in on a
   // transform, and the hole belongs on the box it settles into, not on the one
@@ -487,6 +495,7 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
     const holder = gl.domElement.closest(".crow-canvas") as HTMLElement | null;
     if (!holder) return;
     const px = (v: number) => `${v.toFixed(1)}px`;
+    holder.style.setProperty("--spill-start", px(spillStartPx));
     holder.style.setProperty("--spill-end", px(spillEndPx));
     holder.style.setProperty("--hole-l", px(holeL));
     holder.style.setProperty("--hole-r", px(holeR));
@@ -495,7 +504,7 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
     // The feather rides along so the clearance and the fade that follows it
     // stay defined next to each other rather than one here and one in the CSS
     holder.style.setProperty("--hole-feather", px(TEXT_FEATHER_PX));
-  }, [gl, spillEndPx, holeL, holeR, holeT, holeB]);
+  }, [gl, spillStartPx, spillEndPx, holeL, holeR, holeT, holeB]);
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
   // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every
