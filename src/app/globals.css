@@ -47,14 +47,19 @@ body {
    the page. Side-by-side layout only: stacked, the cut edge is the page's own
    left margin, where there is no column edge to hide.
 
-   The ramp is BODY_MIN_GAP_PX from CrowScene.tsx. That gap is how close the
-   dense body may come to this edge, so a ramp of exactly that length is spent
-   entirely on tail and is back to full opacity by the body's leftmost possible
-   position — the fade can never touch the bird itself. */
+   The ramp is measured, not fixed: CrowScene sets --crow-mask-ramp to the
+   distance it actually left between the cell's left edge and the dense body's,
+   capped at MASK_RAMP_MAX_PX. That distance is all tail, so the fade is back to
+   full opacity before the body starts — it can never touch the bird itself.
+   Where the body is clamped against its own BODY_MIN_GAP_PX margin the ramp is
+   that same 48px, the tightest it ever gets; where the cell is wide enough to
+   leave the body free of the clamp, the tail gets a longer dissolve. The
+   literal below is that floor, standing in until the first measurement lands
+   and after one that fails. */
 .crow-cell {
   @variant hero-row {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 48px);
-            mask-image: linear-gradient(to right, transparent 0, #000 48px);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--crow-mask-ramp, 48px));
+            mask-image: linear-gradient(to right, transparent 0, #000 var(--crow-mask-ramp, 48px));
   }
 }
 

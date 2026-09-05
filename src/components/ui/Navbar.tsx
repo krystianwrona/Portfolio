@@ -44,8 +44,16 @@ export function Navbar() {
 
   const displayCrow = showCrow || logoHovered;
 
-  // Active section via IntersectionObserver
+  // Which link is lit. The observer below only ever sees the homepage's
+  // sections, so off it the state would keep whatever it last saw — on a case
+  // study that is "home", lighting START on a page that is not the start.
+  // The route answers it there instead: every /projects/* page is PROJEKTY.
+  const activeLink = pathname?.startsWith("/projects") ? "projects" : activeSection;
+
+  // Active section via IntersectionObserver — homepage only; the sections
+  // simply do not exist anywhere else
   useEffect(() => {
+    if (!isHomePage) return;
     const sectionIds = ["home", "projects", "about", "contact"];
     const observers: IntersectionObserver[] = [];
     sectionIds.forEach((id) => {
@@ -59,7 +67,7 @@ export function Navbar() {
       observers.push(observer);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [isHomePage]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -165,8 +173,9 @@ export function Navbar() {
               key={link.key}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
+              aria-current={activeLink === link.sectionId ? "true" : undefined}
               className={`transition-colors duration-300 magnetic-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2 focus-visible:rounded-sm ${
-                activeSection === link.sectionId
+                activeLink === link.sectionId
                   ? "font-black text-[#111111] opacity-100"
                   : "hover:text-[#111111]/90"
               }`}

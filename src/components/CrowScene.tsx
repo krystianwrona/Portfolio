@@ -162,10 +162,17 @@ const DENSE_MIN_GAP_PX = 16;
 // cell: the dense body stays this far inside both cell edges, and that clamp is
 // the only thing that ever moves the bird off the viewport's centre line. The
 // sparse tail runs past the gap and is cut by the cell's own overflow — see the
-// mask on .crow-cell in globals.css, whose ramp is this same 48px, so the fade
-// is spent entirely on tail and has always finished by the leftmost position
-// the body can be clamped to.
+// mask on .crow-cell in globals.css, whose ramp is measured against this gap
+// below, so the fade is spent entirely on tail and has always finished by the
+// leftmost position the body can be clamped to. Where the clamp binds, that
+// measurement is exactly this 48px.
 const BODY_MIN_GAP_PX = 48;
+// Ceiling on the tail's fade. The mask ramp is the gap the fit actually left
+// between the cell's left edge and the body's, so the fade is spent entirely on
+// tail; on a wide page that gap is hundreds of px, and a fade that long turns
+// the tail into a smear. 160px is where the dissolve stops reading as a fade
+// and starts reading as the tail simply being fainter.
+const MASK_RAMP_MAX_PX = 160;
 // The dense body is this share of the *viewport's* width. Sizing off the
 // viewport rather than off the cell is what keeps the bird growing evenly with
 // the page: the cell is whatever the text column leaves over, and that column's
@@ -300,6 +307,9 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   let meshW: number;
   let xOffset: number;
   let yOffset: number;
+  // Column layout only — how much room the fit left for the tail, in CSS px.
+  // null everywhere else, which hands the mask back its CSS fallback.
+  let maskRampPx: number | null = null;
 
   if (!isRowLayout && dense) {
     // Stacked layout — fit the dense body rather than the cloud. The cell is
@@ -377,6 +387,15 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     // text column. Nothing about the tail is allowed to cost the body width.
     const bodyCentre = place(meshW);
 
+    // The mask's ramp, from the same numbers that placed the body: the tail
+    // runs from the cell's left edge to the body's left edge, and that whole
+    // distance is fade-able. Where the clamp binds, bodyCentre sits at
+    // -halfCell + bodyGap + leftArm and this is exactly BODY_MIN_GAP_PX; where
+    // the body is free of the clamp it is however much room the viewport's
+    // centre line left, capped so a wide page does not smear the tail.
+    const bodyLeft = bodyCentre - (dense.cx - dense.x0) * meshW;
+    maskRampPx = Math.min(MASK_RAMP_MAX_PX, (bodyLeft + halfCell) / worldPerPx);
+
     // Body centre -> plane centre. Vertically the reference is still the cell,
     // but the axis is the dense box's centre here too, not the plane's.
     xOffset = bodyCentre - (dense.cx - 0.5) * meshW;
@@ -399,6 +418,16 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   }
 
   const meshH = meshW / MESH_ASPECT;
+
+  // Publish the ramp to the cell that carries the mask. Written from an effect
+  // rather than during render — the value is derived from a layout the render
+  // has just measured, and it changes only when that measurement does.
+  useEffect(() => {
+    const cell = gl.domElement.closest(".crow-cell") as HTMLElement | null;
+    if (!cell) return;
+    if (maskRampPx === null) cell.style.removeProperty("--crow-mask-ramp");
+    else cell.style.setProperty("--crow-mask-ramp", `${maskRampPx.toFixed(1)}px`);
+  }, [gl, maskRampPx]);
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
   // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every

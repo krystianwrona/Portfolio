@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   motion, useScroll, AnimatePresence,
-  useInView, useMotionValue, useSpring, animate, useReducedMotion,
+  useMotionValue, useSpring, useReducedMotion,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
@@ -144,42 +144,6 @@ const ARCHITECTS_EYE_ITEMS = [
     textKey: "about.eye.item3.text",
   },
 ];
-
-/* ─── COUNT UP ───────────────────────────────────────────────────────────── */
-
-function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(0, to, {
-      duration: 2,
-      ease: "easeOut",
-      onUpdate: (v) => setDisplay(Math.round(v)),
-    });
-    return () => controls.stop();
-  }, [inView, to]);
-  return <span ref={ref}>{display}{suffix}</span>;
-}
-
-/* ─── INFINITY SYMBOL — fade-in + scale ─────────────────────────────────── */
-
-function InfinitySymbol() {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  return (
-    <motion.span
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      style={{ display: "inline-block" }}
-    >
-      ∞
-    </motion.span>
-  );
-}
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
@@ -672,8 +636,10 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Scroll indicator — decorative */}
-        <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20 hero-row:hidden">
+        {/* Scroll indicator — decorative. Column layout only: stacked, the
+            copy already runs to the bottom of the fold and the hint lands on
+            the CTA rather than below the hero. */}
+        <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 hidden flex-col items-center gap-2 pointer-events-none z-20 hero-row:flex">
           <motion.div
             animate={shouldReduceMotion ? {} : { y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
@@ -809,31 +775,6 @@ export default function Home() {
                 ))}
               </div>
             </motion.div>
-
-            {/* Stats — count up */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {[
-                { to: 5,  suffix: "+", labelKey: "about.stats.projects", infinity: false },
-                { to: 11, suffix: "+", labelKey: "about.stats.tools",    infinity: false },
-                { to: 0,  suffix: "",  labelKey: "about.stats.curiosity", infinity: true  },
-              ].map((stat, i) => (
-                <motion.div
-                  key={stat.labelKey}
-                  variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] } } }}
-                  className="flex-1 p-8 rounded-[32px] bg-[#111] text-[#F8F8F8] flex flex-col justify-between min-h-[160px]"
-                >
-                  <div
-                    className="font-display font-black text-5xl tracking-tighter mb-2"
-                    aria-label={stat.infinity ? t(stat.labelKey) : `${stat.to}${stat.suffix} ${t(stat.labelKey)}`}
-                  >
-                    <span aria-hidden="true">
-                      {stat.infinity ? <InfinitySymbol /> : <CountUp to={stat.to} suffix={stat.suffix} />}
-                    </span>
-                  </div>
-                  <p className="font-bold uppercase tracking-widest text-xs opacity-50">{t(stat.labelKey)}</p>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </section>

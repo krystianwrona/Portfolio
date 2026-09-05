@@ -50,7 +50,6 @@ Defined once in `src/lib/projects.ts` (`PROJECTS[id].brand`) — update there, n
 - Hero text block: widoczny od razu (fade + 12px translate, 600ms, start 300ms po mount) — NIE może czekać na załadowanie sceny z ptakiem. Kontener ma pointer-events: none, tylko przycisk i link mają auto, żeby ptak dalej reagował na kursor
 - prefers-reduced-motion: wyłącz animacje
 - Strona musi startować od góry (scrollTo 0,0)
--- CountUp animating intermediate values (0,1,2,3...) for screen readers is INTENTIONAL — do NOT add aria-hidden or sr-only overrides
-- ∞ symbol in stats is INTENTIONAL as-is — do NOT change its aria-label or add context
+- Favicon: `src/app/icon.svg` + `src/app/apple-icon.png` to znak K W z preloadera (Inter 900, kropka pominięta poniżej 32px) — nie dodawać z powrotem favicon.ico, bo przejmuje pierwszeństwo
 
 Podczas pracy nad interfejsem, animacjami lub audytem kodu, bezwzględnie stosuj zasady i wytyczne opisane w plikach Markdown znajdujących się w folderze .claude/skills/. Przeczytaj je przed wygenerowaniem komponentu.

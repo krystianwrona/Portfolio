@@ -24,7 +24,7 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.aria.crow': 'Animated crow illustration made of particles',
 
     // ── Selected Works ──
-    'works.title': 'Selected Works 2026',
+    'works.title': 'Selected Works 2023–2026',
     'works.ckl.category': 'Architecture / Spatial Design',
     'works.legalray.category': 'LawTech App',
     'works.adoptme.category': 'Adoption Platform',
@@ -41,9 +41,6 @@ export const translations: Record<string, Record<string, string>> = {
     'about.philosophy.text2': 'Today I build complete digital products: interface design, production frontend, and the AI workflow underneath. Working end to end means nothing gets lost in handoff — the person who decided the layout is the same person who shipped it.',
     'about.philosophy.text3': "What I care about is the part most projects skip: making something that's actually finished. Fast, considered, working as well on a three-year-old phone as on a studio display. Hungry for knowledge, concrete in execution, still looking for solutions nobody has tried yet.",
     'about.stack': 'Core Stack',
-    'about.stats.projects': 'Projects built',
-    'about.stats.tools': 'Tools & technologies',
-    'about.stats.curiosity': 'Curiosity & drive',
     'about.aria.stack': 'Core technology stack',
     'about.stack.group.frontend': 'Frontend',
     'about.stack.group.backend': 'Backend & Deploy',
@@ -70,7 +67,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item1.from.mobile': 'Space',
     'about.eye.item1.to': 'Information hierarchy',
     'about.eye.item1.to.mobile': 'Information',
-    'about.eye.item1.text': 'Moving someone through a building and moving them through an interface is the same discipline: deciding what they notice first, what waits until they need it, and how they always know where they are. Five years of designing space turned out to be five years of designing user flows.',
+    'about.eye.item1.text': 'Moving someone through a building and moving them through an interface is the same discipline: deciding what they notice first, what waits until they need it, and how they always know where they are. Three years at the drawing board and three on construction sites turned out to be six years of designing paths — first for people in buildings, now for users in interfaces.',
     'about.eye.item2.from': 'Composition',
     'about.eye.item2.to': 'Layout',
     'about.eye.item2.text': "Architectural boards taught me to compose — balance, light and proportion, knowing when a layout is crowded before anyone can explain why. That instinct transfers directly to a screen, and it's the part of design that's hardest to learn from tutorials.",
@@ -78,7 +75,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item3.from.mobile': 'Detail',
     'about.eye.item3.to': 'Microinteractions',
     'about.eye.item3.to.mobile': 'Interactions',
-    'about.eye.item3.text': "In architecture, quality lives in the detail — the joint nobody notices when it's right. Interfaces work the same way: the transition, the hover state, the loading skeleton. Users won't name them, but they feel the difference.",
+    'about.eye.item3.text': "In architecture, quality lives in the detail — the joint nobody notices when it's right. Three years of construction quality control taught me that better than designing ever did. Interfaces work the same way: the transition, the hover state, the loading skeleton. Users won't name them, but they feel the difference.",
 
     // ── Contact ──
     'contact.headline.1': "let's build",
@@ -478,7 +475,7 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.aria.crow': 'Animowana ilustracja wrony z cząsteczek',
 
     // ── Selected Works ──
-    'works.title': 'Wybrane projekty 2026',
+    'works.title': 'Wybrane projekty 2023–2026',
     'works.ckl.category': 'Architektura / Projektowanie przestrzenne',
     'works.legalray.category': 'Aplikacja LawTech',
     'works.adoptme.category': 'Platforma adopcyjna',
@@ -495,9 +492,6 @@ export const translations: Record<string, Record<string, string>> = {
     'about.philosophy.text2': 'Dziś buduję kompletne produkty cyfrowe: projekt interfejsu, produkcyjny frontend i cały warsztat AI pod spodem. Praca end to end oznacza, że nic nie ginie po drodze — ta sama osoba, która zdecydowała o layoucie, doprowadza go do wdrożenia.',
     'about.philosophy.text3': 'Zależy mi na tym, co większość projektów pomija: żeby produkt był naprawdę skończony. Szybki, przemyślany, działający tak samo dobrze na trzyletnim telefonie, jak na monitorze w studiu. Głodny wiedzy, konkretny w działaniu, wciąż szukam rozwiązań, których nikt jeszcze nie próbował.',
     'about.stack': 'Technologie',
-    'about.stats.projects': 'Zrealizowane projekty',
-    'about.stats.tools': 'Narzędzia i technologie',
-    'about.stats.curiosity': 'Ciekawość i pasja',
     'about.aria.stack': 'Podstawowe technologie',
     'about.stack.group.frontend': 'Frontend',
     'about.stack.group.backend': 'Backend i wdrożenie',
@@ -524,7 +518,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item1.from.mobile': 'Przestrzeń',
     'about.eye.item1.to': 'Hierarchia informacji',
     'about.eye.item1.to.mobile': 'Info',
-    'about.eye.item1.text': "Przeprowadzenie kogoś przez budynek i przez interfejs to w gruncie rzeczy to samo zadanie: decydujesz, co rzuci mu się w oczy najpierw, co ma poczekać, aż stanie się potrzebne, i jak sprawić, żeby przez cały czas wiedział, gdzie jest. Pięć lat projektowania przestrzeni okazało się pięcioma latami projektowania ścieżek użytkownika.",
+    'about.eye.item1.text': "Przeprowadzenie kogoś przez budynek i przez interfejs to w gruncie rzeczy to samo zadanie: decydujesz, co rzuci mu się w oczy najpierw, co ma poczekać, aż stanie się potrzebne, i jak sprawić, żeby przez cały czas wiedział, gdzie jest. Trzy lata przy desce i trzy na budowie okazały się sześcioma latami projektowania ścieżek — najpierw ludzi w budynku, teraz użytkowników w interfejsie.",
     'about.eye.item2.from': 'Kompozycja',
     'about.eye.item2.to': 'Layout',
     'about.eye.item2.text': "Plansze architektoniczne nauczyły mnie kompozycji — balansu, światła, proporcji, wyczucia, że układ jest przeładowany, jeszcze zanim ktokolwiek potrafi powiedzieć dlaczego. Ten instynkt przenosi się na ekran jeden do jednego i jest tą częścią projektowania, której najtrudniej nauczyć się z tutoriali.",
@@ -532,7 +526,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.eye.item3.from.mobile': 'Detal',
     'about.eye.item3.to': 'Mikrointerakcje',
     'about.eye.item3.to.mobile': 'Interakcje',
-    'about.eye.item3.text': "W architekturze o jakości decyduje detal — złącze, którego nikt nie zauważa, dopóki jest zrobione dobrze. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
+    'about.eye.item3.text': "W architekturze o jakości decyduje detal — złącze, którego nikt nie zauważa, dopóki jest zrobione dobrze. Trzy lata kontroli jakości na budowie nauczyły mnie tego lepiej niż projektowanie. Z interfejsami jest tak samo: animacja przejścia, stan hover, skeleton ładowania. Nikt ich nie nazwie po imieniu, ale każdy czuje różnicę.",
 
     // ── Contact ──
     'contact.headline.1': 'zbudujmy',
