@@ -47,6 +47,7 @@ Defined once in `src/lib/projects.ts` (`PROJECTS[id].brand`) — update there, n
 
 ## Ważne
 - NIGDY nie zmieniaj logiki ptaka (CrowShaderMesh, teraz w `src/components/CrowScene.tsx`) bez pytania
+- Canvas ptaka pokrywa całą sekcję hero (`.crow-canvas`, absolute inset-0). Pusty `.crow-cell` w gridzie to element pomiarowy — fit czyta jego rect, nie canvas. Zasięg cząsteczek ustala maska w globals.css (spill + dziura na blok tekstowy), nie overflow
 - Hero text block: widoczny od razu (fade + 12px translate, 600ms, start 300ms po mount) — NIE może czekać na załadowanie sceny z ptakiem. Kontener ma pointer-events: none, tylko przycisk i link mają auto, żeby ptak dalej reagował na kursor
 - prefers-reduced-motion: wyłącz animacje
 - Strona musi startować od góry (scrollTo 0,0)

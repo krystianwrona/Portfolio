@@ -161,18 +161,28 @@ const DENSE_MIN_GAP_PX = 16;
 // middle of the leftover column. One gap keeps that from pushing it out of the
 // cell: the dense body stays this far inside both cell edges, and that clamp is
 // the only thing that ever moves the bird off the viewport's centre line. The
-// sparse tail runs past the gap and is cut by the cell's own overflow — see the
-// mask on .crow-cell in globals.css, whose ramp is measured against this gap
-// below, so the fade is spent entirely on tail and has always finished by the
-// leftmost position the body can be clamped to. Where the clamp binds, that
-// measurement is exactly this 48px.
+// sparse tail runs past the gap and out of the cell entirely, into the text
+// column, where the spill fade in globals.css brings it in — see SPILL_* below.
+// The gap is what guarantees that fade only ever lands on tail: the body's left
+// edge can never come closer to the cell than this, and the fade ends well
+// short of the cell.
 const BODY_MIN_GAP_PX = 48;
-// Ceiling on the tail's fade. The mask ramp is the gap the fit actually left
-// between the cell's left edge and the body's, so the fade is spent entirely on
-// tail; on a wide page that gap is hundreds of px, and a fade that long turns
-// the tail into a smear. 160px is where the dissolve stops reading as a fade
-// and starts reading as the tail simply being fainter.
-const MASK_RAMP_MAX_PX = 160;
+
+// ── Spill (column layout) ────────────────────────────────────────────────────
+// The tail is no longer cut at the cell's edge: the canvas covers the whole
+// hero, and the particles run on into the text column, where the mask fades
+// them in instead. The fade ends this far short of the cell's left edge — a
+// share of the text column's width, floored and capped so the ramp is neither
+// a hard rule on a narrow page nor half the column on a wide one.
+const SPILL_OF_TEXT_COL = 0.3;
+const SPILL_MIN_PX = 160;
+const SPILL_MAX_PX = 360;
+// ── Text-block exclusion (both layouts) ──────────────────────────────────────
+// The copy is the one thing the tail may not reach. The mask cuts a hole around
+// the text block's own box: clear by this much on every side, then this much
+// again to fade back to full ink, so the exclusion never shows as an outline.
+const TEXT_CLEARANCE_PX = 48;
+const TEXT_FEATHER_PX = 64;
 // The dense body is this share of the *viewport's* width. Sizing off the
 // viewport rather than off the cell is what keeps the bird growing evenly with
 // the page: the cell is whatever the text column leaves over, and that column's
@@ -269,7 +279,9 @@ const ASSEMBLY_DURATION = 2.2;
 // the assembly until it starts lifting so the flight is actually seen
 const PRELOADER_MS = 1750;
 
-function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
+function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }: {
+  cellRef: { current: HTMLElement | null };
+  textRef: { current: HTMLElement | null };
   scrollRef: { current: number };
   mouseRef: { current: { x: number; y: number } };
   isHoveringRef: { current: boolean };
@@ -290,26 +302,54 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
   const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
   const [segments] = useState(() => (isMobileViewport ? 160 : 288));
 
+  // A cell resize used to re-render this component for free, because the
+  // canvas *was* the cell. It is the section now, and the cell can change size
+  // while the section does not — the language toggle reflows the hero copy, a
+  // late webfont changes its height, and either moves the row boundary the cell
+  // sits on. Watch both boxes and re-run the fit when they move.
+  const [, remeasure] = useState(0);
+  useEffect(() => {
+    const boxes = [cellRef.current, textRef.current].filter((el): el is HTMLElement => !!el);
+    if (!boxes.length) return;
+    const ro = new ResizeObserver(() => remeasure((n) => n + 1));
+    boxes.forEach((el) => ro.observe(el));
+    return () => ro.disconnect();
+  }, [cellRef, textRef]);
+
   // ── Fit ────────────────────────────────────────────────────────────────────
-  // The canvas fills one grid cell of the hero, so `viewport` here describes
-  // that cell in world units — not the window. There are two ways to fill it,
-  // chosen by the same media query the hero grid uses, so the crow and the
-  // layout can never disagree about which one they are in.
+  // The canvas covers the whole hero section, so `viewport` describes the
+  // section in world units. The crow is not fitted to it: it is fitted to the
+  // grid cell, exactly as before, and the cell is now an element the canvas
+  // measures rather than the canvas itself. Every budget below is therefore
+  // taken from the cell's rect, and the result is converted into the canvas's
+  // own coordinates at the end by `cellDx`/`cellDy`. There are two ways to fill
+  // the cell, chosen by the same media query the hero grid uses, so the crow
+  // and the layout can never disagree about which one they are in.
   const isRowLayout = useRowLayout();
   const dense = measureDenseBox(texture.image as HTMLImageElement);
-  // The cell's own place in the page, in CSS px. The row fit needs it: its
-  // reference is the viewport, and the cell knows nothing about the viewport
-  // except through this rect. Read every render — `size` changes on resize, so
-  // this is re-read exactly when the geometry it describes can have moved.
-  const cellRect = gl.domElement.getBoundingClientRect();
+  // Both boxes in CSS px, read every render — `size` changes on resize and the
+  // observer above covers the rest, so these are re-read exactly when the
+  // geometry they describe can have moved.
+  const canvasRect = gl.domElement.getBoundingClientRect();
+  const cellRect = cellRef.current?.getBoundingClientRect() ?? canvasRect;
   const canPlaceInViewport = dense !== null && size.width > 0 && cellRect.width > 0;
+
+  // World units per CSS px. Off the section's canvas now, not the cell's — the
+  // scale is the canvas's own, and every px-denominated budget below is
+  // converted through it, so the bird's size on screen is unchanged.
+  const worldPerPx = size.width > 0 ? viewport.width / size.width : 0;
+  // The cell, in world units, and where its centre sits relative to the
+  // canvas's. Everything the fit does is expressed against the cell's centre;
+  // these two carry the answer back to the canvas's centre, which is where the
+  // mesh's position is actually measured from.
+  const cellW = cellRect.width * worldPerPx;
+  const cellH = cellRect.height * worldPerPx;
+  const cellDx = (cellRect.left + cellRect.width / 2 - (canvasRect.left + canvasRect.width / 2)) * worldPerPx;
+  const cellDy = (canvasRect.top + canvasRect.height / 2 - (cellRect.top + cellRect.height / 2)) * worldPerPx;
 
   let meshW: number;
   let xOffset: number;
   let yOffset: number;
-  // Column layout only — how much room the fit left for the tail, in CSS px.
-  // null everywhere else, which hands the mask back its CSS fallback.
-  let maskRampPx: number | null = null;
 
   if (!isRowLayout && dense) {
     // Stacked layout — fit the dense body rather than the cloud. The cell is
@@ -317,25 +357,25 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     // spent on the sparse tail is a unit the bird does not get. Size the dense
     // box to DENSE_W_OF_CELL of the width, cap it at DENSE_H_MAX_OF_CELL of the
     // height, take whichever scale is smaller, and centre that box — not the
-    // plane — in the cell. The tail then hangs off the left edge and the crow
-    // cell clips it. No CELL_PADDING and no MASS_BIAS budget here: both exist
-    // to keep the tail inside, which is no longer the goal.
-    const worldPerPx = size.width > 0 ? viewport.width / size.width : 0;
+    // plane — in the cell. The tail then hangs off the cell's left edge and
+    // runs on into the page's own margin, where it thins out on its own. No
+    // CELL_PADDING and no MASS_BIAS budget here: both exist to keep the tail
+    // inside, which is no longer the goal.
     const minGap = DENSE_MIN_GAP_PX * worldPerPx;
     // Centred at DENSE_W_OF_CELL the gap is already ~6% of the cell, but on a
     // narrow enough cell 6% is under 16px — then the gap, not the target, sets
     // the width, so the body's right edge never crowds the cell's edge.
     const targetW = Math.min(
-      DENSE_W_OF_CELL * viewport.width,
-      Math.max(0, viewport.width - 2 * minGap)
+      DENSE_W_OF_CELL * cellW,
+      Math.max(0, cellW - 2 * minGap)
     );
     const byWidth  = targetW / dense.w;
-    const byHeight = (DENSE_H_MAX_OF_CELL * viewport.height * MESH_ASPECT) / dense.h;
+    const byHeight = (DENSE_H_MAX_OF_CELL * cellH * MESH_ASPECT) / dense.h;
     meshW = Math.min(byWidth, byHeight);
     const meshHeight = meshW / MESH_ASPECT;
     // Put the dense box's centre on the cell's centre, both axes
-    xOffset = -(dense.cx - 0.5) * meshW;
-    yOffset = -(dense.cy - 0.5) * meshHeight;
+    xOffset = -(dense.cx - 0.5) * meshW + cellDx;
+    yOffset = -(dense.cy - 0.5) * meshHeight + cellDy;
   } else if (isRowLayout && dense && canPlaceInViewport) {
     // Row layout — the bird is centred on the *viewport*, not on its cell.
     // The cell is the hero grid's right-hand column, so its middle sits well
@@ -343,8 +383,7 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     // the corner. The axis is the dense body's own bbox centre (the same
     // measurement the stacked fit uses) so the sparse tail, which is a long
     // horizontal feature, cannot drag the bird off the mark it is aimed at.
-    const worldPerPx = viewport.width / size.width;
-    const halfCell = viewport.width / 2;
+    const halfCell = cellW / 2;
     const bodyGap = BODY_MIN_GAP_PX * worldPerPx;
     // documentElement.clientWidth, not innerWidth — getBoundingClientRect and
     // the layout viewport both exclude a classic scrollbar, innerWidth does not.
@@ -361,8 +400,8 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     //     binds only where the cell is barely wider than the body it has to
     //     hold — around 1024px, where 40vw is 410px and the cell is 423px.
     const byViewport = BODY_W_OF_VIEWPORT * clientWidthPx * worldPerPx / dense.w;
-    const byHeight   = viewport.height * (1 - 2 * CELL_PADDING) * MESH_ASPECT;
-    const byBodyFit  = Math.max(0, viewport.width - 2 * bodyGap) / dense.w;
+    const byHeight   = cellH * (1 - 2 * CELL_PADDING) * MESH_ASPECT;
+    const byBodyFit  = Math.max(0, cellW - 2 * bodyGap) / dense.w;
     meshW = Math.min(byViewport, byHeight, byBodyFit);
 
     // Target, in the cell's own world coordinates: the viewport's centre line.
@@ -381,25 +420,18 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
         halfCell - bodyGap - rightArm
       );
     };
-    // The sparse tail runs left past the body's margin and out of the cell,
-    // where the cell's overflow-hidden cuts it and the cell's mask dissolves
-    // the cut — exactly as it is stacked, and also why it can never reach the
-    // text column. Nothing about the tail is allowed to cost the body width.
+    // The sparse tail runs left past the body's margin and out of the cell
+    // into the text column, where the spill fade brings it in and the exclusion
+    // hole keeps it off the copy. Nothing about the tail is allowed to cost the
+    // body width — the fade is spent on whatever room the clamp happens to
+    // leave, and the clamp answers to the body alone.
     const bodyCentre = place(meshW);
 
-    // The mask's ramp, from the same numbers that placed the body: the tail
-    // runs from the cell's left edge to the body's left edge, and that whole
-    // distance is fade-able. Where the clamp binds, bodyCentre sits at
-    // -halfCell + bodyGap + leftArm and this is exactly BODY_MIN_GAP_PX; where
-    // the body is free of the clamp it is however much room the viewport's
-    // centre line left, capped so a wide page does not smear the tail.
-    const bodyLeft = bodyCentre - (dense.cx - dense.x0) * meshW;
-    maskRampPx = Math.min(MASK_RAMP_MAX_PX, (bodyLeft + halfCell) / worldPerPx);
-
-    // Body centre -> plane centre. Vertically the reference is still the cell,
-    // but the axis is the dense box's centre here too, not the plane's.
-    xOffset = bodyCentre - (dense.cx - 0.5) * meshW;
-    yOffset = -(dense.cy - 0.5) * (meshW / MESH_ASPECT);
+    // Body centre -> plane centre, and cell coordinates -> canvas ones. The
+    // vertical reference is still the cell, and the axis is the dense box's
+    // centre here too, not the plane's.
+    xOffset = bodyCentre - (dense.cx - 0.5) * meshW + cellDx;
+    yOffset = -(dense.cy - 0.5) * (meshW / MESH_ASPECT) + cellDy;
   } else {
     // Contain fit — the fallback when the texture cannot be measured (tainted
     // canvas, no 2d context) or the cell has not been laid out yet, since it
@@ -410,24 +442,60 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
     // that fraction of its own width so the dense mass — not the plane's
     // geometric centre — lands in the middle of the cell, which costs an extra
     // 2 x MASS_BIAS of width before the shifted box is symmetric about it.
-    const availW = viewport.width * (1 - 2 * CELL_PADDING);
-    const availH = viewport.height * (1 - 2 * CELL_PADDING);
+    const availW = cellW * (1 - 2 * CELL_PADDING);
+    const availH = cellH * (1 - 2 * CELL_PADDING);
     meshW = Math.min(availW / (1 + 2 * MASS_BIAS), availH * MESH_ASPECT);
-    xOffset = -MASS_BIAS * meshW;
-    yOffset = 0;
+    xOffset = -MASS_BIAS * meshW + cellDx;
+    yOffset = cellDy;
   }
 
   const meshH = meshW / MESH_ASPECT;
 
-  // Publish the ramp to the cell that carries the mask. Written from an effect
-  // rather than during render — the value is derived from a layout the render
-  // has just measured, and it changes only when that measurement does.
+  // ── Mask geometry ──────────────────────────────────────────────────────────
+  // A canvas that spans the section can do two things it must not: start out of
+  // nowhere at the cell's edge, and draw over the copy. Both are answered by
+  // the mask, and both are measured here, in the canvas's own px, off the same
+  // two boxes the fit used. The stylesheet owns the gradients, this owns the
+  // numbers. Nothing here can move the bird — the mask only decides which of
+  // its particles are painted.
+  const cellLeftLocal = cellRect.left - canvasRect.left;
+  const textEl = textRef.current;
+  // The text column is the grid's first track: the copy's own left edge to
+  // where the cell begins. The spill fades in over a share of that, so the ramp
+  // grows with the column instead of being one fixed distance on every page.
+  const textColW = textEl ? cellLeftLocal - textEl.offsetLeft : 0;
+  const spillEndPx = isRowLayout
+    ? cellLeftLocal - Math.min(SPILL_MAX_PX, Math.max(SPILL_MIN_PX, SPILL_OF_TEXT_COL * textColW))
+    // Stacked there is no column to spill into: a zero-length ramp leaves the
+    // layer fully opaque, which is a mask that does nothing.
+    : 0;
+
+  // offsetLeft/Top rather than a rect: the text block animates in on a
+  // transform, and the hole belongs on the box it settles into, not on the one
+  // it is passing through. Both are measured from the section's padding box,
+  // which is exactly the box the canvas is stretched over. With no text block
+  // to read, an empty hole off the top-left corner leaves the layer opaque.
+  const holeL = textEl ? textEl.offsetLeft - TEXT_CLEARANCE_PX : -9999;
+  const holeR = textEl ? textEl.offsetLeft + textEl.offsetWidth + TEXT_CLEARANCE_PX : -9999;
+  const holeT = textEl ? textEl.offsetTop - TEXT_CLEARANCE_PX : -9999;
+  const holeB = textEl ? textEl.offsetTop + textEl.offsetHeight + TEXT_CLEARANCE_PX : -9999;
+
+  // Publish it to the element that carries the mask. Written from an effect
+  // rather than during render — these are derived from a layout the render has
+  // just measured, and they change only when that measurement does.
   useEffect(() => {
-    const cell = gl.domElement.closest(".crow-cell") as HTMLElement | null;
-    if (!cell) return;
-    if (maskRampPx === null) cell.style.removeProperty("--crow-mask-ramp");
-    else cell.style.setProperty("--crow-mask-ramp", `${maskRampPx.toFixed(1)}px`);
-  }, [gl, maskRampPx]);
+    const holder = gl.domElement.closest(".crow-canvas") as HTMLElement | null;
+    if (!holder) return;
+    const px = (v: number) => `${v.toFixed(1)}px`;
+    holder.style.setProperty("--spill-end", px(spillEndPx));
+    holder.style.setProperty("--hole-l", px(holeL));
+    holder.style.setProperty("--hole-r", px(holeR));
+    holder.style.setProperty("--hole-t", px(holeT));
+    holder.style.setProperty("--hole-b", px(holeB));
+    // The feather rides along so the clearance and the fade that follows it
+    // stay defined next to each other rather than one here and one in the CSS
+    holder.style.setProperty("--hole-feather", px(TEXT_FEATHER_PX));
+  }, [gl, spillEndPx, holeL, holeR, holeT, holeB]);
 
   // uPixelRatio scales gl_PointSize so dots stay crisp on retina screens, but
   // pre-"polish" dots had no DPR scaling at all (flat 2.0 base, same on every
@@ -565,7 +633,9 @@ function CrowShaderMesh({ scrollRef, mouseRef, isHoveringRef }: {
 
 /* ─── CROW SCENE — Canvas wrapper, lazy-loaded from page.tsx ────────────────── */
 
-export function CrowScene({ scrollRef, mouseRef, isHoveringRef }: {
+export function CrowScene({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }: {
+  cellRef: { current: HTMLElement | null };
+  textRef: { current: HTMLElement | null };
   scrollRef: { current: number };
   mouseRef: { current: { x: number; y: number } };
   isHoveringRef: { current: boolean };
@@ -573,12 +643,21 @@ export function CrowScene({ scrollRef, mouseRef, isHoveringRef }: {
   return (
     <Suspense fallback={<div className="absolute inset-0 bg-[#F5F5F4]" />}>
       <Canvas
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        // The canvas covers the hero's controls now, so it stays out of the
+        // pointer's way entirely: the mousemove the crow tracks is the
+        // section's, and it has to reach the section.
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
         camera={{ position: [0, 0, 5], fov: 45 }}
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: false }}
       >
-        <CrowShaderMesh scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
+        <CrowShaderMesh
+          cellRef={cellRef}
+          textRef={textRef}
+          scrollRef={scrollRef}
+          mouseRef={mouseRef}
+          isHoveringRef={isHoveringRef}
+        />
       </Canvas>
     </Suspense>
   );

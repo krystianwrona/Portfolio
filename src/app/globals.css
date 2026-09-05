@@ -39,28 +39,52 @@ body {
   color: #111;
 }
 
-/* ── Crow cell ──────────────────────────────────────────────────────────────
-   The crow is fitted and placed by its dense body, so the sparse tail runs off
-   the cell's left edge — which is the text column's right edge — and the cell's
-   overflow-hidden cuts it. Cutting a particle cloud leaves a ruled vertical
-   line of half-dots; fading the same edge instead lets the tail dissolve into
-   the page. Side-by-side layout only: stacked, the cut edge is the page's own
-   left margin, where there is no column edge to hide.
+/* ── Crow canvas ────────────────────────────────────────────────────────────
+   The canvas spans the whole hero section, so the crow's sparse tail is free to
+   run left out of its grid cell and into the text column — which is where it
+   wants to go, and where an overflow box used to cut it off on a ruled line of
+   half-dots. What holds it back now is this mask, in two parts, both driven by
+   custom properties CrowScene measures off the live layout (see "Mask
+   geometry" there). The declared values are the ones that make each layer do
+   nothing, so an unmeasured canvas paints in full rather than vanishing.
 
-   The ramp is measured, not fixed: CrowScene sets --crow-mask-ramp to the
-   distance it actually left between the cell's left edge and the dense body's,
-   capped at MASK_RAMP_MAX_PX. That distance is all tail, so the fade is back to
-   full opacity before the body starts — it can never touch the bird itself.
-   Where the body is clamped against its own BODY_MIN_GAP_PX margin the ramp is
-   that same 48px, the tightest it ever gets; where the cell is wide enough to
-   leave the body free of the clamp, the tail gets a longer dissolve. The
-   literal below is that floor, standing in until the first measurement lands
-   and after one that fails. */
-.crow-cell {
-  @variant hero-row {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--crow-mask-ramp, 48px));
-            mask-image: linear-gradient(to right, transparent 0, #000 var(--crow-mask-ramp, 48px));
-  }
+   1. The spill ramp fades the tail in from the section's left edge to
+      --spill-end, which sits a third of the text column short of the cell. The
+      tail arrives out of the page instead of starting on an edge. Stacked,
+      --spill-end is 0: a zero-length ramp is fully opaque and the layer is
+      inert, so the portrait crow keeps the framing it has.
+
+   2. The exclusion cuts a hole around the hero copy — clear to --hole-*, which
+      CrowScene has already inset by TEXT_CLEARANCE_PX, then TEXT_FEATHER_PX
+      more to fade back to full ink so the hole never reads as an outline. It
+      is built as the union (add) of the four half-planes outside that box,
+      because a mask layer can only be one gradient and "outside a rectangle"
+      is four of them.
+
+   The spill then intersects that union: a particle is painted only where both
+   agree. Older WebKit gets the same shape through the legacy composite
+   keywords, declared first so the standard property wins wherever it exists. */
+.crow-canvas {
+  --spill-end: 0px;
+  --hole-l: -9999px;
+  --hole-r: -9999px;
+  --hole-t: -9999px;
+  --hole-b: -9999px;
+  --hole-feather: 64px;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--spill-end)),
+    linear-gradient(to right, #000 calc(var(--hole-l) - var(--hole-feather)), transparent var(--hole-l)),
+    linear-gradient(to right, transparent var(--hole-r), #000 calc(var(--hole-r) + var(--hole-feather))),
+    linear-gradient(to bottom, #000 calc(var(--hole-t) - var(--hole-feather)), transparent var(--hole-t)),
+    linear-gradient(to bottom, transparent var(--hole-b), #000 calc(var(--hole-b) + var(--hole-feather)));
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--spill-end)),
+    linear-gradient(to right, #000 calc(var(--hole-l) - var(--hole-feather)), transparent var(--hole-l)),
+    linear-gradient(to right, transparent var(--hole-r), #000 calc(var(--hole-r) + var(--hole-feather))),
+    linear-gradient(to bottom, #000 calc(var(--hole-t) - var(--hole-feather)), transparent var(--hole-t)),
+    linear-gradient(to bottom, transparent var(--hole-b), #000 calc(var(--hole-b) + var(--hole-feather)));
+  -webkit-mask-composite: source-in, source-over, source-over, source-over, source-over;
+          mask-composite: intersect, add, add, add, add;
 }
 
 /* ── Skip to content link ───────────────────────── */

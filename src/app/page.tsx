@@ -534,6 +534,11 @@ export default function Home() {
   }, [router]);
 
   const containerRef  = useRef<HTMLDivElement>(null);
+  // The crow's canvas spans the whole hero now, but it is still placed against
+  // the grid: the empty cell gives it the box it is fitted to, the text block
+  // the box it must not draw into. Both are measured by CrowScene.
+  const crowCellRef   = useRef<HTMLDivElement>(null);
+  const heroTextRef   = useRef<HTMLDivElement>(null);
   const scrollRef     = useRef(0);
   const mouseRef      = useRef({ x: 0, y: 0 });
   const isHoveringRef = useRef(false);
@@ -576,23 +581,39 @@ export default function Home() {
         onMouseEnter={() => { isHoveringRef.current = true; }}
         onMouseLeave={() => { isHoveringRef.current = false; }}
       >
-        {/* Canvas bird — decorative illustration. Fills its own grid cell; the
-            canvas measures this element, so the crow is sized by the cell and
-            not by the viewport. min-h-0/min-w-0 keep the 1fr track free to
-            shrink instead of being floored by the canvas's own size. Stacked,
-            the crow is fitted by its dense body and the sparse tail is left to
-            run off the left edge, so the clip lives here, on the cell, and not
-            on the section: the tail is cut at the cell's own boundary and can
-            never reach the text block or the navbar. Side by side, .crow-cell
-            fades that cut edge out over the tail's last 48px (globals.css), so
-            the tail dissolves at the text column instead of ending on a rule. */}
+        {/* Canvas bird — decorative illustration, drawn across the whole
+            section rather than inside one grid cell. The cell below still
+            decides where the bird goes and how big it is; the canvas only
+            decides how far its particles may reach, and the answer is now "past
+            the cell's left edge, into the text column", which is where the tail
+            wants to go. What keeps it off the copy is the mask in globals.css,
+            not a box: a fade that brings the tail in over the column's outer
+            third, intersected with a hole cut around the text block. Under the
+            text block in z, and transparent to the pointer, so the section
+            keeps receiving the mousemove the crow tracks. */}
         <div
           role="img"
           aria-label={t('hero.aria.crow')}
-          className="crow-cell relative z-10 row-start-1 min-h-0 min-w-0 overflow-hidden hero-row:col-start-2"
+          className="crow-canvas pointer-events-none absolute inset-0 z-10"
         >
-          <CrowScene scrollRef={scrollRef} mouseRef={mouseRef} isHoveringRef={isHoveringRef} />
+          <CrowScene
+            cellRef={crowCellRef}
+            textRef={heroTextRef}
+            scrollRef={scrollRef}
+            mouseRef={mouseRef}
+            isHoveringRef={isHoveringRef}
+          />
         </div>
+
+        {/* The crow's measurement cell: an empty grid item that reserves the
+            column the bird is fitted to. It draws nothing itself — it is the
+            box the fit reads — so it needs no overflow and no stacking of its
+            own. min-h-0/min-w-0 keep the 1fr track free to shrink. */}
+        <div
+          ref={crowCellRef}
+          aria-hidden="true"
+          className="crow-cell row-start-1 min-h-0 min-w-0 hero-row:col-start-2"
+        />
 
         {/* Hero text block — a normal grid item that reserves its own space.
             Animates on mount only: it must never wait on the lazy-loaded
@@ -600,6 +621,7 @@ export default function Home() {
             pointer-events stay off the container so the crow keeps tracking the
             cursor everywhere except the two controls. */}
         <motion.div
+          ref={heroTextRef}
           initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
