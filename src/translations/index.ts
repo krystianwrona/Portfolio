@@ -20,7 +20,6 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architect turned',
     'hero.tagline.2': 'digital creator',
-    'hero.scroll': 'Scroll',
     'hero.aria.crow': 'Animated crow illustration made of particles',
 
     // ── Selected Works ──
@@ -471,7 +470,6 @@ export const translations: Record<string, Record<string, string>> = {
     'hero.cta.linkedin': 'LinkedIn →',
     'hero.tagline.1': 'Architekt, który został',
     'hero.tagline.2': 'twórcą cyfrowym',
-    'hero.scroll': 'Przewiń',
     'hero.aria.crow': 'Animowana ilustracja wrony z cząsteczek',
 
     // ── Selected Works ──

@@ -669,17 +669,6 @@ export default function Home() {
             </a>
           </div>
         </motion.div>
-
-        {/* Scroll indicator — decorative. Column layout only: stacked, the
-            copy already runs to the bottom of the fold and the hint lands on
-            the CTA rather than below the hero. */}
-        <div aria-hidden="true" className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 hidden flex-col items-center gap-2 pointer-events-none z-20 hero-row:flex">
-          <motion.div
-            animate={shouldReduceMotion ? {} : { y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-            className="w-[1px] h-[32px] bg-[#555]"
-          />
-        </div>
       </section>
 
       {/* 2. SELECTED WORKS */}
