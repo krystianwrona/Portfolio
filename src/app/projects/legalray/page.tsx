@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { useCarousel } from "@/lib/useCarousel";
 import { PROJECTS } from "@/lib/projects";
 import { UpNextCard } from "@/components/ui/UpNextCard";
 
@@ -30,10 +31,8 @@ export default function LegalRayCaseStudy() {
   const shouldReduceMotion = useReducedMotion();
 
   // Carousel
-  const [activeSlide, setActiveSlide] = useState(0);
+  const { carouselRef, slideRefs, activeSlide, goPrev, goNext } = useCarousel(SLIDES.length);
   const [isDragging, setIsDragging] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const pointerDownX = useRef(0);
 
   // Lightbox
@@ -42,46 +41,6 @@ export default function LegalRayCaseStudy() {
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseBtnRef = useRef<HTMLButtonElement>(null);
   const lightboxTriggerRef = useRef<HTMLElement | null>(null);
-
-  // Track active slide via IntersectionObserver
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-    const observers: IntersectionObserver[] = [];
-    slideRefs.current.forEach((slide, i) => {
-      if (!slide) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSlide(i); },
-        { root: carousel, threshold: 0.5 }
-      );
-      obs.observe(slide);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-
-  const scrollToSlide = useCallback((index: number) => {
-    const slide = slideRefs.current[index];
-    const carousel = carouselRef.current;
-    if (slide && carousel) {
-      const scrollPL = parseFloat(getComputedStyle(carousel).scrollPaddingLeft) || carousel.clientWidth * 0.04;
-      const scrollTarget =
-        carousel.scrollLeft +
-        slide.getBoundingClientRect().left -
-        carousel.getBoundingClientRect().left -
-        scrollPL;
-      carousel.scrollTo({ left: Math.max(0, scrollTarget), behavior: "smooth" });
-    }
-  }, []);
-
-  const goPrev = useCallback(
-    () => scrollToSlide(Math.max(0, activeSlide - 1)),
-    [activeSlide, scrollToSlide]
-  );
-  const goNext = useCallback(
-    () => scrollToSlide(Math.min(SLIDES.length - 1, activeSlide + 1)),
-    [activeSlide, scrollToSlide]
-  );
 
   // Lightbox: keyboard nav, focus trap, body scroll lock
   useEffect(() => {
@@ -402,11 +361,13 @@ export default function LegalRayCaseStudy() {
             <div
               ref={carouselRef}
               tabIndex={0}
+              data-lenis-prevent-horizontal
               role="region"
               aria-label={t("case.aria.medialabel")}
               className="flex items-center gap-[2vw] overflow-x-auto overflow-y-hidden px-[6vw] md:px-[12.5vw] scroll-pl-[6vw] md:scroll-pl-[12.5vw] h-[max(280px,50vw)] md:h-[clamp(400px,60vh,700px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111]/40 focus-visible:ring-offset-2"
               style={{
                 scrollSnapType: "x mandatory",
+                overscrollBehaviorX: "contain",
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
                 cursor: isDragging ? "grabbing" : "grab",
@@ -476,7 +437,7 @@ export default function LegalRayCaseStudy() {
               <button
                 onClick={goPrev}
                 aria-label={t("case.aria.previousslide")}
-                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                className="hidden md:flex absolute z-20 w-11 h-11 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ left: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -490,7 +451,7 @@ export default function LegalRayCaseStudy() {
               <button
                 onClick={goNext}
                 aria-label={t("case.aria.nextslide")}
-                className="hidden md:flex absolute z-10 w-10 h-10 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
+                className="hidden md:flex absolute z-20 w-11 h-11 items-center justify-center border-2 border-[#111] bg-white text-[#111] hover:bg-[#111] hover:text-white transition-colors duration-200"
                 style={{ right: "1.5vw", top: "50%", transform: "translateY(-50%)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
