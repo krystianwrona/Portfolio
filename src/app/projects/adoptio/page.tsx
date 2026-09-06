@@ -24,9 +24,7 @@ const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }
   { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",         altKey: "adoptme.alt.pet",         type: "framed" },
   { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",      altKey: "adoptme.alt.mobile",      type: "framed" },
   { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",   altKey: "adoptme.alt.dashboard",   type: "framed" },
-  // Jedyny slajd wciąż w starej, nieoprawionej wersji — czeka na poprawkę
-  // miniatury "Kropka" na live. Po ponownym zrzucie i oprawie: type: "framed".
-  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban",      type: "flat"   },
+  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban",      type: "framed" },
   { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",        altKey: "adoptme.alt.blog",        type: "framed" },
 ];
 
