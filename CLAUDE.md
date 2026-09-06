@@ -52,6 +52,6 @@ Defined once in `src/lib/projects.ts` (`PROJECTS[id].brand`) — update there, n
 - Hero text block: widoczny od razu (fade + 12px translate, 600ms, start 300ms po mount) — NIE może czekać na załadowanie sceny z ptakiem. Kontener ma pointer-events: none, tylko przycisk i link mają auto, żeby ptak dalej reagował na kursor
 - prefers-reduced-motion: wyłącz animacje
 - Strona musi startować od góry (scrollTo 0,0)
-- Favicon: `src/app/icon.svg` + `src/app/apple-icon.png` to znak K W z preloadera (Inter 900, kropka pominięta poniżej 32px) — nie dodawać z powrotem favicon.ico, bo przejmuje pierwszeństwo
+- Favicon: `src/app/icon.svg` + `src/app/apple-icon.png` to zwarty znak KW (Inter 900 obrysowane do ścieżek, bez <text>, bez kropki i bez separatora). Odstęp liter to 0.03em nominalnie — dobrany na złączeniu, nie z metryki: ramię K i pierwsza kreska W schodzą się najbliżej na linii wersalików, i przy 16px piksel między nimi trzyma 132/244 dla każdego odstępu do 0.026em, czyli zlewa oba kształty; przy 0.028em spada do 76/244. Nie zacieśniaj poniżej 0.03em bez ponownego sprawdzenia rastra 16px. Nie dodawać z powrotem favicon.ico, bo przejmuje pierwszeństwo
 
 Podczas pracy nad interfejsem, animacjami lub audytem kodu, bezwzględnie stosuj zasady i wytyczne opisane w plikach Markdown znajdujących się w folderze .claude/skills/. Przeczytaj je przed wygenerowaniem komponentu.
