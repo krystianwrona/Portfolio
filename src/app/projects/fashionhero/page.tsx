@@ -13,13 +13,13 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 const BRAND = PROJECTS.fashionhero.brand;
 const LIVE_URL = "https://fashionhero-hub.vercel.app/";
 
-type SlideType = "macbook" | "mobile";
+type SlideType = "framed" | "mobile";
 
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/fashionhero-dashboard.png", labelKey: "fashionhero.slide.dashboard", altKey: "fashionhero.alt.dashboard", type: "macbook" },
-  { src: "/fashionhero-promote.png",   labelKey: "fashionhero.slide.promote",   altKey: "fashionhero.alt.promote",   type: "macbook" },
-  { src: "/fashionhero-catalog.png",   labelKey: "fashionhero.slide.catalog",   altKey: "fashionhero.alt.catalog",   type: "macbook" },
-  { src: "/fashionhero-analytics.png", labelKey: "fashionhero.slide.analytics", altKey: "fashionhero.alt.analytics", type: "macbook" },
+  { src: "/fashionhero-dashboard.png", labelKey: "fashionhero.slide.dashboard", altKey: "fashionhero.alt.dashboard", type: "framed"  },
+  { src: "/fashionhero-promote.png",   labelKey: "fashionhero.slide.promote",   altKey: "fashionhero.alt.promote",   type: "framed"  },
+  { src: "/fashionhero-catalog.png",   labelKey: "fashionhero.slide.catalog",   altKey: "fashionhero.alt.catalog",   type: "framed"  },
+  { src: "/fashionhero-analytics.png", labelKey: "fashionhero.slide.analytics", altKey: "fashionhero.alt.analytics", type: "framed"  },
   { src: "/fashionhero-mobile.png",    labelKey: "fashionhero.slide.mobile",    altKey: "fashionhero.alt.mobile",    type: "mobile"  },
 ];
 
