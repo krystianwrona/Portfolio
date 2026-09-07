@@ -42,3 +42,7 @@ next-env.d.ts
 
 # vendored motion library repo used as a local Claude skill — 1.9 GB, never commit
 /.claude/skills/motion/
+
+# playwright session profile created by scripts/capture_adoptio.py --login
+# contains live logged-in cookies — never commit
+/scripts/.adoptio-profile/

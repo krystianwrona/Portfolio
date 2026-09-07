@@ -12,11 +12,11 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS.legalray.brand;
 
-type SlideType = "macbook" | "flat" | "mobile";
+type SlideType = "framed" | "flat" | "mobile";
 
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  altKey: "legalray.alt.report",       type: "macbook" },
-  { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", altKey: "legalray.alt.landing",      type: "macbook" },
+  { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  altKey: "legalray.alt.report",       type: "framed"  },
+  { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", altKey: "legalray.alt.landing",      type: "framed"  },
   { src: "/legalray-mobile.png",  labelKey: "legalray.slide.mobile",  altKey: "legalray.alt.mobile",       type: "mobile"  },
   { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    altKey: "legalray.alt.team",         type: "flat"    },
   { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      altKey: "legalray.alt.ai",           type: "flat"    },
