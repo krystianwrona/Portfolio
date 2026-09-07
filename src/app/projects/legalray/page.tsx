@@ -12,15 +12,15 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS.legalray.brand;
 
-type SlideType = "framed" | "flat" | "mobile";
+type SlideType = "framed" | "mobile";
 
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
   { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  altKey: "legalray.alt.report",       type: "framed"  },
   { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", altKey: "legalray.alt.landing",      type: "framed"  },
   { src: "/legalray-mobile.png",  labelKey: "legalray.slide.mobile",  altKey: "legalray.alt.mobile",       type: "mobile"  },
-  { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    altKey: "legalray.alt.team",         type: "flat"    },
-  { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      altKey: "legalray.alt.ai",           type: "flat"    },
-  { src: "/legalray-paywall.png", labelKey: "legalray.slide.monetization", altKey: "legalray.alt.monetization", type: "flat"    },
+  { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    altKey: "legalray.alt.team",         type: "framed"  },
+  { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      altKey: "legalray.alt.ai",           type: "framed"  },
+  { src: "/legalray-paywall.png", labelKey: "legalray.slide.monetization", altKey: "legalray.alt.monetization", type: "framed"  },
 ];
 
 export default function LegalRayCaseStudy() {
@@ -244,7 +244,7 @@ export default function LegalRayCaseStudy() {
             >
               <p className="text-[0.6rem] uppercase tracking-widest font-bold text-[#111]/40 mb-6">{t("case.techstack")}</p>
               <ul className="flex flex-col gap-3">
-                {["Google Gemini 3.1 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
+                {["Google Gemini 3.0 Pro", "Supabase", "Clerk", "Stripe", "Next.js", "TypeScript", "Tailwind CSS"].map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: BRAND }} />
                     <span className="font-bold text-base text-[#111]/80">{tech}</span>
@@ -424,7 +424,7 @@ export default function LegalRayCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px" }}
                       draggable={false}
                     />
                   </div>
