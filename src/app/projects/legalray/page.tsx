@@ -12,15 +12,13 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS.legalray.brand;
 
-type SlideType = "framed" | "mobile";
-
-const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  altKey: "legalray.alt.report",       type: "framed"  },
-  { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", altKey: "legalray.alt.landing",      type: "framed"  },
-  { src: "/legalray-mobile.png",  labelKey: "legalray.slide.mobile",  altKey: "legalray.alt.mobile",       type: "mobile"  },
-  { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    altKey: "legalray.alt.team",         type: "framed"  },
-  { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      altKey: "legalray.alt.ai",           type: "framed"  },
-  { src: "/legalray-paywall.png", labelKey: "legalray.slide.monetization", altKey: "legalray.alt.monetization", type: "framed"  },
+const SLIDES: { src: string; labelKey: string; altKey: string }[] = [
+  { src: "/legalray-report.png",  labelKey: "legalray.slide.report",  altKey: "legalray.alt.report" },
+  { src: "/legalray-hero.png",    labelKey: "legalray.slide.landing", altKey: "legalray.alt.landing" },
+  { src: "/legalray-mobile.png",  labelKey: "legalray.slide.mobile",  altKey: "legalray.alt.mobile" },
+  { src: "/legalray-team.png",    labelKey: "legalray.slide.team",    altKey: "legalray.alt.team" },
+  { src: "/legalray-loading.png", labelKey: "legalray.slide.ai",      altKey: "legalray.alt.ai" },
+  { src: "/legalray-paywall.png", labelKey: "legalray.slide.monetization", altKey: "legalray.alt.monetization" },
 ];
 
 export default function LegalRayCaseStudy() {

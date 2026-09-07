@@ -12,20 +12,15 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS.adoptio.brand;
 
-// "framed" — obraz niesie własną oprawę (pasek przeglądarki albo bezel telefonu
-// z frame_screens.py) i wchodzi w kadr bez skalowania.
-// "flat" — goła karta na dużym płótnie, potrzebuje skali, żeby wypełnić slajd.
-type SlideType = "framed";
-
-const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",    altKey: "adoptme.alt.matching",    type: "framed" },
-  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",      altKey: "adoptme.alt.search",      type: "framed" },
-  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",        altKey: "adoptme.alt.quiz",        type: "framed" },
-  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",         altKey: "adoptme.alt.pet",         type: "framed" },
-  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",      altKey: "adoptme.alt.mobile",      type: "framed" },
-  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",   altKey: "adoptme.alt.dashboard",   type: "framed" },
-  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban",      type: "framed" },
-  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",        altKey: "adoptme.alt.blog",        type: "framed" },
+const SLIDES: { src: string; labelKey: string; altKey: string }[] = [
+  { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",    altKey: "adoptme.alt.matching" },
+  { src: "/adoptio-search.png",     labelKey: "adoptme.slide.search",      altKey: "adoptme.alt.search" },
+  { src: "/adoptio-quiz.png",       labelKey: "adoptme.slide.quiz",        altKey: "adoptme.alt.quiz" },
+  { src: "/adoptio-pet.png",        labelKey: "adoptme.slide.pet",         altKey: "adoptme.alt.pet" },
+  { src: "/adoptio-mobile.png",     labelKey: "adoptme.slide.mobile",      altKey: "adoptme.alt.mobile" },
+  { src: "/adoptio-dashboard.png",  labelKey: "adoptme.slide.dashboard",   altKey: "adoptme.alt.dashboard" },
+  { src: "/adoptio-kanban.png",     labelKey: "adoptme.slide.kanban",      altKey: "adoptme.alt.kanban" },
+  { src: "/adoptio-blog.png",       labelKey: "adoptme.slide.blog",        altKey: "adoptme.alt.blog" },
 ];
 
 export default function AdoptMeCaseStudy() {

@@ -12,8 +12,6 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS["ania-kampania"].brand;
 
-type SlideType = "framed" | "mobile";
-
 // ─────────────────────────────────────────────────────────────────────────────
 // THE FUNNEL — the only place in this case study where a price appears.
 //
@@ -51,13 +49,13 @@ const FUNNEL: {
   { key: "opieka",   amount: "100 €",  from: true, unitKey: "aniak.funnel.perday" },
 ];
 
-const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/ania-hero.png",       labelKey: "aniak.slide.hero",       altKey: "aniak.alt.hero",       type: "framed"  },
-  { src: "/ania-manifest.png",   labelKey: "aniak.slide.brandstory", altKey: "aniak.alt.brandstory", type: "framed"  },
-  { src: "/ania-gallery.png",    labelKey: "aniak.slide.gallery",    altKey: "aniak.alt.gallery",    type: "framed"  },
-  { src: "/ania-packages.png",   labelKey: "aniak.slide.packages",   altKey: "aniak.alt.packages",   type: "framed"  },
-  { src: "/ania-booking.png",    labelKey: "aniak.slide.booking",    altKey: "aniak.alt.booking",    type: "framed"  },
-  { src: "/ania-mobile.png",     labelKey: "aniak.slide.mobile",     altKey: "aniak.alt.mobile",     type: "mobile"  },
+const SLIDES: { src: string; labelKey: string; altKey: string }[] = [
+  { src: "/ania-hero.png",       labelKey: "aniak.slide.hero",       altKey: "aniak.alt.hero" },
+  { src: "/ania-manifest.png",   labelKey: "aniak.slide.brandstory", altKey: "aniak.alt.brandstory" },
+  { src: "/ania-gallery.png",    labelKey: "aniak.slide.gallery",    altKey: "aniak.alt.gallery" },
+  { src: "/ania-packages.png",   labelKey: "aniak.slide.packages",   altKey: "aniak.alt.packages" },
+  { src: "/ania-booking.png",    labelKey: "aniak.slide.booking",    altKey: "aniak.alt.booking" },
+  { src: "/ania-mobile.png",     labelKey: "aniak.slide.mobile",     altKey: "aniak.alt.mobile" },
 ];
 
 export default function AniaKampaniaCaseStudy() {

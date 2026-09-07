@@ -10,16 +10,14 @@ import { useCarousel } from "@/lib/useCarousel";
 import { PROJECTS } from "@/lib/projects";
 import { UpNextCard } from "@/components/ui/UpNextCard";
 
-type SlideType = "flat";
-
-const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
-  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      altKey: "ckl.alt.aerial",      type: "flat" },
-  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  altKey: "ckl.alt.axonometry",  type: "flat" },
-  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        altKey: "ckl.alt.site",        type: "flat" },
-  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       altKey: "ckl.alt.plans",        type: "flat" },
-  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", altKey: "ckl.alt.underground", type: "flat" },
-  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    altKey: "ckl.alt.sections",    type: "flat" },
-  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", altKey: "ckl.alt.concerthall", type: "flat" },
+const SLIDES: { src: string; labelKey: string; altKey: string }[] = [
+  { src: "/ckl-aerial.jpg",       labelKey: "ckl.slide.aerial",      altKey: "ckl.alt.aerial" },
+  { src: "/ckl-axonometry.jpg",   labelKey: "ckl.slide.axonometry",  altKey: "ckl.alt.axonometry" },
+  { src: "/ckl-site.jpg",         labelKey: "ckl.slide.site",        altKey: "ckl.alt.site" },
+  { src: "/ckl-plans.jpg",        labelKey: "ckl.slide.plans",       altKey: "ckl.alt.plans" },
+  { src: "/ckl-underground.jpg",  labelKey: "ckl.slide.underground", altKey: "ckl.alt.underground" },
+  { src: "/ckl-sections-bc.jpg",  labelKey: "ckl.slide.sections",    altKey: "ckl.alt.sections" },
+  { src: "/ckl-concert-hall.jpg", labelKey: "ckl.slide.concerthall", altKey: "ckl.alt.concerthall" },
 ];
 
 export default function FolkCultureCenterCaseStudy() {
