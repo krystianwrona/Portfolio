@@ -15,7 +15,7 @@ const BRAND = PROJECTS.adoptio.brand;
 // "framed" — obraz niesie własną oprawę (pasek przeglądarki albo bezel telefonu
 // z frame_screens.py) i wchodzi w kadr bez skalowania.
 // "flat" — goła karta na dużym płótnie, potrzebuje skali, żeby wypełnić slajd.
-type SlideType = "framed" | "flat";
+type SlideType = "framed";
 
 const SLIDES: { src: string; labelKey: string; altKey: string; type: SlideType }[] = [
   { src: "/adoptio-hero.png",       labelKey: "adoptme.slide.matching",    altKey: "adoptme.alt.matching",    type: "framed" },
@@ -387,7 +387,7 @@ export default function AdoptMeCaseStudy() {
                       width={1600}
                       height={1000}
                       sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
+                      style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px" }}
                       draggable={false}
                     />
                   </div>

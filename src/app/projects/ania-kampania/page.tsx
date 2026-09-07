@@ -12,7 +12,7 @@ import { UpNextCard } from "@/components/ui/UpNextCard";
 
 const BRAND = PROJECTS["ania-kampania"].brand;
 
-type SlideType = "macbook" | "flat" | "mobile";
+type SlideType = "macbook" | "mobile";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE FUNNEL — the only place in this case study where a price appears.
@@ -515,7 +515,7 @@ export default function AniaKampaniaCaseStudy() {
                           width={1600}
                           height={1000}
                           sizes="(max-width: 768px) 95vw, (max-width: 1024px) 90vw, 80vw"
-                          style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px", ...(slide.type === "flat" ? { transform: "scale(1.2375)", transformOrigin: "center center" } : {}) }}
+                          style={{ width: "auto", height: "100%", maxWidth: "100%", objectFit: "contain", display: "block", margin: "0 auto", borderRadius: "12px" }}
                           draggable={false}
                         />
                       </div>
