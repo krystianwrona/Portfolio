@@ -179,7 +179,16 @@ export default function FashionHeroCaseStudy() {
                 {t("fashionhero.tagline")}
               </p>
               <p className="text-base leading-[1.65] text-white/70 font-medium max-w-lg">
-                {t("fashionhero.desc")}
+                {t("fashionhero.desc.before")}
+                <a
+                  href="https://aiproductheroes.pl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/90 underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors duration-300"
+                >
+                  {t("fashionhero.desc.link")}
+                </a>
+                {t("fashionhero.desc.after")}
               </p>
             </motion.div>
           </div>
