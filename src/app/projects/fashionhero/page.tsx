@@ -341,7 +341,7 @@ export default function FashionHeroCaseStudy() {
           </motion.p>
           {/* Oś procesu: pięć bloków w jednej kolumnie. Karty obok siebie sugerowałyby
               równoległość, a to jest sekwencja — każdy krok wynika z poprzedniego. */}
-          <ol className="flex flex-col gap-6 max-w-3xl">
+          <ol className="flex flex-col gap-6">
             {process.map(({ title, desc }, i) => (
               <motion.li
                 key={title}
@@ -349,12 +349,12 @@ export default function FashionHeroCaseStudy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.7, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white flex flex-col gap-4 transition-colors duration-500 hover:border-[#E11D48]/30"
+                className="p-8 md:p-10 rounded-[28px] border border-[#111]/10 bg-white grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-10 items-start transition-colors duration-500 hover:border-[#E11D48]/30"
               >
-                <h2 className="font-display font-black text-xl text-[#111] tracking-tight leading-tight">
+                <h2 className="md:col-span-4 font-display font-black text-xl text-[#111] tracking-tight leading-tight">
                   {title}
                 </h2>
-                <p className="text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
+                <p className="md:col-span-8 text-sm leading-[1.65] text-[#111]/50 font-medium">{desc}</p>
               </motion.li>
             ))}
           </ol>
