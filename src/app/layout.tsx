@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
+import { CrowAnchorsProvider } from "@/components/crow/CrowAnchors";
+import { CrowStage } from "@/components/crow/CrowStage";
 import { Navbar } from "@/components/ui/Navbar";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { Preloader } from "@/components/ui/Preloader";
@@ -58,7 +60,14 @@ export default function RootLayout({
           />
           <SmoothScrollProvider>
             <Navbar />
-            {children}
+            {/* The crow's canvas lives here, above the router, so it survives
+                a route change with its WebGL context intact. The page hands it
+                the boxes to place itself against (CrowAnchors); on a route
+                that registers none it stays mounted and draws nothing. */}
+            <CrowAnchorsProvider>
+              <CrowStage />
+              {children}
+            </CrowAnchorsProvider>
           </SmoothScrollProvider>
         </LanguageProvider>
         <Analytics />

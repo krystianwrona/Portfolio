@@ -71,11 +71,19 @@ body {
 .crow-canvas {
   --spill-start: 0px;
   --spill-end: 0px;
-  /* 0 while the bird is assembled, 1 once the scroll has dispersed it — written
-     by the hero's scroll handler in page.tsx. The column ramp only earns its
-     place while there is a tail to keep off the copy; on the uniform cloud the
-     scroll leaves behind, the same gradient is a band with a wall at its foot.
-     So it collapses: both stops scale to zero and the mask becomes a no-op. */
+  /* 0 while the bird is assembled, 1 once the take-off has dispersed it — all
+     six of these are written by CrowScene, which is the only thing that knows
+     both where the boxes are and how far along the flight is. The column ramp
+     only earns its place while there is a tail to keep off the copy; on the
+     uniform cloud the take-off leaves behind, the same gradient is a band with
+     a wall at its foot. So it collapses: both stops scale to zero and the mask
+     becomes a no-op.
+
+     The element carrying this is the fixed, viewport-sized crow stage now, not
+     a layer inside the hero, so every offset above is viewport-space. Nothing
+     about the gradients changed with it: the hero starts at the top of the
+     page and is at least 100svh tall, so the box these were measured in and
+     the box they are measured in now are the same box. */
   --mask-open: 0;
   --hole-l: -9999px;
   --hole-r: -9999px;

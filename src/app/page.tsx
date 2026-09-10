@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import dynamic from "next/dynamic";
 import {
-  motion, useScroll, AnimatePresence,
+  motion, AnimatePresence,
   useMotionValue, useSpring, useReducedMotion,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -12,14 +11,7 @@ import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
 import { SvgOutlineTitle, type SvgOutlineTitleHandle } from "@/components/ui/SvgOutlineTitle";
 import { ProjectTitleFitProvider, useTitleFit } from "@/components/ui/ProjectTitleFit";
-
-// Three.js/@react-three bundle is code-split into its own chunk and
-// only fetched on the client, after first paint, instead of blocking
-// the homepage's main JS bundle.
-const CrowScene = dynamic(() => import("@/components/CrowScene").then((m) => m.CrowScene), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0 bg-[#F5F5F4]" />,
-});
+import { useCrowAnchorRef } from "@/components/crow/CrowAnchors";
 
 const CONTACT_EMAIL = "krystian.wrona@protonmail.com";
 
@@ -115,29 +107,6 @@ const PERSON_JSON_LD = {
     "https://github.com/krystianwrona",
   ],
 };
-
-// Scroll blows the hero crow apart: CrowScene's vertex shader moves every
-// particle `uScroll^2 * 2.5 * 45` mesh widths outward, uScroll being the page's
-// own scroll progress. These two mirror those literals — the spread has to be
-// the number the particles are actually moving by, so a change in the shader is
-// a change here. (Nothing else may touch the bird's logic; this only reads it.)
-const SCROLL_EASE_K = 2.5;
-const SCROLL_EXPLODE = 45;
-
-// Spread, in mesh widths, by which the cloud is even enough that the column
-// mask's ramp would read as a band across it — and even enough that dropping
-// the mask outright shows nothing, since there is no longer a tail to keep off
-// the copy. A tenth of a mesh width is well past the last of the bird's shape.
-const MASK_OPEN_SPREAD = 0.1;
-
-/** How far open the crow's column mask is at a given scroll progress (0..1). */
-function crowMaskOpen(scrollProgress: number): number {
-  const spread = scrollProgress * scrollProgress * SCROLL_EASE_K * SCROLL_EXPLODE;
-  // Linear in the spread, which is already flat at the top — the spread grows
-  // with the square of the scroll, so the ramp holds still for the first pixels
-  // and then opens quickly, well inside the dispersion it is hiding behind.
-  return Math.min(1, Math.max(0, spread / MASK_OPEN_SPREAD));
-}
 
 const HOW_I_WORK_STEPS = [
   { number: "01", titleKey: "about.work.step1.title", textKey: "about.work.step1.text" },
@@ -556,43 +525,20 @@ export default function Home() {
     PROJECT_DATA.forEach(p => router.prefetch(`/projects/${p.id}`));
   }, [router]);
 
-  const containerRef  = useRef<HTMLDivElement>(null);
-  // The crow's canvas spans the whole hero now, but it is still placed against
-  // the grid: the empty cell gives it the box it is fitted to, the text block
-  // the box it must not draw into. Both are measured by CrowScene.
-  const crowCellRef   = useRef<HTMLDivElement>(null);
-  const heroTextRef   = useRef<HTMLDivElement>(null);
-  const crowLayerRef  = useRef<HTMLDivElement>(null);
-  const scrollRef     = useRef(0);
-  const mouseRef      = useRef({ x: 0, y: 0 });
-  const isHoveringRef = useRef(false);
-
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
-
-  // One subscription drives both the dispersion and the mask that has to get
-  // out of its way: the shader reads scrollRef to blow the bird apart, and the
-  // same number opens the column mask as it goes. A second listener could only
-  // disagree with this one about how far along the explosion is.
-  //
-  // Reduced motion is the case where they must not move together: the shader
-  // multiplies its explode by (1 - uReduced), so the bird stays assembled and
-  // its tail keeps reaching into the copy's column however far the page is
-  // scrolled. The mask is still doing real work there, so it stays put.
-  useEffect(() => {
-    const apply = (v: number) => {
-      scrollRef.current = v;
-      const open = shouldReduceMotion ? 0 : crowMaskOpen(v);
-      crowLayerRef.current?.style.setProperty("--mask-open", open.toFixed(3));
-    };
-    apply(scrollYProgress.get());
-    return scrollYProgress.on("change", apply);
-  }, [scrollYProgress, shouldReduceMotion]);
+  // The crow's canvas is in the root layout now, not here. What the page
+  // still owns are the boxes it is placed against: the empty grid cell that
+  // reserves the column the bird is fitted to, the copy the mask must not
+  // paint over, and the section both are measured inside. Registering them
+  // is the whole of the page's involvement — no canvas, no scroll plumbing,
+  // no mask variables.
+  const heroAnchorRef     = useCrowAnchorRef("hero");
+  const crowCellAnchorRef = useCrowAnchorRef("crowCell");
+  const heroTextAnchorRef = useCrowAnchorRef("heroText");
 
   return (
     <main
       id="main-content"
       className={`w-full min-h-screen bg-[#F5F5F4] transition-opacity duration-[250ms] ease-in-out ${isExiting ? "opacity-0" : "opacity-100"}`}
-      ref={containerRef}
     >
       <script
         type="application/ld+json"
@@ -615,42 +561,15 @@ export default function Home() {
       <section
         id="home"
         aria-labelledby="hero-heading"
+        ref={heroAnchorRef}
         className="relative grid w-full min-h-[100svh] grid-rows-[minmax(0,1fr)_auto] overflow-hidden pt-[7vh] pb-[clamp(40px,8vh,96px)] pl-6 pr-6 md:pl-[4vw] md:pr-[4vw] hero-row:pr-0 hero-row:grid-rows-1 hero-row:grid-cols-[clamp(560px,30vw,760px)_minmax(0,1fr)]"
-        onMouseMove={(e) => { mouseRef.current = { x: (e.clientX / window.innerWidth) * 2 - 1, y: -(e.clientY / window.innerHeight) * 2 + 1 }; }}
-        onMouseEnter={() => { isHoveringRef.current = true; }}
-        onMouseLeave={() => { isHoveringRef.current = false; }}
       >
-        {/* Canvas bird — decorative illustration, drawn across the whole
-            section rather than inside one grid cell. The cell below still
-            decides where the bird goes and how big it is; the canvas only
-            decides how far its particles may reach, and the answer is now "past
-            the cell's left edge, into the text column", which is where the tail
-            wants to go. What keeps it off the copy is the mask in globals.css,
-            not a box: a fade that brings the tail in over the column's outer
-            third, intersected with a hole cut around the text block. Under the
-            text block in z, and transparent to the pointer, so the section
-            keeps receiving the mousemove the crow tracks. */}
-        <div
-          ref={crowLayerRef}
-          role="img"
-          aria-label={t('hero.aria.crow')}
-          className="crow-canvas pointer-events-none absolute inset-0 z-10"
-        >
-          <CrowScene
-            cellRef={crowCellRef}
-            textRef={heroTextRef}
-            scrollRef={scrollRef}
-            mouseRef={mouseRef}
-            isHoveringRef={isHoveringRef}
-          />
-        </div>
-
         {/* The crow's measurement cell: an empty grid item that reserves the
             column the bird is fitted to. It draws nothing itself — it is the
             box the fit reads — so it needs no overflow and no stacking of its
             own. min-h-0/min-w-0 keep the 1fr track free to shrink. */}
         <div
-          ref={crowCellRef}
+          ref={crowCellAnchorRef}
           aria-hidden="true"
           className="crow-cell row-start-1 min-h-0 min-w-0 hero-row:col-start-2"
         />
@@ -661,7 +580,7 @@ export default function Home() {
             pointer-events stay off the container so the crow keeps tracking the
             cursor everywhere except the two controls. */}
         <motion.div
-          ref={heroTextRef}
+          ref={heroTextAnchorRef}
           initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
