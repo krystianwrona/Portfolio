@@ -6,6 +6,7 @@ import {
   useMotionValue, useSpring, useReducedMotion,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useLenis } from "lenis/react";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
@@ -486,6 +487,7 @@ export default function Home() {
   const [emailCopied, setEmailCopied] = useState(false);
   const { t } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
+  const lenis = useLenis();
 
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -524,6 +526,15 @@ export default function Home() {
   useEffect(() => {
     PROJECT_DATA.forEach(p => router.prefetch(`/projects/${p.id}`));
   }, [router]);
+
+  // Expanding the contact form grows the document under Lenis, which keeps
+  // the scroll limit it measured before. Two rAFs so the remeasure lands
+  // after Framer has applied the first frame of `height: auto`.
+  useEffect(() => {
+    if (!lenis) return;
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => lenis.resize()));
+    return () => cancelAnimationFrame(id);
+  }, [contactOpen, lenis]);
 
   // The crow's canvas is in the root layout now, not here. What the page
   // still owns are the boxes it is placed against: the empty grid cell that
@@ -779,6 +790,7 @@ export default function Home() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              onAnimationComplete={() => lenis?.resize()}
               className="overflow-hidden border-t border-white/10"
             >
               <ContactForm onClose={() => setContactOpen(false)} />
