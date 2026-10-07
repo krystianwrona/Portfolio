@@ -359,12 +359,20 @@ function MagneticHeading({ children, onClick, className, ariaLabel }: {
 
 /* ─── CONTACT FORM ───────────────────────────────────────────────────────── */
 
+type SubmitError = "failed" | "rate_limited";
+
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<SubmitError | null>(null);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
   const { t } = useLanguage();
+
+  // The fallback carries what was typed, so a failed send never costs the
+  // visitor their message — the form keeps it too, since nothing resets it.
+  const fallbackHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+    form.subject.trim() || t('contact.email.subject')
+  )}&body=${encodeURIComponent(form.message)}`;
 
   const inputCls = "w-full bg-transparent border-b border-white/40 py-4 text-white placeholder-white/50 font-medium text-sm focus:outline-none focus-visible:border-white focus:border-white/80 transition-colors duration-300 invalid:border-red-500/60";
 
@@ -394,17 +402,28 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       onSubmit={async (e) => {
         e.preventDefault();
         setSubmitting(true);
-        setSubmitError(false);
+        setSubmitError(null);
         try {
           const res = await fetch("/api/contact", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(form),
           });
-          if (!res.ok) throw new Error("failed");
+          // 429 comes from the Vercel WAF rule in front of the route, so its
+          // body is not ours — the status alone decides.
+          if (res.status === 429) {
+            setSubmitError("rate_limited");
+            return;
+          }
+          // Success means the route confirmed the email service accepted the
+          // message — a 200 alone, or an unreadable body, is not enough.
+          const data: unknown = await res.json().catch(() => null);
+          const accepted =
+            res.ok && typeof data === "object" && data !== null && (data as { ok?: unknown }).ok === true;
+          if (!accepted) throw new Error("not accepted");
           setSubmitted(true);
         } catch {
-          setSubmitError(true);
+          setSubmitError("failed");
         } finally {
           setSubmitting(false);
         }
@@ -481,13 +500,16 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       </div>
       {submitError && (
         <p role="alert" className="text-red-400 text-xs font-bold uppercase tracking-widest text-center">
-          {t('contact.form.error')}{' '}
+          {t(submitError === "rate_limited" ? 'contact.form.error.ratelimit' : 'contact.form.error')}{' '}
           <a
-            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`}
-            className="underline hover:text-white transition-colors"
+            href={fallbackHref}
+            className="underline normal-case hover:text-white transition-colors"
           >
             {CONTACT_EMAIL}
           </a>
+          <span className="block mt-2 font-medium normal-case tracking-normal text-white/60">
+            {t('contact.form.error.kept')}
+          </span>
         </p>
       )}
       <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4">
