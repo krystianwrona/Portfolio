@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCarousel } from "@/lib/useCarousel";
+import { useLightboxDialog } from "@/lib/useLightboxDialog";
 import { PROJECTS } from "@/lib/projects";
 import { UpNextCard } from "@/components/ui/UpNextCard";
 
@@ -40,37 +41,15 @@ export default function FolkCultureCenterCaseStudy() {
   const lightboxTriggerRef = useRef<HTMLElement | null>(null);
 
   // Lightbox: keyboard nav, focus trap, body scroll lock
-  useEffect(() => {
-    if (!lightboxOpen) {
-      document.body.style.overflow = "";
-      lightboxTriggerRef.current?.focus();
-      return;
-    }
-    document.body.style.overflow = "hidden";
-    const focusId = setTimeout(() => lightboxCloseBtnRef.current?.focus(), 0);
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setLightboxOpen(false); return; }
-      if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
-      if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
-      if (e.key === "Tab") {
-        const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
-        if (!focusables || focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-        } else {
-          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-        }
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-      clearTimeout(focusId);
-    };
-  }, [lightboxOpen]);
+  useLightboxDialog({
+    open: lightboxOpen,
+    dialogRef: lightboxRef,
+    initialFocusRef: lightboxCloseBtnRef,
+    returnFocusRef: lightboxTriggerRef,
+    onClose: () => setLightboxOpen(false),
+    onPrev: () => setLightboxIndex((i) => Math.max(0, i - 1)),
+    onNext: () => setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)),
+  });
 
   const backTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {

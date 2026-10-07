@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCarousel } from "@/lib/useCarousel";
+import { useLightboxDialog } from "@/lib/useLightboxDialog";
 import { PROJECTS } from "@/lib/projects";
 import { UpNextCard } from "@/components/ui/UpNextCard";
 
@@ -48,42 +49,17 @@ export default function FashionHeroCaseStudy() {
   // so focus returns there on close.
   const activeTriggerRef = useRef<HTMLElement | null>(null);
 
-  // Lightbox: keyboard nav, focus trap, body scroll lock
-  useEffect(() => {
-    if (!lightboxOpen && !certOpen) {
-      document.body.style.overflow = "";
-      activeTriggerRef.current?.focus();
-      return;
-    }
-    document.body.style.overflow = "hidden";
-    const activeDialogRef = lightboxOpen ? lightboxRef : certRef;
-    const activeCloseBtnRef = lightboxOpen ? lightboxCloseBtnRef : certCloseBtnRef;
-    const focusId = setTimeout(() => activeCloseBtnRef.current?.focus(), 0);
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setLightboxOpen(false); setCertOpen(false); return; }
-      if (lightboxOpen) {
-        if (e.key === "ArrowLeft")  setLightboxIndex((i) => Math.max(0, i - 1));
-        if (e.key === "ArrowRight") setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1));
-      }
-      if (e.key === "Tab") {
-        const focusables = activeDialogRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled)");
-        if (!focusables || focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-        } else {
-          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-        }
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-      clearTimeout(focusId);
-    };
-  }, [lightboxOpen, certOpen]);
+  // Lightbox: keyboard nav, focus trap, body scroll lock — one hook for both
+  // dialogs; only the carousel one pages with the arrow keys.
+  useLightboxDialog({
+    open: lightboxOpen || certOpen,
+    dialogRef: lightboxOpen ? lightboxRef : certRef,
+    initialFocusRef: lightboxOpen ? lightboxCloseBtnRef : certCloseBtnRef,
+    returnFocusRef: activeTriggerRef,
+    onClose: () => { setLightboxOpen(false); setCertOpen(false); },
+    onPrev: lightboxOpen ? () => setLightboxIndex((i) => Math.max(0, i - 1)) : undefined,
+    onNext: lightboxOpen ? () => setLightboxIndex((i) => Math.min(SLIDES.length - 1, i + 1)) : undefined,
+  });
 
   const backTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
