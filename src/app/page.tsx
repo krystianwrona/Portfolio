@@ -907,15 +907,25 @@ export default function Home() {
             &copy; {new Date().getFullYear()} KRYSTIAN.WRONA. {t('footer.rights')}
           </p>
           <ul className="flex flex-wrap gap-x-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
+            {/* The address itself, readable and clickable — the contact matters
+                more than keeping the footer to labels. Lowercase because an
+                uppercased address is harder to read back and to retype. */}
+            <li>
+              <a
+                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`}
+                className="normal-case tracking-normal opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </li>
             <li>
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                title={CONTACT_EMAIL}
                 aria-label={`${t('footer.aria.email')}: ${CONTACT_EMAIL}`}
                 className="bg-transparent border-0 p-0 cursor-pointer opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                {emailCopied ? t('footer.email.copied') : t('footer.email.label')}
+                {emailCopied ? t('footer.email.copied') : t('footer.email.copy')}
               </button>
               <span aria-live="polite" className="sr-only">
                 {emailCopied ? t('footer.email.copied') : ''}

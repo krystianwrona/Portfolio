@@ -111,7 +111,7 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.aria.behance': 'Behance (opens in new tab)',
     'footer.aria.github': 'GitHub (opens in new tab)',
     'footer.aria.email': 'Copy email address',
-    'footer.email.label': 'EMAIL',
+    'footer.email.copy': 'COPY',
     'footer.email.copied': 'COPIED',
 
     // ── Case Study — shared ──
@@ -563,7 +563,7 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.aria.behance': 'Behance (otwiera się w nowej karcie)',
     'footer.aria.github': 'GitHub (otwiera się w nowej karcie)',
     'footer.aria.email': 'Skopiuj adres e-mail',
-    'footer.email.label': 'E-MAIL',
+    'footer.email.copy': 'KOPIUJ',
     'footer.email.copied': 'SKOPIOWANO',
 
     // ── Case Study — shared ──
