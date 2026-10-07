@@ -6,6 +6,7 @@ import {
   motion, useScroll, AnimatePresence,
   useMotionValue, useSpring, useReducedMotion,
 } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLenis } from "lenis/react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -13,6 +14,7 @@ import { PROJECTS, PROJECT_ORDER } from "@/lib/projects";
 import { SITE_URL, PERSON_ID } from "@/lib/seo";
 import { SvgOutlineTitle, type SvgOutlineTitleHandle } from "@/components/ui/SvgOutlineTitle";
 import { ProjectTitleFitProvider, useTitleFit } from "@/components/ui/ProjectTitleFit";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 // Three.js/@react-three bundle is code-split into its own chunk and
 // only fetched on the client, after first paint, instead of blocking
@@ -171,9 +173,18 @@ const ARCHITECTS_EYE_ITEMS = [
 
 /* ─── PROJECT ROW — Awwwards list style ──────────────────────────────────── */
 
-function ProjectRow({ project, onClick, index }: {
+// A real link, so the row keeps everything a link gives for free: open in a
+// new tab, Ctrl/Cmd/Shift-click, middle-click, "copy link address", Enter.
+const MotionLink = motion.create(Link);
+
+/** A plain primary click — the only one the animated exit may take over. */
+function isPlainClick(e: React.MouseEvent<HTMLAnchorElement>) {
+  return !e.defaultPrevented && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+}
+
+function ProjectRow({ project, onNavigate, index }: {
   project: ProjectEntry;
-  onClick: (e: React.MouseEvent, id: string, route: string, color: string) => void;
+  onNavigate: (route: string) => void;
   index: number;
 }) {
   const { t } = useLanguage();
@@ -184,26 +195,19 @@ function ProjectRow({ project, onClick, index }: {
   const titleBoxRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<SvgOutlineTitleHandle>(null);
   const titleFit = useTitleFit();
-  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  const isCoarsePointer = useMediaQuery("(pointer: coarse)");
   // Drives which pre-authored line break (and matching scale) renders — kept
   // in JS rather than pure CSS so SvgOutlineTitle's own lines prop actually
   // changes at the md breakpoint, which re-triggers its getBBox() remeasure.
   // Two parallel CSS-only <SvgOutlineTitle>s (one hidden per breakpoint)
   // would measure a hidden instance against a zero-size box.
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
-
-  // Layout, not plain, effect: which line break renders decides which line is
-  // the widest, which decides the shared font-size. Settling it before the
-  // browser paints is what stops the mobile line break from arriving as a
-  // visible resize one frame after the desktop one.
-  useLayoutEffect(() => {
-    setIsCoarsePointer(window.matchMedia("(pointer: coarse)").matches);
-    const mq = window.matchMedia("(max-width: 767px)");
-    setIsMobileViewport(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsMobileViewport(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  //
+  // Subscribed rather than copied into state by an effect. On a client
+  // navigation the right line break is in the very first render; after a hard
+  // load the server's desktop answer can be swapped once on hydration, while
+  // the rows are still at their server-rendered opacity 0 and below the fold,
+  // and the layout effect further down refits the shared size before paint.
+  const isMobileViewport = useMediaQuery("(max-width: 767px)");
 
   const lines = isMobileViewport ? project.titleLinesMobile : project.titleLines;
 
@@ -226,11 +230,11 @@ function ProjectRow({ project, onClick, index }: {
     titleFit?.fit();
   }, [titleFit, lines]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onClick(e as unknown as React.MouseEvent, project.id, `/projects/${project.id}`, project.color);
-    }
+  const href = `/projects/${project.id}`;
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isPlainClick(e)) return; // modified and middle clicks stay native
+    e.preventDefault();
+    onNavigate(href);
   };
 
   // Touch/coarse-pointer devices skip the y-transform on this wrapper entirely
@@ -249,16 +253,14 @@ function ProjectRow({ project, onClick, index }: {
       };
 
   return (
-    <motion.div
-      role="button"
-      tabIndex={0}
+    <MotionLink
+      href={href}
       aria-label={`${t('works.aria.viewproject')}: ${project.title} — ${t(project.categoryKey)}`}
       initial={reveal.initial}
       whileInView={reveal.whileInView}
       viewport={{ once: true, margin: "-10%" }}
-      onClick={(e) => onClick(e, project.id, `/projects/${project.id}`, project.color)}
-      onKeyDown={handleKeyDown}
-      className="group relative border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
+      onClick={handleClick}
+      className="group relative block border-b border-gray-800 py-6 md:py-20 cursor-pointer transition-colors duration-500 hover:border-white focus-visible:outline-none focus-visible:border-white overflow-hidden"
       style={{
         ['--project-color' as string]: project.color,
         ['--title-hover-color' as string]: project.color,
@@ -305,7 +307,7 @@ function ProjectRow({ project, onClick, index }: {
           {t(project.categoryKey)}
         </span>
       </div>
-    </motion.div>
+    </MotionLink>
   );
 }
 
@@ -544,8 +546,7 @@ export default function Home() {
 
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleProjectClick = (e: React.MouseEvent, projectId: string, route: string, color: string) => {
-    e.preventDefault();
+  const handleProjectNavigate = (route: string) => {
     setIsExiting(true);
     exitTimerRef.current = setTimeout(() => router.push(route), 250);
   };
@@ -746,7 +747,7 @@ export default function Home() {
         </motion.p>
         <ProjectTitleFitProvider className="flex flex-col">
           {PROJECT_DATA.map((project, index) => (
-            <ProjectRow key={project.id} project={project} index={index} onClick={handleProjectClick} />
+            <ProjectRow key={project.id} project={project} index={index} onNavigate={handleProjectNavigate} />
           ))}
         </ProjectTitleFitProvider>
       </section>
