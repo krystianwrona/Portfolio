@@ -69,9 +69,12 @@ export function Navbar() {
     return () => observers.forEach((o) => o.disconnect());
   }, [isHomePage]);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll while the mobile menu is open — and only then. Writing
+  // "" while it is closed also ran on mount, right after the Preloader had
+  // locked the page for its intro, and quietly released that lock.
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+    document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
