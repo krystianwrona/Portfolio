@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useState, Suspense } from "react";
+import { Component, useRef, useEffect, useMemo, useState, Suspense, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -297,8 +297,9 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
   mouseRef: { current: { x: number; y: number } };
   isHoveringRef: { current: boolean };
 }) {
-  const { viewport, camera, gl, size } = useThree();
+  const { viewport, camera, gl, size, invalidate } = useThree();
   const texture = useTexture("/crow-particles.webp");
+  // eslint-disable-next-line react-hooks/immutability -- Three.js texture setting on a cached loader object (GPU-side config), not React state.
   texture.colorSpace = THREE.SRGBColorSpace;
 
   const pointsRef = useRef<THREE.Points>(null);
@@ -550,17 +551,48 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
 
   // Track reduced-motion preference live; static users skip assembly entirely
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability -- Shader uniforms are GPU inputs Three.js reads on draw; writing them in place is how they are updated.
     uniforms.uPixelRatio.value = gl.getPixelRatio();
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const apply = () => {
       reducedMotion.current = mq.matches;
       uniforms.uReduced.value = mq.matches ? 1 : 0;
       if (mq.matches) uniforms.uAssembly.value = 1;
+      invalidate(); // one frame in the new mode; motion keeps itself going
     };
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, [gl, uniforms]);
+  }, [gl, uniforms, invalidate]);
+
+  // ── Render budget ──────────────────────────────────────────────────────────
+  // The Canvas renders on demand. The frame loop below asks for the next frame
+  // only while the hero is on screen and something can move: always, while
+  // motion is allowed (assembly, idle sway, cursor); under reduced motion only
+  // until uScroll has caught up with the page. Scrolled past the hero, in a
+  // hidden tab, or holding still under reduced motion, nothing is drawn.
+  // uScroll is the whole page's progress, and the particles are fully
+  // transparent from ~0.67 — before this, the loop kept drawing an invisible
+  // cloud at full frame rate for most of the page.
+  const inViewRef = useRef(true);
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const io = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) invalidate();
+    });
+    io.observe(canvas);
+    // Scrolling moves uScroll's target; a second frame lands after the page's
+    // own scroll handler has written scrollRef, whichever runs first.
+    const wake = () => { if (inViewRef.current) invalidate(2); };
+    window.addEventListener("scroll", wake, { passive: true });
+    document.addEventListener("visibilitychange", wake);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", wake);
+      document.removeEventListener("visibilitychange", wake);
+    };
+  }, [gl, invalidate]);
 
   // Compute aIsHead attribute — smoothstep blend around HEAD_Y_THRESHOLD
   useEffect(() => {
@@ -601,14 +633,21 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05); // cap — prevents spike after tab switch
 
+    // eslint-disable-next-line react-hooks/immutability -- Per-frame shader uniform updates inside the R3F frame loop; Three.js reads them on draw.
     uniforms.uScroll.value += (scrollRef.current - uniforms.uScroll.value) * 0.14;
+    // Still easing towards the page's scroll position (see "Render budget").
+    const settling = Math.abs(scrollRef.current - uniforms.uScroll.value) > 0.0005;
 
     // Skip the draw entirely once the bird has fully exploded/faded on scroll
     if (pointsRef.current) {
       pointsRef.current.visible = uniforms.uScroll.value < 0.99;
     }
 
-    if (reducedMotion.current) return; // static assembled state — uniforms frozen
+    if (reducedMotion.current) {
+      // static assembled state — uniforms frozen
+      if (settling && inViewRef.current) invalidate();
+      return;
+    }
 
     uniforms.uTime.value += dt;
 
@@ -648,6 +687,10 @@ function CrowShaderMesh({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef }
     const target = Math.max(-0.3, Math.min(0.3, idle + mouseInfluence));
     headRotation.current += (target - headRotation.current) * dt * 1.4;
     uniforms.uHeadRotationY.value = headRotation.current;
+
+    // Keep animating while the hero is on screen; the IntersectionObserver and
+    // the scroll listener wake the loop again when it comes back.
+    if (inViewRef.current) invalidate();
   });
 
   return (
@@ -668,8 +711,11 @@ export function CrowScene({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef
   isHoveringRef: { current: boolean };
 }) {
   return (
+    <CrowSceneBoundary>
     <Suspense fallback={<div className="absolute inset-0 bg-[#F5F5F4]" />}>
       <Canvas
+        // Draw only when asked: see "Render budget" in CrowShaderMesh.
+        frameloop="demand"
         // The canvas covers the hero's controls now, so it stays out of the
         // pointer's way entirely: the mousemove the crow tracks is the
         // section's, and it has to reach the section.
@@ -687,5 +733,26 @@ export function CrowScene({ cellRef, textRef, scrollRef, mouseRef, isHoveringRef
         />
       </Canvas>
     </Suspense>
+    </CrowSceneBoundary>
   );
+}
+
+/**
+ * Contains a scene failure to the scene. react-three-fiber re-throws WebGL
+ * errors (no context, context creation refused, a shader that will not
+ * compile) out of <Canvas>; without a boundary one missing GPU feature takes
+ * the whole homepage down. On failure the bird is simply not drawn — the hero
+ * copy never depended on it.
+ */
+class CrowSceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: unknown) {
+    console.error("[crow] Scene disabled:", error instanceof Error ? error.message : error);
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }
