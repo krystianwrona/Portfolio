@@ -115,7 +115,6 @@ const PERSON_JSON_LD = {
   ],
   sameAs: [
     "https://www.linkedin.com/in/krystian-wrona/",
-    "https://www.behance.net/krystianwrona3",
     "https://github.com/krystianwrona",
   ],
 };
@@ -910,17 +909,6 @@ export default function Home() {
                 className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 LinkedIn
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.behance.net/krystianwrona3"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t('footer.aria.behance')}
-                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                Behance
               </a>
             </li>
             <li>
