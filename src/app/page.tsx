@@ -76,7 +76,8 @@ const TECH_GROUPS = [
     items: [
       { name: "Claude Code",   bg: "#CC785C", color: "#FFFFFF", rotation:  2   },
       { name: "Claude Design", bg: "#D97757", color: "#FFFFFF", rotation: -1   },
-      { name: "Cowork",        bg: "#7C3AED", color: "#FFFFFF", rotation:  1.5 },
+      { name: "Codex",         bg: "#000000", color: "#FFFFFF", rotation:  1   },
+      { name: "Cowork",       bg: "#7C3AED", color: "#FFFFFF", rotation:  1.5 },
       { name: "Gemini",        bg: "#1A73E8", color: "#FFFFFF", rotation: -2   },
     ],
   },
