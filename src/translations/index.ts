@@ -504,7 +504,7 @@ export const translations: Record<string, Record<string, string>> = {
     'about.work.step2.title': 'Koncepcja i kierunek',
     'about.work.step2.text': 'Z researchem w ręku szukam kierunku wizualnego i koncepcji interfejsu — w narzędziach takich jak Claude Design: layout, hierarchia, typografia, kolor. Tu projekt zyskuje charakter i tu powstaje większość pomysłów, które później lądują w koszu.',
     'about.work.step3.title': 'Struktura i treść',
-    'about.work.step3.text': 'W Coworku projekt dostaje szkielet: architekturę informacji, teksty, kolejność sekcji i materiały, które trafią do case study. Nic nie idzie do budowy niedokończone.',
+    'about.work.step3.text': 'W Coworku koncepcja zamienia się w plan: które ekrany powstają i w jakiej kolejności, co jest na nich najważniejsze, jak nazywa się każda rzecz, którą użytkownik zobaczy. Tu powstają teksty interfejsu i case study oraz decyzje, których nie da się już odkładać. Do budowy wchodzi gotowy plan, nie luźny pomysł.',
     'about.work.step4.title': 'Budowa',
     'about.work.step4.text': 'Kod produkcyjny pisze Claude Code według moich wytycznych — React, Next.js, TypeScript. Nie piszę kodu sam — decyduję, co powstaje i jak ma działać, a każdą zmianę sprawdzam w działającym produkcie, na prawdziwych ekranach. AI pisze kod, decyzje produktowe zostają po mojej stronie.',
     'about.work.step5.title': 'Dopracowanie',
