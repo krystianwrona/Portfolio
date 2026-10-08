@@ -539,6 +539,7 @@ export default function Home() {
   const router = useRouter();
   const [isExiting, setIsExiting] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
   const { t } = useLanguage();
   const shouldReduceMotion = useReducedMotion();
   const lenis = useLenis();
@@ -550,11 +551,26 @@ export default function Home() {
     exitTimerRef.current = setTimeout(() => router.push(route), 250);
   };
 
+  const emailCopiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     return () => {
       if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+      if (emailCopiedTimeoutRef.current) clearTimeout(emailCopiedTimeoutRef.current);
     };
   }, []);
+
+  const handleCopyEmail = async () => {
+    try {
+      if (!navigator.clipboard) throw new Error("clipboard unavailable");
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setEmailCopied(true);
+      if (emailCopiedTimeoutRef.current) clearTimeout(emailCopiedTimeoutRef.current);
+      emailCopiedTimeoutRef.current = setTimeout(() => setEmailCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`;
+    }
+  };
 
   // A — always start from top
   useEffect(() => {
@@ -892,13 +908,18 @@ export default function Home() {
           </p>
           <ul className="flex flex-wrap gap-x-8 text-[0.85rem] font-bold uppercase tracking-widest list-none p-0 m-0" aria-label={t('footer.aria.sociallinks')}>
             <li>
-              <a
-                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t('contact.email.subject'))}`}
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                title={CONTACT_EMAIL}
                 aria-label={`${t('footer.aria.email')}: ${CONTACT_EMAIL}`}
-                className="opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="bg-transparent border-0 p-0 cursor-pointer opacity-80 hover:opacity-100 hover:text-[#FACC15] transition-colors duration-300 min-h-[44px] inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                {t('footer.email.label')}
-              </a>
+                {emailCopied ? t('footer.email.copied') : t('footer.email.label')}
+              </button>
+              <span aria-live="polite" className="sr-only">
+                {emailCopied ? t('footer.email.copied') : ''}
+              </span>
             </li>
             <li>
               <a

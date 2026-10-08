@@ -109,8 +109,9 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.aria.sociallinks': 'Social media links',
     'footer.aria.linkedin': 'LinkedIn (opens in new tab)',
     'footer.aria.github': 'GitHub (opens in new tab)',
-    'footer.aria.email': 'Send an email',
+    'footer.aria.email': 'Copy email address',
     'footer.email.label': 'EMAIL',
+    'footer.email.copied': 'COPIED',
 
     // ── Case Study — shared ──
     'case.close': '[ CLOSE CASE ]',
@@ -559,8 +560,9 @@ export const translations: Record<string, Record<string, string>> = {
     'footer.aria.sociallinks': 'Linki do mediów społecznościowych',
     'footer.aria.linkedin': 'LinkedIn (otwiera się w nowej karcie)',
     'footer.aria.github': 'GitHub (otwiera się w nowej karcie)',
-    'footer.aria.email': 'Napisz e-mail',
+    'footer.aria.email': 'Skopiuj adres e-mail',
     'footer.email.label': 'E-MAIL',
+    'footer.email.copied': 'SKOPIOWANO',
 
     // ── Case Study — shared ──
     'case.close': '[ ZAMKNIJ ]',
